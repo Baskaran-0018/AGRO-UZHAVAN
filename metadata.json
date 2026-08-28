@@ -1,0 +1,6 @@
+{
+  "name": "AGRO AI — Intelligent Weather & Smart Crop Management",
+  "description": "Enterprise AI-powered agricultural intelligence platform featuring weather prediction, disease vision diagnosis, yield forecasting, custom ML model training studio, and multilingual voice assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

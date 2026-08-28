@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="180" fill="#10b981" opacity="0.12" filter="url(#glow)"/>
+  <!-- Stem -->
+  <path d="M256 260 L256 420" stroke="#047857" stroke-width="24" stroke-linecap="round"/>
+  <!-- Leaves -->
+  <path d="M256 90 C150 180 110 300 256 400 C402 300 362 180 256 90 Z" fill="url(#leafGrad)"/>
+  <!-- Left Sub Leaf -->
+  <path d="M256 280 C180 260 140 310 180 360 C220 370 250 320 256 280 Z" fill="#10b981" opacity="0.9"/>
+  <!-- Right Sub Leaf -->
+  <path d="M256 240 C330 210 370 260 340 310 C300 330 265 280 256 240 Z" fill="#34d399" opacity="0.9"/>
+  <!-- Energy Core / Sun -->
+  <circle cx="256" cy="245" r="42" fill="url(#sunGrad)" filter="url(#glow)"/>
+  <circle cx="256" cy="245" r="28" fill="#ffffff" opacity="0.3"/>
+</svg>

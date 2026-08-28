@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "id": "/?source=pwa",
+  "name": "AGRO AI — Intelligent Weather & Smart Crop Management",
+  "short_name": "AGRO AI",
+  "description": "Enterprise AI-powered smart agriculture platform for weather forecasting, plant disease vision diagnosis, yield prediction, crop management, and multilingual farm advisory.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#020617",
+  "theme_color": "#16a34a",
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": [
+    "agriculture",
+    "business",
+    "productivity",
+    "utilities",
+    "weather"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Disease AI Vision Scan",
+      "short_name": "Disease Scan",
+      "description": "Diagnose crop leaf diseases instantly with AI computer vision",
+      "url": "/?view=diseasescanner",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Weather & Climate Forecast",
+      "short_name": "Weather",
+      "description": "Hyperlocal 7-day agricultural weather forecast and microclimate advice",
+      "url": "/?view=weather",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Smart Crop Planner",
+      "short_name": "Crop Plan",
+      "description": "Daily and weekly agronomic management schedules and NPK schedules",
+      "url": "/?view=cropplanner",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "AgroGenius AI Advisor",
+      "short_name": "AI Advisor",
+      "description": "Multilingual conversational voice and text agricultural expert",
+      "url": "/?view=assistant",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Yield Prediction ML",
+      "short_name": "Yield ML",
+      "description": "Forecast crop harvest tonnage and revenue with ML models",
+      "url": "/?view=yieldpredictor",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
