@@ -120,9 +120,9 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({ lang }) => {
 
             {/* Header: App Icon & Verified Badge */}
             <div className="flex items-center gap-3.5">
-              <div className="relative w-14 h-14 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-xl shadow-emerald-500/20 shrink-0 border border-emerald-400/40">
+              <div className="relative w-14 h-14 rounded-2xl bg-white p-1 flex items-center justify-center shadow-xl shadow-emerald-500/20 shrink-0 border border-emerald-400/40 overflow-hidden">
                 <img
-                  src="/favicon.svg"
+                  src="/logo.png"
                   alt="AGRO UZHAVAN Logo"
                   className="w-full h-full object-contain"
                 />

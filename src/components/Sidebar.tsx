@@ -76,9 +76,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {onCloseMobile && (
         <div className="md:hidden flex items-center justify-between p-4 border-b border-emerald-100 bg-emerald-50/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white border border-emerald-200 shadow-xs p-1 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-white border border-emerald-200 shadow-xs p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
               <img
-                src="/favicon.svg"
+                src="/logo.png"
                 alt="AGRO UZHAVAN"
                 className="w-full h-full object-contain"
               />

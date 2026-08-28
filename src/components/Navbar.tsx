@@ -65,25 +65,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => onNavigate('dashboard')}
             className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-none"
           >
-            <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-emerald-200 shadow-sm p-1 group-hover:scale-105 transition-transform shrink-0">
+            <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
               <img
-                src="/favicon.svg"
+                src="/logo.png"
                 alt="AGRO UZHAVAN Logo"
                 className="w-full h-full object-contain"
               />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 leading-none">
-                  AGRO UZHAVAN
-                </span>
-                <span className="text-[8px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 hidden xs:inline">
-                  AI Platform
-                </span>
-              </div>
-              <p className="text-[10px] font-medium text-emerald-700 tracking-wider uppercase mt-0.5 hidden sm:block">
-                Intelligent Agriculture
-              </p>
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 leading-none">
+                AGRO UZHAVAN
+              </span>
             </div>
           </button>
         </div>

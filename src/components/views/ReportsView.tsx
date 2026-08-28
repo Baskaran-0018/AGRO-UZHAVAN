@@ -107,7 +107,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         <div className="flex items-start justify-between pb-6 border-b border-slate-800">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl text-emerald-400 font-display">AGRO AI</span>
+              <span className="font-extrabold text-xl text-emerald-400 font-display">AGRO UZHAVAN</span>
               <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
                 Official Farm Dossier
               </span>
@@ -117,7 +117,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           </div>
           <div className="text-right text-xs text-slate-400 space-y-0.5">
             <div><b>Report Date:</b> {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-            <div><b>Auditor:</b> AGRO AI Autonomous Engine</div>
+            <div><b>Auditor:</b> AGRO UZHAVAN Autonomous Engine</div>
             <div><b>Status:</b> Certified Valid</div>
           </div>
         </div>
@@ -195,7 +195,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
         {/* Footer Signature */}
         <div className="pt-6 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-500">
-          <span>Digitally Signed & Validated via AGRO AI Autonomous Cloud</span>
+          <span>Digitally Signed & Validated via AGRO UZHAVAN Autonomous Cloud</span>
           <span>Doc ID: AGRO-AUDIT-{activeFarm.id}-{Date.now().toString().slice(-6)}</span>
         </div>
       </div>

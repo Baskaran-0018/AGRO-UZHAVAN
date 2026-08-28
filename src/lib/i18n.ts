@@ -26,8 +26,8 @@ export function getLanguageName(code: SupportedLang): string {
 export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
   en: {
     // Brand & Applet
-    appTitle: 'AGRO AI',
-    tagline: 'Intelligent Micro-Climate Prediction & Precision Farm Management',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'v3.7',
     version: 'Version',
 
@@ -196,8 +196,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   hi: {
     // Brand & Applet
-    appTitle: 'एग्रो एआई (AGRO AI)',
-    tagline: 'बुद्धिमान मौसम पूर्वानुमान एवं सटीक कृषि प्रबंधन प्रणाली',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'संस्करण 3.7',
     version: 'संस्करण',
 
@@ -366,8 +366,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   ta: {
     // Brand & Applet
-    appTitle: 'அக்ரோ ஏஐ (AGRO AI)',
-    tagline: 'வானிலை நுண்ணறிவு & துல்லிய பண்ணை மேலாண்மை',
+    appTitle: 'அக்ரோ உழவன் (AGRO UZHAVAN)',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'பதிப்பு 3.7',
     version: 'பதிப்பு',
 
@@ -536,8 +536,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   te: {
     // Brand & Applet
-    appTitle: 'ఆగ్రో ఏఐ (AGRO AI)',
-    tagline: 'ఖచ్చితమైన వాతావరణ అంచనాలు & పంటల నిర్వహణ',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'వెర్షన్ 3.7',
     version: 'వెర్షన్',
 
@@ -706,8 +706,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   kn: {
     // Brand & Applet
-    appTitle: 'ಆಗ್ರೋ ಎಐ (AGRO AI)',
-    tagline: 'ನಿಖರ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ಮತ್ತು ಕೃಷಿ ನಿರ್ವಹಣೆ',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'ಆವೃತ್ತಿ 3.7',
     version: 'ಆವೃತ್ತಿ',
 
@@ -876,8 +876,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   mr: {
     // Brand & Applet
-    appTitle: 'अॅग्रो एआय (AGRO AI)',
-    tagline: 'अचूक हवामान अंदाज आणि आधुनिक शेती व्यवस्थापन',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'आवृत्ती 3.7',
     version: 'आवृत्ती',
 
@@ -1046,8 +1046,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   bn: {
     // Brand & Applet
-    appTitle: 'এগ্রো এআই (AGRO AI)',
-    tagline: 'নির্ভুল আবহাওয়া পূর্বাভাস এবং স্মার্ট খামার ব্যবস্থাপনা',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'সংস্করণ ৩.৭',
     version: 'সংস্করণ',
 
@@ -1216,8 +1216,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   gu: {
     // Brand & Applet
-    appTitle: 'એગ્રો એઆઈ (AGRO AI)',
-    tagline: 'સચોટ હવામાન આગાહી અને સ્માર્ટ ખેતી સંચાલન',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'આવૃત્તિ 3.7',
     version: 'આવૃત્તિ',
 
@@ -1386,8 +1386,8 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 
   pa: {
     // Brand & Applet
-    appTitle: 'ਐਗਰੋ ਏ.ਆਈ (AGRO AI)',
-    tagline: 'ਸਟੀਕ ਮੌਸਮ ਭਵਿੱਖਬਾਣੀ ਅਤੇ ਖੇਤੀਬਾੜੀ ਪ੍ਰਬੰਧਨ',
+    appTitle: 'AGRO UZHAVAN',
+    tagline: 'AGRO UZHAVAN',
     v3Badge: 'ਸੰਸਕਰਨ 3.7',
     version: 'ਸੰਸਕਰਨ',
 
