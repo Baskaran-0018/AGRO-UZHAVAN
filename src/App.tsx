@@ -9,6 +9,7 @@ import { FarmModal } from './components/FarmModal';
 import { CropModal } from './components/CropModal';
 import { NotificationsModal } from './components/NotificationsModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { MobileBottomNav } from './components/MobileBottomNav';
 
 // Views
 import { DashboardView } from './components/views/DashboardView';
@@ -50,6 +51,7 @@ export function App() {
   const [isAddFarmOpen, setIsAddFarmOpen] = useState(false);
   const [isAddCropOpen, setIsAddCropOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // ML Training Engine State
   const [trainingState, setTrainingState] = useState<MLTrainingState>({
@@ -192,19 +194,43 @@ export function App() {
         currentTemp={weather?.current?.temp}
         currentWeatherDesc={weather?.current?.weatherDescription}
         onNavigate={setCurrentView}
+        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
       />
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Navigation Sidebar */}
-        <Sidebar
-          currentView={currentView}
-          onSelectView={setCurrentView}
-          lang={lang}
-          trainingRunning={trainingState.status === 'running'}
-        />
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Desktop Left Navigation Sidebar */}
+        <div className="hidden md:flex shrink-0">
+          <Sidebar
+            currentView={currentView}
+            onSelectView={setCurrentView}
+            lang={lang}
+            trainingRunning={trainingState.status === 'running'}
+          />
+        </div>
+
+        {/* Mobile Slide-Out Drawer Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 z-50 flex animate-in fade-in duration-200">
+            {/* Backdrop */}
+            <div
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs"
+            />
+            {/* Drawer */}
+            <div className="relative z-10 w-72 max-w-[85vw] h-full shadow-2xl animate-in slide-in-from-left duration-300">
+              <Sidebar
+                currentView={currentView}
+                onSelectView={setCurrentView}
+                lang={lang}
+                onCloseMobile={() => setIsMobileMenuOpen(false)}
+                trainingRunning={trainingState.status === 'running'}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Center Main View Canvas */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8 pb-24 md:pb-8">
           {currentView === 'dashboard' && (
             <DashboardView
               activeFarm={activeFarm}
@@ -344,6 +370,14 @@ export function App() {
         isOpen={isNotificationsOpen}
         onClose={() => setIsNotificationsOpen(false)}
         alerts={weather?.alerts || []}
+        lang={lang}
+      />
+
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileBottomNav
+        currentView={currentView}
+        onSelectView={setCurrentView}
+        onOpenMenu={() => setIsMobileMenuOpen(true)}
         lang={lang}
       />
 
