@@ -120,23 +120,27 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({ lang }) => {
 
             {/* Header: App Icon & Verified Badge */}
             <div className="flex items-center gap-3.5">
-              <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-xl shadow-emerald-500/30 shrink-0 border border-emerald-400/30">
-                <Smartphone className="w-7 h-7" />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 text-slate-950 flex items-center justify-center text-[10px] font-black shadow">
+              <div className="relative w-14 h-14 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-xl shadow-emerald-500/20 shrink-0 border border-emerald-400/40">
+                <img
+                  src="/favicon.svg"
+                  alt="AGRO UZHAVAN Logo"
+                  className="w-full h-full object-contain"
+                />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black shadow">
                   ✓
                 </div>
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <h3 className="text-base font-extrabold text-white tracking-tight truncate">
-                    AGRO AI
+                    AGRO UZHAVAN
                   </h3>
                   <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[9px] font-bold uppercase tracking-wider">
                     Official App
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 font-medium truncate">
-                  Smart Farming & Weather Intelligence
+                <p className="text-xs text-emerald-400 font-medium truncate">
+                  Intelligent Agriculture Platform
                 </p>
                 <div className="flex items-center gap-2 mt-1 text-[11px] text-amber-400 font-bold">
                   <div className="flex items-center">

@@ -75,13 +75,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile Drawer Header */}
       {onCloseMobile && (
         <div className="md:hidden flex items-center justify-between p-4 border-b border-emerald-100 bg-emerald-50/50">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-sm">
-              🌱
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-white border border-emerald-200 shadow-xs p-1 flex items-center justify-center shrink-0">
+              <img
+                src="/favicon.svg"
+                alt="AGRO UZHAVAN"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-slate-900">AGRO AI</h3>
-              <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Navigation Menu</p>
+              <h3 className="font-extrabold text-sm text-slate-900 leading-none">AGRO UZHAVAN</h3>
+              <p className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider mt-0.5">Intelligent Agriculture</p>
             </div>
           </div>
           <button

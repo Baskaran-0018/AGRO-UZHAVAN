@@ -63,22 +63,26 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate('dashboard')}
-            className="flex items-center gap-2 text-left group cursor-pointer focus:outline-none"
+            className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-none"
           >
-            <div className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
-              <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-emerald-200 shadow-sm p-1 group-hover:scale-105 transition-transform shrink-0">
+              <img
+                src="/favicon.svg"
+                alt="AGRO UZHAVAN Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <div className="flex items-center gap-1">
-                <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900">
-                  AGRO AI
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 leading-none">
+                  AGRO UZHAVAN
                 </span>
-                <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 hidden xs:inline">
-                  Smart Farm
+                <span className="text-[8px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 hidden xs:inline">
+                  AI Platform
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 hidden md:block">
-                {t.tagline}
+              <p className="text-[10px] font-medium text-emerald-700 tracking-wider uppercase mt-0.5 hidden sm:block">
+                Intelligent Agriculture
               </p>
             </div>
           </button>
