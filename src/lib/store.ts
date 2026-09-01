@@ -6,7 +6,8 @@ import {
   DatasetItem,
   ModelZooItem,
   MLTrainingConfig,
-  WeatherAlert
+  WeatherAlert,
+  UserProfile
 } from '../types/agro';
 import { PRELOADED_DATASETS } from '../data/datasets';
 import { MODELS_ZOO } from '../data/modelsZoo';
@@ -175,6 +176,29 @@ export class AgroStore {
     localStorage.setItem(this.LANG_KEY, lang);
   }
 
+  private static USER_KEY = 'agro_ai_user_profile_v2';
+
+  static getUser(): UserProfile | null {
+    try {
+      const data = localStorage.getItem(this.USER_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  static setUser(user: UserProfile | null) {
+    if (user) {
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(this.USER_KEY);
+    }
+  }
+
+  static logout() {
+    localStorage.removeItem(this.USER_KEY);
+  }
+
   static resetAllData() {
     localStorage.removeItem(this.FARMS_KEY);
     localStorage.removeItem(this.ACTIVE_FARM_KEY);
@@ -183,5 +207,6 @@ export class AgroStore {
     localStorage.removeItem(this.YIELDS_KEY);
     localStorage.removeItem(this.DATASETS_KEY);
     localStorage.removeItem(this.MODELS_KEY);
+    localStorage.removeItem(this.USER_KEY);
   }
 }

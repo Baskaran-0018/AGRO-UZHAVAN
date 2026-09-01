@@ -8,7 +8,7 @@
       "destination": "/api"
     },
     {
-      "source": "/((?!api/|icons/|favicon.svg|manifest.webmanifest|manifest.json|sw.js|assets/).*)",
+      "source": "/((?!api/|icons/|favicon.svg|manifest.webmanifest|manifest.json|sw.js|assets/|login.html|signup.html|register.html).*)",
       "destination": "/index.html"
     }
   ]

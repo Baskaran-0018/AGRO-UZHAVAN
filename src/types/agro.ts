@@ -323,3 +323,20 @@ export interface ChatMessage {
   suggestedActions?: string[];
   groundingSources?: string[];
 }
+
+export type AuthProviderType = 'google' | 'apple' | 'guest' | 'email' | 'phone';
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  avatarUrl?: string;
+  provider: AuthProviderType;
+  isGuest: boolean;
+  role?: 'Farmer' | 'Agronomist' | 'Farm Manager' | 'Researcher';
+  location?: string;
+  createdAt: string;
+  lastLoginAt: string;
+  farmCount?: number;
+}

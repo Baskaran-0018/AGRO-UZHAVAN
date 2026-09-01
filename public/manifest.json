@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "id": "/?source=pwa",
-  "name": "AGRO UZHAVAN — Intelligent Agriculture",
-  "short_name": "AGRO UZHAVAN",
-  "description": "AGRO UZHAVAN — Enterprise AI-powered intelligent agriculture platform for weather forecasting, plant disease vision diagnosis, yield prediction, crop management, and multilingual farm advisory.",
+  "name": "Agro Uzhavan — Intelligent Agriculture",
+  "short_name": "Agro Uzhavan",
+  "description": "Agro Uzhavan — Enterprise AI-powered intelligent agriculture platform for weather forecasting, plant disease vision diagnosis, yield prediction, crop management, and multilingual farm advisory.",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",

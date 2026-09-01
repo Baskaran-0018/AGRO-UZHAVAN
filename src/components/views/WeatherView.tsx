@@ -80,7 +80,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
             </span>
             <span className="text-xs text-slate-500 font-medium">· {activeFarm.locationName}</span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 mt-1.5">{t.weatherPrediction} & Microclimate Analytics</h1>
+          <h1 className="text-2xl font-black text-slate-900 mt-1.5">{t.weatherPrediction} & {t.microClimate || 'Microclimate Analytics'}</h1>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -99,12 +99,12 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
         {/* Current Station Metrics */}
         <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white border border-emerald-500/30 flex flex-col justify-between shadow-sm">
           <div>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-100">Station Live Reading</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-100">{t.hourlyAdvisory || 'Station Live Reading'}</span>
             <div className="flex items-center gap-4 my-4">
               <CloudSun className="w-16 h-16 text-amber-300 shrink-0" />
               <div>
                 <span className="text-5xl font-black font-display">{cur ? Math.round(cur.temp) : 28}°C</span>
-                <p className="text-sm font-bold text-emerald-100">{cur?.weatherDescription || 'Mainly Clear'}</p>
+                <p className="text-sm font-bold text-emerald-100">{cur?.weatherDescription || (t.optimal || 'Mainly Clear')}</p>
                 <p className="text-xs text-emerald-200">Feels like {cur ? Math.round(cur.feelsLike) : 30}°C</p>
               </div>
             </div>
@@ -125,7 +125,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
             </div>
             <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xs">
               <span className="text-emerald-200 block text-[10px] uppercase font-bold">{t.sprayingIndex || 'Spraying'}</span>
-              <span className="font-extrabold text-base text-amber-200">{daily[0]?.sprayingIndex || 'Optimal'}</span>
+              <span className="font-extrabold text-base text-amber-200">{daily[0]?.sprayingIndex || (t.optimal || 'Optimal')}</span>
             </div>
           </div>
         </div>
@@ -134,11 +134,11 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
         <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-emerald-100 space-y-4 shadow-xs">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-emerald-600" />
-            <h3 className="text-base font-bold text-slate-900">AI Agronomic Weather Guidance</h3>
+            <h3 className="text-base font-bold text-slate-900">{t.fieldAdvisory || 'AI Agronomic Weather Guidance'}</h3>
           </div>
 
           <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs space-y-1.5">
-            <p className="font-bold text-emerald-900 text-sm">{weather?.aiAnalysis?.headline || 'Optimal Farm Weather Trajectory'}</p>
+            <p className="font-bold text-emerald-900 text-sm">{weather?.aiAnalysis?.headline || (t.optimal || 'Optimal Farm Weather Trajectory')}</p>
             <p className="leading-relaxed text-slate-700 font-medium">{weather?.aiAnalysis?.summary || 'Favorable thermal ranges present for healthy crop vegetative and grain growth.'}</p>
           </div>
 
@@ -148,7 +148,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
               <p className="text-slate-800 font-medium">{weather?.aiAnalysis?.sprayingConditions || 'Wind speed < 14 km/h provides suitable chemical deposition window without foliar drift.'}</p>
             </div>
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <span className="text-[10px] font-bold uppercase text-slate-500 block mb-1">{t.fieldAdvisory || 'Irrigation Advisory'}</span>
+              <span className="text-[10px] font-bold uppercase text-slate-500 block mb-1">{t.irrigationSchedule || 'Irrigation Advisory'}</span>
               <p className="text-slate-800 font-medium">{weather?.aiAnalysis?.irrigationRecommendation || 'Maintain scheduled root zone moisture saturation during morning hours.'}</p>
             </div>
           </div>
@@ -176,9 +176,9 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
           <div>
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-emerald-600" />
-              Interactive Weather Prediction Graphs
+              {t.weatherPrediction || 'Interactive Weather Prediction Graphs'}
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">High-resolution forecasting curves and probability trends</p>
+            <p className="text-xs text-slate-500 mt-0.5">{t.hourlyAdvisory || 'High-resolution forecasting curves and probability trends'}</p>
           </div>
 
           {/* Graph View Selector Buttons */}
@@ -191,7 +191,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              24-Hour Temp & Rain Graph
+              {t.hourlyAdvisory || '24-Hour Temp & Rain Graph'}
             </button>
             <button
               onClick={() => setActiveTab('weekly')}
@@ -201,7 +201,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              14-Day Temperature & Rain Curve
+              {t.sevenDayForecast || '14-Day Temperature & Rain Curve'}
             </button>
             <button
               onClick={() => setActiveTab('soil_humidity')}
@@ -211,7 +211,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Humidity & Wind Speed
+              {t.humidity || 'Humidity'} & {t.windSpeed || 'Wind Speed'}
             </button>
             <button
               onClick={() => setActiveTab('table')}
@@ -221,7 +221,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              14-Day Table
+              {t.reports || '14-Day Table'}
             </button>
           </div>
         </div>
@@ -269,7 +269,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                     }}
                   />
                   <Legend verticalAlign="top" height={36} />
-                  <Bar yAxisId="right" dataKey="rainProb" name="Rain Probability (%)" fill="url(#rainGradient)" radius={[4, 4, 0, 0]} maxBarSize={22} />
+                  <Bar yAxisId="right" dataKey="rainProb" name={t.rainProb || 'Rain Probability (%)'} fill="url(#rainGradient)" radius={[4, 4, 0, 0]} maxBarSize={22} />
                   <Area
                     yAxisId="left"
                     type="monotone"
@@ -314,15 +314,15 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                   <span className="font-bold text-slate-900 text-sm">{hourly[selectedHour].timestamp}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] font-bold uppercase">Temp & Humidity</span>
+                  <span className="text-slate-500 block text-[10px] font-bold uppercase">{t.humidity || 'Temp & Humidity'}</span>
                   <span className="font-bold text-emerald-700 text-sm">{hourly[selectedHour].temp}°C · {hourly[selectedHour].humidity}%</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] font-bold uppercase">Solar Flux & UV</span>
+                  <span className="text-slate-500 block text-[10px] font-bold uppercase">{t.solarRad || 'Solar Flux & UV'}</span>
                   <span className="font-bold text-amber-700 text-sm">{hourly[selectedHour].solarRadiationWm2} W/m² (UV {hourly[selectedHour].uvIndex})</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] font-bold uppercase">Soil Moisture</span>
+                  <span className="text-slate-500 block text-[10px] font-bold uppercase">{t.soilMoistureLayer || 'Soil Moisture'}</span>
                   <span className="font-bold text-sky-700 text-sm">{(hourly[selectedHour].soilMoisture * 100).toFixed(0)}% volumetric</span>
                 </div>
               </div>
@@ -350,14 +350,14 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                     }}
                   />
                   <Legend verticalAlign="top" height={36} />
-                  <Bar yAxisId="rain" dataKey="rainSum" name="Rainfall (mm)" fill="#0ea5e9" radius={[4, 4, 0, 0]} maxBarSize={20} />
+                  <Bar yAxisId="rain" dataKey="rainSum" name={t.precipitation || 'Rainfall (mm)'} fill="#0ea5e9" radius={[4, 4, 0, 0]} maxBarSize={20} />
                   <Line yAxisId="temp" type="monotone" dataKey="tempMax" name="Max Temp (°C)" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4, fill: '#f59e0b' }} />
                   <Line yAxisId="temp" type="monotone" dataKey="tempMin" name="Min Temp (°C)" stroke="#0284c7" strokeWidth={3} dot={{ r: 4, fill: '#0284c7' }} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
             <p className="text-xs text-slate-500 text-center font-medium">
-              14-Day thermal envelope showing projected daytime maximums and nighttime minimum thresholds with precipitation.
+              {t.weeklyAdvisory || '14-Day thermal envelope showing projected daytime maximums and nighttime minimum thresholds with precipitation.'}
             </p>
           </div>
         )}
@@ -382,13 +382,13 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                     }}
                   />
                   <Legend verticalAlign="top" height={36} />
-                  <Line yAxisId="hum" type="monotone" dataKey="humidity" name="Relative Humidity (%)" stroke="#0284c7" strokeWidth={2.5} dot={false} />
-                  <Line yAxisId="wind" type="monotone" dataKey="windSpeed" name="Wind Speed (km/h)" stroke="#0d9488" strokeWidth={2.5} dot={false} />
+                  <Line yAxisId="hum" type="monotone" dataKey="humidity" name={t.humidity || 'Relative Humidity (%)'} stroke="#0284c7" strokeWidth={2.5} dot={false} />
+                  <Line yAxisId="wind" type="monotone" dataKey="windSpeed" name={t.windSpeed || 'Wind Speed (km/h)'} stroke="#0d9488" strokeWidth={2.5} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <p className="text-xs text-slate-500 text-center font-medium">
-              Diurnal humidity cycle and kinetic wind velocity tracking for precision spraying and disease risk modeling.
+              {t.microClimate || 'Diurnal humidity cycle and kinetic wind velocity tracking for precision spraying and disease risk modeling.'}
             </p>
           </div>
         )}
@@ -400,12 +400,12 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
               <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200">
                 <tr>
                   <th className="p-3.5">Date</th>
-                  <th className="p-3.5">Condition</th>
+                  <th className="p-3.5">{t.condition || 'Condition'}</th>
                   <th className="p-3.5">Max / Min Temp</th>
-                  <th className="p-3.5">Rain Probability</th>
-                  <th className="p-3.5">Precipitation</th>
-                  <th className="p-3.5">Max Wind</th>
-                  <th className="p-3.5">Spraying Index</th>
+                  <th className="p-3.5">{t.rainProb || 'Rain Probability'}</th>
+                  <th className="p-3.5">{t.precipitation || 'Precipitation'}</th>
+                  <th className="p-3.5">{t.windSpeed || 'Max Wind'}</th>
+                  <th className="p-3.5">{t.sprayingIndex || 'Spraying Index'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium">
@@ -425,7 +425,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
                     <td className="p-3.5 font-mono">{d.windMaxKmh} km/h</td>
                     <td className="p-3.5">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${d.sprayingIndex === 'Optimal' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : d.sprayingIndex === 'Caution' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-rose-100 text-rose-800 border border-rose-200'}`}>
-                        {d.sprayingIndex}
+                        {d.sprayingIndex === 'Optimal' ? (t.optimal || 'Optimal') : d.sprayingIndex === 'Caution' ? (t.caution || 'Caution') : (t.unfavorable || 'Unfavorable')}
                       </span>
                     </td>
                   </tr>

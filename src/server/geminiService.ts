@@ -17,15 +17,17 @@ function getAI(): GoogleGenAI {
 }
 
 const CANDIDATE_MODELS = [
-  'gemini-3.7-flash',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
   'gemini-3.1-flash-lite',
-  'gemini-flash-latest',
+  'gemini-3.7-flash',
 ];
 
 const VISION_CANDIDATE_MODELS = [
-  'gemini-3.7-flash',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
   'gemini-3.1-flash-lite',
-  'gemini-flash-latest',
+  'gemini-3.7-flash',
 ];
 
 // Simple in-memory cache to prevent duplicate quota usage on fast renders or reloads
@@ -473,23 +475,29 @@ Provide the output in JSON format adhering to the schema. Include detailed Morni
 
 export async function detectPlantDiseaseVision(imageDataBase64: string, mimeType = 'image/jpeg', lang = 'English') {
   try {
-    const prompt = `You are a World-Class Agricultural Plant Pathologist and Computer Vision Specialist at AGRO AI.
-Carefully examine this plant / crop / leaf image:
-1. Identify the exact crop / plant species shown in the photo (e.g. Tomato, Rice, Wheat, Potato, Apple, Maize/Corn, Cotton, Pepper/Chili, Soybean, Grape, Cucumber, Citrus, Banana, Rose, etc.).
-2. Inspect the leaf surface, margins, veins, discoloration, spots, necrosis, pustules, mildew, or wilting. Determine whether it is HEALTHY or has a DISEASE / PEST / NUTRIENT DEFICIENCY.
-3. If diseased, identify the exact disease name (e.g. Early Blight, Late Blight, Powdery Mildew, Downy Mildew, Brown Spot, Leaf Rust, Leaf Curl Virus, Anthracnose, Bacterial Leaf Spot, Septoria Leaf Spot, Black Rot, Yellow Vein Mosaic, Apple Scab, etc.). If healthy, clearly state "Healthy Leaf".
-4. Determine the causal pathogen (e.g., scientific name like Alternaria solani, Phytophthora infestans, Magnaporthe oryzae, Puccinia triticina, etc.), progression stage (Early / Moderate / Severe), estimated disease severity percentage (0-100), confidence score (0.85 to 0.99), and affected leaf surface percentage.
-5. Provide comprehensive actionable guidance:
-   - Root cause and environmental triggers (temperature, humidity, spore vectors).
-   - Observed visual symptoms specific to this specimen.
-   - Organic & Bio-Control remedies (e.g., Neem oil PPM, Trichoderma viride, Bacillus subtilis, copper sprays, sanitation).
-   - Chemical fungicides/pesticides with specific active ingredients (e.g., Azoxystrobin + Difenoconazole, Mancozeb 75 WP, Chlorothalonil, Imidacloprid, etc.).
-   - Exact dosage (e.g. 2 ml/L or 400 g/acre in 200L water) and application method.
-   - Essential PPE safety guidelines & Pre-Harvest Intervals (PHI).
-   - Practical farm prevention tips, expected recovery time, and spread risk (Low / Moderate / High).
-6. Write all explanations in language: ${lang}.
+    const prompt = `You are a Senior Agricultural Plant Pathologist and Phytosanitary Diagnostic Specialist at AGRO AI.
+Carefully inspect this plant leaf/crop image and produce an exact, high-accuracy pathological diagnosis:
 
-Format the response strictly as a JSON object matching the schema.`;
+1. Exact Crop Identification (cropGuess): Identify the exact crop or plant species shown in the photo (e.g. "Tomato", "Potato", "Rice / Paddy", "Wheat", "Maize / Corn", "Cotton", "Chili Pepper", "Soybean", "Grape", "Apple", "Cucumber", "Banana", "Citrus", etc.).
+2. Health & Disease Assessment (isHealthy, diseaseName):
+   - Inspect the leaf canopy, veins, margins, necrotic lesions, concentric rings, pustules, powdery mildew, mosaic discoloration, or chlorosis.
+   - If diseased: State the EXACT specific disease name (e.g., "Tomato Early Blight", "Potato Late Blight", "Rice Leaf Blast", "Wheat Yellow/Stripe Rust", "Powdery Mildew", "Bacterial Leaf Spot", "Corn Northern Leaf Blight", "Black Rot", "Anthracnose", "Septoria Leaf Spot", "Yellow Vein Mosaic", "Citrus Canker"). Do NOT use generic terms like "Leaf Spot" or "Unknown Disease".
+   - If healthy: Set isHealthy = true, and set diseaseName = "Healthy Foliage (No Pathogens Detected)".
+3. Scientific Pathogen (scientificName): Provide the precise binomial biological name of the causal fungus, bacterium, virus, or oomycete (e.g. "Alternaria solani", "Phytophthora infestans", "Magnaporthe oryzae", "Puccinia striiformis", "Xanthomonas campestris", "Bipolaris maydis", "Erysiphe cichoracearum", etc.). If healthy, provide "None (Physiologically Optimal)".
+4. Metrics: Provide progression stage (diseaseStage), severity percentage (severityPercentage: 0-100), confidence score (confidenceScore: 0.85-0.99), and affected leaf surface percentage (affectedLeafAreaPct: 0-100).
+5. Comprehensive Treatment Protocols:
+   - Root cause & environmental triggers (cause).
+   - Observable symptoms (symptoms).
+   - Organic & biological controls with exact concentrations (organicTreatment).
+   - Curative chemical fungicides & active ingredients (chemicalTreatment).
+   - Specific recommended commercial fungicide / pesticide formulations (recommendedFungicides, recommendedPesticides).
+   - Exact dosage and water volume per acre (dosage).
+   - Application method (applicationMethod).
+   - Protective PPE & Pre-Harvest Intervals (safetyInstructions).
+   - Prevention tips, recovery time, and spread risk (preventionTips, recoveryTime, spreadRisk).
+6. Response Language: Write all explanations and remedies in language: ${lang}.
+
+Output strictly as a valid JSON object matching the schema.`;
 
     const cleanBase64 = imageDataBase64.replace(/^data:image\/[a-zA-Z0-9+.-]+;base64,/, '').trim();
     const imagePart = {

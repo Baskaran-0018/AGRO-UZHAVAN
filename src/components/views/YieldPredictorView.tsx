@@ -81,28 +81,28 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
         <div>
           <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 uppercase tracking-wider">
-            Yield & Revenue Estimator
+            {t.predictiveYieldEngine || 'Yield & Revenue Estimator'}
           </span>
           <h1 className="text-2xl font-black text-slate-900 mt-1">{t.yieldPrediction}</h1>
-          <p className="text-xs text-slate-500 font-medium">Estimate seasonal production yield, market revenues, and input cost optimization</p>
+          <p className="text-xs text-slate-500 font-medium">{t.basedOnYield || 'Estimate seasonal production yield, market revenues, and input cost optimization'}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Input Panel (5 cols) */}
         <div className="lg:col-span-5 p-6 rounded-2xl bg-white border border-emerald-100 space-y-5 shadow-xs">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Prediction Parameters</h2>
+          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">{t.simulateDifferentScenario || 'Prediction Parameters'}</h2>
 
           {/* Crop Selector */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700">Target Crop</label>
+            <label className="text-xs font-semibold text-slate-700">{t.crop || 'Target Crop'}</label>
             <select
               value={selectedCrop}
               onChange={(e) => setSelectedCrop(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:border-emerald-500 focus:outline-none"
             >
               {farmCrops.map(c => (
-                <option key={c.id} value={c.cropName}>{c.cropName} (Registered Crop)</option>
+                <option key={c.id} value={c.cropName}>{c.cropName} ({t.activeFarm || 'Registered Crop'})</option>
               ))}
               {CROPS_CATALOG.map(c => (
                 <option key={c.name} value={c.name}>{c.name}</option>
@@ -113,8 +113,8 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
           {/* Acreage */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="font-semibold text-slate-700">Cultivated Land (Acres)</span>
-              <span className="font-bold text-emerald-700 font-mono">{acreage} Acres</span>
+              <span className="font-semibold text-slate-700">{t.plantedArea || 'Cultivated Land'} ({t.acres || 'Acres'})</span>
+              <span className="font-bold text-emerald-700 font-mono">{acreage} {t.acres || 'Acres'}</span>
             </div>
             <input
               type="range"
@@ -130,7 +130,7 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
           {/* Fertilizer Adjustment */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="font-semibold text-slate-700">Fertilizer Regimen Modifier</span>
+              <span className="font-semibold text-slate-700">{t.fertilizerCost || 'Fertilizer Regimen Modifier'}</span>
               <span className="font-bold text-amber-700 font-mono">{fertilizerAdjPct > 0 ? `+${fertilizerAdjPct}` : fertilizerAdjPct}%</span>
             </div>
             <input
@@ -143,16 +143,16 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
               className="w-full accent-amber-600 cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-400">
-              <span>-30% (Low Input)</span>
-              <span>Baseline</span>
-              <span>+30% (Intensive)</span>
+              <span>-30% ({t.lowSeverity || 'Low Input'})</span>
+              <span>{t.optimal || 'Baseline'}</span>
+              <span>+30% ({t.highSeverity || 'Intensive'})</span>
             </div>
           </div>
 
           {/* Irrigation Cycles */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="font-semibold text-slate-700">Scheduled Irrigation Rounds</span>
+              <span className="font-semibold text-slate-700">{t.irrigationSchedule || 'Scheduled Irrigation Rounds'}</span>
               <span className="font-bold text-sky-700 font-mono">{irrigationCount} Cycles</span>
             </div>
             <input
@@ -168,7 +168,7 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
 
           {/* ML Model Selector */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700">Inference Architecture</label>
+            <label className="text-xs font-semibold text-slate-700">{t.modelZoo || 'Inference Architecture'}</label>
             <div className="grid grid-cols-3 gap-2">
               {(['XGBoost', 'RandomForest', 'DNN'] as const).map(m => (
                 <button
@@ -192,7 +192,7 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
             className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
           >
             <Sparkles className="w-4 h-4" />
-            {isPredicting ? 'Calculating...' : 'Run Yield & Profit Forecast'}
+            {isPredicting ? (t.loading || 'Calculating...') : (t.runSimulation || 'Run Yield & Profit Forecast')}
           </button>
         </div>
 
@@ -202,7 +202,7 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
             <div className="p-6 rounded-2xl bg-white border border-emerald-100 space-y-6 shadow-xs">
               <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Projection Output</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t.yieldPrediction || 'Projection Output'}</span>
                   <h3 className="text-xl font-black text-slate-900 mt-0.5">{currentResult.crop}</h3>
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
@@ -213,31 +213,31 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
               {/* Primary Output Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Expected Total Yield</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.expectedYield || 'Expected Total Yield'}</span>
                   <span className="text-lg font-black text-emerald-700 block font-display">{currentResult.expectedYieldTotal} Q</span>
-                  <span className="text-[10px] text-slate-500">Across {acreage} Acres</span>
+                  <span className="text-[10px] text-slate-500">{acreage} {t.acres || 'Acres'}</span>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Yield / Acre</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.projectedYield || 'Yield / Acre'}</span>
                   <span className="text-lg font-black text-slate-900 block font-display">{currentResult.yieldPerAcre} Q/Ac</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold">Target Range</span>
+                  <span className="text-[10px] text-emerald-700 font-semibold">{t.optimal || 'Target Range'}</span>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Estimated Revenue</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.projectedRevenue || 'Estimated Revenue'}</span>
                   <span className="text-lg font-black text-amber-700 block font-display">₹{(currentResult.estimatedRevenue).toLocaleString()}</span>
-                  <span className="text-[10px] text-slate-500">Market Rate</span>
+                  <span className="text-[10px] text-slate-500">{t.grossRevenue || 'Market Rate'}</span>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">Estimated Net Profit</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.projectedIncome || 'Estimated Net Profit'}</span>
                   <span className="text-lg font-black text-emerald-700 block font-display">₹{(currentResult.estimatedProfit).toLocaleString()}</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold">After Input Costs</span>
+                  <span className="text-[10px] text-emerald-700 font-semibold">{t.netProfitMargin || 'Net Margin'}</span>
                 </div>
               </div>
 
               {/* Key Influencing Factors */}
               {currentResult.keyFactors && currentResult.keyFactors.length > 0 && (
                 <div className="space-y-3">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Top Yield Drivers</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.topYieldDrivers || 'Top Yield Drivers'}</h4>
                   <div className="space-y-2">
                     {(currentResult.keyFactors || []).map((kf, i) => (
                       <div key={i} className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
@@ -262,9 +262,9 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
           ) : (
             <div className="p-12 text-center rounded-2xl bg-white border border-emerald-100 space-y-3 shadow-xs">
               <TrendingUp className="w-12 h-12 text-amber-500 mx-auto" />
-              <h3 className="text-base font-bold text-slate-900">No Forecast Calculated</h3>
+              <h3 className="text-base font-bold text-slate-900">{t.yieldPrediction || 'No Forecast Calculated'}</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium">
-                Configure your crop acreage, soil type, and input parameters on the left and tap "Run Yield & Profit Forecast".
+                {t.basedOnYield || 'Configure your crop acreage, soil type, and input parameters on the left and tap Run Yield Forecast.'}
               </p>
             </div>
           )}

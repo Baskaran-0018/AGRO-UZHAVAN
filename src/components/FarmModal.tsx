@@ -112,20 +112,20 @@ export const FarmModal: React.FC<FarmModalProps> = ({
             <Plus className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-100">{t.addFarm}</h2>
-            <p className="text-xs text-slate-400">Register a new micro-climate agricultural plot</p>
+            <h2 className="text-lg font-bold text-slate-100">{t.addFarm || 'Add Farm'}</h2>
+            <p className="text-xs text-slate-400">{t.registerNewPlot || 'Register a new micro-climate agricultural plot'}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Farm Name
+              {t.farmName || 'Farm Name'}
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. Sunrise Organic Fields"
+              placeholder={t.farmNamePlaceholder || 'e.g. Sunrise Organic Fields'}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
@@ -134,12 +134,12 @@ export const FarmModal: React.FC<FarmModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              {t.farmLocation} (Geocoded GPS)
+              {t.farmLocation} (GPS)
             </label>
             <div className="flex gap-2 mb-1.5">
               <input
                 type="text"
-                placeholder="Search city, district, or village..."
+                placeholder={t.searchLocationPlaceholder || 'Search city, district, or village...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSearch(); } }}
@@ -152,7 +152,7 @@ export const FarmModal: React.FC<FarmModalProps> = ({
                 className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <Search className="w-3.5 h-3.5" />
-                {isSearching ? 'Searching...' : 'Search'}
+                {isSearching ? (t.searching || 'Searching...') : (t.search || 'Search')}
               </button>
             </div>
 
@@ -198,7 +198,7 @@ export const FarmModal: React.FC<FarmModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Farm Size ({t.acres})
+                {t.farmSize || 'Farm Size'} ({t.acres})
               </label>
               <input
                 type="number"
@@ -214,18 +214,18 @@ export const FarmModal: React.FC<FarmModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Irrigation Infrastructure
+              {t.irrigationInfrastructure || 'Irrigation Infrastructure'}
             </label>
             <select
               value={irrigationType}
               onChange={(e) => setIrrigationType(e.target.value as any)}
               className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:border-emerald-500 outline-none cursor-pointer"
             >
-              <option value="Drip">Drip Fertigation (Micro-Irrigation - High Efficiency)</option>
-              <option value="Sprinkler">Overhead Sprinkler System</option>
-              <option value="Canal/Flood">Canal / Surface Flood Irrigation</option>
-              <option value="Pivot">Center Pivot System</option>
-              <option value="Rainfed">Rainfed (Dryland Agriculture)</option>
+              <option value="Drip">{t.irrigationDrip || 'Drip Fertigation (Micro-Irrigation)'}</option>
+              <option value="Sprinkler">{t.irrigationSprinkler || 'Overhead Sprinkler System'}</option>
+              <option value="Canal/Flood">{t.irrigationFlood || 'Canal / Surface Flood Irrigation'}</option>
+              <option value="Pivot">{t.irrigationPivot || 'Center Pivot System'}</option>
+              <option value="Rainfed">{t.irrigationRainfed || 'Rainfed (Dryland Agriculture)'}</option>
             </select>
           </div>
 
@@ -235,14 +235,14 @@ export const FarmModal: React.FC<FarmModalProps> = ({
               onClick={onClose}
               className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
             >
-              Cancel
+              {t.cancel || 'Cancel'}
             </button>
             <button
               type="submit"
               className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-1.5"
             >
               <Check className="w-3.5 h-3.5" />
-              Save Farm Record
+              {t.saveFarmRecord || 'Save Farm Record'}
             </button>
           </div>
         </form>

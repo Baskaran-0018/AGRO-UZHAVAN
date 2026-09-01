@@ -1,7 +1,29 @@
 import { WeatherCondition, WeatherForecastBundle } from '../types/agro';
 import { generateWeatherInsight } from './geminiService';
 
-export async function fetchLiveWeatherData(lat: number, lon: number, locationName: string, lang = 'English'): Promise<WeatherForecastBundle> {
+export async function fetchLiveWeatherData(
+  lat: number,
+  lon: number,
+  locationName: string,
+  lang = 'English'
+): Promise<WeatherForecastBundle> {
+  const openWeatherKey =
+    process.env.OPENWEATHER_API_KEY ||
+    process.env.WEATHER_API_KEY ||
+    process.env.VITE_OPENWEATHER_API_KEY ||
+    '';
+
+  // 1. If OpenWeatherMap key is available, attempt OpenWeatherMap primary fetch
+  if (openWeatherKey) {
+    try {
+      const owResult = await fetchFromOpenWeatherMap(lat, lon, locationName, openWeatherKey, lang);
+      if (owResult) return owResult;
+    } catch (owErr) {
+      console.warn('[OpenWeatherMap Fetch Error, trying fallback]:', owErr);
+    }
+  }
+
+  // 2. Open-Meteo high-resolution fallback
   try {
     const url = new URL('https://api.open-meteo.com/v1/forecast');
     url.searchParams.set('latitude', lat.toString());
@@ -22,7 +44,7 @@ export async function fetchLiveWeatherData(lat: number, lon: number, locationNam
     url.searchParams.set('forecast_days', '14');
 
     const res = await fetch(url.toString(), { signal: AbortSignal.timeout(6000) });
-    if (!res.ok) throw new Error(`Weather API returned status ${res.status}`);
+    if (!res.ok) throw new Error(`Open-Meteo returned status ${res.status}`);
     const data = await res.json();
 
     const current: WeatherCondition = {
@@ -73,7 +95,7 @@ export async function fetchLiveWeatherData(lat: number, lon: number, locationNam
       const rainSum = data.daily.precipitation_sum[i] || 0;
       const windMax = data.daily.wind_speed_10m_max[i] || 10;
       const rainProb = data.daily.precipitation_probability_max[i] || 0;
-      
+
       let sprayingIndex: 'Optimal' | 'Caution' | 'Unfavorable' = 'Optimal';
       if (rainProb > 40 || rainSum > 5 || windMax > 20) {
         sprayingIndex = 'Unfavorable';
@@ -98,7 +120,10 @@ export async function fetchLiveWeatherData(lat: number, lon: number, locationNam
       temp: hourlyList[1]?.temp || current.temp,
       rainProb: hourlyList[1]?.rainProbabilityPct || 10,
       rainMm: hourlyList[1]?.rainfallMm || 0,
-      summary: (hourlyList[1]?.rainProbabilityPct || 0) > 40 ? 'Light intermittent showers likely' : 'Clear and stable conditions',
+      summary:
+        (hourlyList[1]?.rainProbabilityPct || 0) > 40
+          ? 'Light intermittent showers likely'
+          : 'Clear and stable conditions',
     };
 
     const tomorrow = {
@@ -107,16 +132,42 @@ export async function fetchLiveWeatherData(lat: number, lon: number, locationNam
       rainProb: dailyList[1]?.rainProb || 15,
       rainSumMm: dailyList[1]?.rainSumMm || 0,
       humidity: Math.round(current.humidity * 0.95),
-      summary: (dailyList[1]?.rainSumMm || 0) > 10 ? 'Heavy rainfall expected. Secure farm drainage.' : 'Good sunny weather for field operations.',
+      summary:
+        (dailyList[1]?.rainSumMm || 0) > 10
+          ? 'Heavy rainfall expected. Secure farm drainage.'
+          : 'Good sunny weather for field operations.',
     };
 
     const monthlyTrends = [
-      { month: 'Current Month', expectedAvgTemp: Math.round(current.temp), historicAvgTemp: Math.round(current.temp - 0.5), tempAnomaly: 0.5, expectedRainfallMm: 65, historicRainfallMm: 60, droughtRisk: 'Low' as const },
-      { month: 'Next Month', expectedAvgTemp: Math.round(current.temp + 2), historicAvgTemp: Math.round(current.temp + 1.8), tempAnomaly: 0.2, expectedRainfallMm: 80, historicRainfallMm: 75, droughtRisk: 'Low' as const },
-      { month: 'Following Month', expectedAvgTemp: Math.round(current.temp + 4), historicAvgTemp: Math.round(current.temp + 3.2), tempAnomaly: 0.8, expectedRainfallMm: 110, historicRainfallMm: 95, droughtRisk: 'Moderate' as const },
+      {
+        month: 'Current Month',
+        expectedAvgTemp: Math.round(current.temp),
+        historicAvgTemp: Math.round(current.temp - 0.5),
+        tempAnomaly: 0.5,
+        expectedRainfallMm: 65,
+        historicRainfallMm: 60,
+        droughtRisk: 'Low' as const,
+      },
+      {
+        month: 'Next Month',
+        expectedAvgTemp: Math.round(current.temp + 2),
+        historicAvgTemp: Math.round(current.temp + 1.8),
+        tempAnomaly: 0.2,
+        expectedRainfallMm: 80,
+        historicRainfallMm: 75,
+        droughtRisk: 'Low' as const,
+      },
+      {
+        month: 'Following Month',
+        expectedAvgTemp: Math.round(current.temp + 4),
+        historicAvgTemp: Math.round(current.temp + 3.2),
+        tempAnomaly: 0.8,
+        expectedRainfallMm: 110,
+        historicRainfallMm: 95,
+        droughtRisk: 'Moderate' as const,
+      },
     ];
 
-    // Call Gemini for high-level agronomic meteorological advisory
     const aiInsight = await generateWeatherInsight({ current, daily: dailyList.slice(0, 7) }, locationName, lang);
 
     return {
@@ -139,6 +190,211 @@ export async function fetchLiveWeatherData(lat: number, lon: number, locationNam
     console.warn('Live weather fetch failed, returning synthesized high-accuracy data:', err);
     return getSyntheticWeatherData(lat, lon, locationName, lang);
   }
+}
+
+/**
+ * Fetches current & forecast weather directly from OpenWeatherMap using API Key
+ */
+async function fetchFromOpenWeatherMap(
+  lat: number,
+  lon: number,
+  locationName: string,
+  apiKey: string,
+  lang: string
+): Promise<WeatherForecastBundle> {
+  const [currentRes, forecastRes] = await Promise.all([
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
+      { signal: AbortSignal.timeout(6000) }
+    ),
+    fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
+      { signal: AbortSignal.timeout(6000) }
+    ),
+  ]);
+
+  if (!currentRes.ok || !forecastRes.ok) {
+    throw new Error(`OpenWeather API returned ${currentRes.status} / ${forecastRes.status}`);
+  }
+
+  const curData = await currentRes.json();
+  const fcastData = await forecastRes.json();
+
+  const current: WeatherCondition = {
+    timestamp: new Date((curData.dt || Date.now() / 1000) * 1000).toISOString(),
+    temp: curData.main?.temp ?? 28,
+    feelsLike: curData.main?.feels_like ?? curData.main?.temp ?? 28,
+    humidity: curData.main?.humidity ?? 55,
+    rainfallMm: curData.rain?.['1h'] || curData.rain?.['3h'] || 0,
+    windSpeedKmh: Math.round(((curData.wind?.speed ?? 3) * 3.6) * 10) / 10,
+    windDirectionDeg: curData.wind?.deg || 0,
+    pressureHpa: curData.main?.pressure || 1012,
+    solarRadiationWm2: Math.max(100, Math.round((100 - (curData.clouds?.all || 10)) * 8.5)),
+    cloudCoverPct: curData.clouds?.all || 10,
+    uvIndex: 6.0,
+    soilTemp: Math.round((curData.main?.temp ?? 28) - 1.5),
+    soilMoisture: 0.30,
+    weatherCode: mapOpenWeatherIdToCode(curData.weather?.[0]?.id),
+    weatherDescription: capitalizeFirst(curData.weather?.[0]?.description || 'Clear Sky'),
+    rainProbabilityPct: fcastData.list?.[0]?.pop ? Math.round(fcastData.list[0].pop * 100) : 10,
+  };
+
+  const hourlyList: WeatherCondition[] = (fcastData.list || []).map((item: any) => ({
+    timestamp: new Date(item.dt * 1000).toISOString(),
+    temp: item.main?.temp ?? current.temp,
+    feelsLike: item.main?.feels_like ?? current.feelsLike,
+    humidity: item.main?.humidity ?? current.humidity,
+    rainfallMm: item.rain?.['3h'] ? Math.round((item.rain['3h'] / 3) * 10) / 10 : 0,
+    windSpeedKmh: Math.round(((item.wind?.speed ?? 3) * 3.6) * 10) / 10,
+    windDirectionDeg: item.wind?.deg || 0,
+    pressureHpa: item.main?.pressure || 1012,
+    solarRadiationWm2: Math.max(0, Math.round((100 - (item.clouds?.all || 0)) * 7.5)),
+    cloudCoverPct: item.clouds?.all || 0,
+    uvIndex: 4.5,
+    soilTemp: Math.round((item.main?.temp ?? 28) - 1.5),
+    soilMoisture: 0.28,
+    weatherCode: mapOpenWeatherIdToCode(item.weather?.[0]?.id),
+    weatherDescription: capitalizeFirst(item.weather?.[0]?.description || 'Clear'),
+    rainProbabilityPct: Math.round((item.pop || 0) * 100),
+  }));
+
+  // Aggregate daily forecast from 3-hour chunks
+  const dailyMap = new Map<string, any>();
+  for (const item of fcastData.list || []) {
+    const dateStr = item.dt_txt ? item.dt_txt.slice(0, 10) : new Date(item.dt * 1000).toISOString().slice(0, 10);
+    if (!dailyMap.has(dateStr)) {
+      dailyMap.set(dateStr, {
+        date: dateStr,
+        temps: [],
+        rains: 0,
+        maxWind: 0,
+        pops: [],
+        code: mapOpenWeatherIdToCode(item.weather?.[0]?.id),
+      });
+    }
+    const bucket = dailyMap.get(dateStr);
+    bucket.temps.push(item.main?.temp);
+    if (item.rain?.['3h']) bucket.rains += item.rain['3h'];
+    const windKmh = (item.wind?.speed || 0) * 3.6;
+    if (windKmh > bucket.maxWind) bucket.maxWind = windKmh;
+    bucket.pops.push(item.pop || 0);
+  }
+
+  const dailyList = Array.from(dailyMap.values()).map((d: any) => {
+    const maxT = Math.max(...d.temps);
+    const minT = Math.min(...d.temps);
+    const maxPop = Math.round(Math.max(...d.pops, 0) * 100);
+    let sprayingIndex: 'Optimal' | 'Caution' | 'Unfavorable' = 'Optimal';
+    if (maxPop > 40 || d.rains > 5 || d.maxWind > 20) {
+      sprayingIndex = 'Unfavorable';
+    } else if (maxPop > 20 || d.maxWind > 14) {
+      sprayingIndex = 'Caution';
+    }
+    return {
+      date: d.date,
+      tempMax: Math.round(maxT * 10) / 10,
+      tempMin: Math.round(minT * 10) / 10,
+      rainProb: maxPop,
+      rainSumMm: Math.round(d.rains * 10) / 10,
+      weatherCode: d.code,
+      windMaxKmh: Math.round(d.maxWind * 10) / 10,
+      solarRadiation: 20.5,
+      sprayingIndex,
+    };
+  });
+
+  const nextHour = {
+    temp: hourlyList[0]?.temp || current.temp,
+    rainProb: hourlyList[0]?.rainProbabilityPct || 10,
+    rainMm: hourlyList[0]?.rainfallMm || 0,
+    summary:
+      (hourlyList[0]?.rainProbabilityPct || 0) > 40
+        ? 'Showers likely in the next few hours'
+        : 'Stable, clear weather window for farm activity',
+  };
+
+  const tomorrow = {
+    tempMax: dailyList[1]?.tempMax || current.temp + 2,
+    tempMin: dailyList[1]?.tempMin || current.temp - 4,
+    rainProb: dailyList[1]?.rainProb || 15,
+    rainSumMm: dailyList[1]?.rainSumMm || 0,
+    humidity: Math.round(current.humidity * 0.95),
+    summary:
+      (dailyList[1]?.rainSumMm || 0) > 10
+        ? 'Rain anticipated tomorrow. Ensure field drainage channels are clear.'
+        : 'Good sunny weather expected tomorrow. Favorable for irrigation & field work.',
+  };
+
+  const monthlyTrends = [
+    {
+      month: 'Current Month',
+      expectedAvgTemp: Math.round(current.temp),
+      historicAvgTemp: Math.round(current.temp - 0.5),
+      tempAnomaly: 0.5,
+      expectedRainfallMm: 65,
+      historicRainfallMm: 60,
+      droughtRisk: 'Low' as const,
+    },
+    {
+      month: 'Next Month',
+      expectedAvgTemp: Math.round(current.temp + 2),
+      historicAvgTemp: Math.round(current.temp + 1.8),
+      tempAnomaly: 0.2,
+      expectedRainfallMm: 80,
+      historicRainfallMm: 75,
+      droughtRisk: 'Low' as const,
+    },
+    {
+      month: 'Following Month',
+      expectedAvgTemp: Math.round(current.temp + 4),
+      historicAvgTemp: Math.round(current.temp + 3.2),
+      tempAnomaly: 0.8,
+      expectedRainfallMm: 110,
+      historicRainfallMm: 95,
+      droughtRisk: 'Moderate' as const,
+    },
+  ];
+
+  const aiInsight = await generateWeatherInsight(
+    { current, daily: dailyList.slice(0, 7), provider: 'OpenWeatherMap' },
+    locationName || curData.name || 'Farm',
+    lang
+  );
+
+  return {
+    current,
+    nextHour,
+    tomorrow,
+    hourly: hourlyList,
+    daily: dailyList,
+    monthlyTrends,
+    alerts: aiInsight.alerts || [],
+    aiAnalysis: {
+      headline: aiInsight.headline,
+      summary: aiInsight.summary,
+      fieldAdvisory: aiInsight.fieldAdvice,
+      sprayingConditions: aiInsight.sprayingConditions,
+      irrigationRecommendation: aiInsight.irrigationRecommendation,
+    },
+  };
+}
+
+function mapOpenWeatherIdToCode(owId: number): number {
+  if (!owId) return 0;
+  if (owId >= 200 && owId < 300) return 95; // Thunderstorm
+  if (owId >= 300 && owId < 400) return 51; // Drizzle
+  if (owId >= 500 && owId < 600) return 61; // Rain
+  if (owId >= 600 && owId < 700) return 71; // Snow
+  if (owId >= 700 && owId < 800) return 45; // Fog / Mist
+  if (owId === 800) return 0; // Clear
+  if (owId === 801 || owId === 802) return 1; // Few / scattered clouds
+  if (owId === 803 || owId === 804) return 3; // Overcast
+  return 1;
+}
+
+function capitalizeFirst(str: string): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function getSyntheticWeatherData(lat: number, lon: number, locationName: string, lang: string): WeatherForecastBundle {

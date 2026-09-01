@@ -78,8 +78,8 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
             <Bell className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-100">{t.alerts} & Multi-Channel Advisory</h2>
-            <p className="text-xs text-slate-400">SMS, Push Notifications & Email Broadcast Telemetry</p>
+            <h2 className="text-lg font-bold text-slate-100">{t.alertsTitle || (t.alerts + ' & Multi-Channel Advisory')}</h2>
+            <p className="text-xs text-slate-400">{t.smsEmailBroadcast || 'SMS, Push Notifications & Email Broadcast Telemetry'}</p>
           </div>
         </div>
 
@@ -88,9 +88,9 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
           <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
             <span className="flex items-center gap-1.5">
               <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
-              Farmer SMS & WhatsApp Alert Relay
+              {t.farmerRelay || 'Farmer SMS & WhatsApp Alert Relay'}
             </span>
-            <span className="text-[11px] text-emerald-400 font-mono">Carrier Gateway Active</span>
+            <span className="text-[11px] text-emerald-400 font-mono">{t.carrierGatewayActive || 'Carrier Gateway Active'}</span>
           </div>
           <div className="grid sm:grid-cols-2 gap-2">
             <input
@@ -111,7 +111,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
           {simulatedSent && (
             <div className="p-2 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-[11px] text-emerald-300 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-              <span>{simulatedSent}</span>
+              <span>{t.alertSentSuccess || simulatedSent}</span>
             </div>
           )}
         </div>
@@ -159,7 +159,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                     className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
                   >
                     <Send className="w-3 h-3" />
-                    Test SMS/Push
+                    {t.sendTestAlert || 'Test SMS/Push'}
                   </button>
                 </div>
               </div>
@@ -170,9 +170,9 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
         <div className="flex justify-end pt-4 border-t border-slate-800 mt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
+            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold cursor-pointer"
           >
-            Close
+            {t.close || 'Close'}
           </button>
         </div>
       </div>

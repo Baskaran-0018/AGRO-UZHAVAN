@@ -183,11 +183,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           {!isInstalled && (
             <button
               onClick={promptInstall}
-              title="Install AGRO AI App"
+              title={t.installMobileApp || 'Install AGRO AI App'}
               className="hidden xs:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 text-xs font-extrabold shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-emerald-700 animate-bounce" />
-              <span className="hidden sm:inline">Install</span>
+              <span className="hidden sm:inline">{t.install || 'Install'}</span>
             </button>
           )}
 
@@ -214,7 +214,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     {user.name}
                   </span>
                   <span className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider mt-0.5">
-                    {user.isGuest ? 'Guest Pass' : user.provider === 'phone' ? 'Mobile OTP' : user.provider}
+                    {user.isGuest ? (t.guestPass || 'Guest Pass') : user.provider === 'phone' ? (t.mobileOtp || 'Mobile OTP') : user.provider}
                   </span>
                 </div>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
@@ -233,9 +233,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                     <div className="min-w-0 flex-1">
                       <h4 className="text-xs font-extrabold text-slate-900 truncate">{user.name}</h4>
-                      <p className="text-[11px] text-slate-500 truncate">{user.phone || user.email || (user.isGuest ? 'Guest Farmer' : 'Verified User')}</p>
+                      <p className="text-[11px] text-slate-500 truncate">{user.phone || user.email || (user.isGuest ? (t.guestFarmer || 'Guest Farmer') : (t.verifiedUser || 'Verified User'))}</p>
                       <span className="inline-block mt-0.5 text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 uppercase">
-                        {user.role || (user.isGuest ? 'Guest Mode' : user.provider === 'phone' ? 'Phone Verified' : user.provider)}
+                        {user.role || (user.isGuest ? (t.guestMode || 'Guest Mode') : user.provider === 'phone' ? (t.phoneVerified || 'Phone Verified') : user.provider)}
                       </span>
                     </div>
                   </div>
@@ -249,7 +249,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>Link Google / Apple Account</span>
+                      <span>{t.linkGoogleApple || 'Link Google / Apple Account'}</span>
                     </button>
                   )}
 
@@ -263,7 +263,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className="w-full flex items-center gap-2.5 p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-50 font-medium transition-colors text-left cursor-pointer"
                       >
                         <UserIcon className="w-4 h-4 text-slate-400" />
-                        <span>Switch Account</span>
+                        <span>{t.switchToLogin || 'Switch Account'}</span>
                       </button>
                     )}
 
@@ -276,7 +276,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className="w-full flex items-center gap-2.5 p-2 rounded-lg text-rose-600 hover:bg-rose-50 font-bold transition-colors text-left cursor-pointer"
                       >
                         <LogOut className="w-4 h-4 text-rose-500" />
-                        <span>Sign Out</span>
+                        <span>{t.logout || 'Log Out'}</span>
                       </button>
                     )}
                   </div>
@@ -289,7 +289,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 transition-all cursor-pointer"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>Sign In</span>
+              <span>{t.login || 'Sign In'}</span>
             </button>
           )}
         </div>

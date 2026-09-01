@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agro Uzhavan - Live Interactive Login</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    :root {
+      --card-bg: rgba(18, 26, 23, 0.72);
+      --card-border: rgba(255, 255, 255, 0.18);
+      --text-main: #f0f4f1;
+      --text-dim: #a3b8ab;
+      --accent: #52b788;
+      --accent-glow: rgba(82, 183, 136, 0.45);
+      --error-color: #ff6b6b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Fullscreen Container & Live Background Setup */
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #0d1512;
+    }
+
+    .bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(10, 20, 16, 0.82) 0%, rgba(0, 0, 0, 0.6) 100%);
+      z-index: 2;
+    }
+
+    .fullscreen-wrapper {
+      position: relative;
+      z-index: 3;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Glassmorphism Card Design */
+    .login-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 32px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.65), 0 0 30px rgba(82, 183, 136, 0.15);
+      text-align: center;
+      position: relative;
+      animation: fadeInCard 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInCard {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Brand Logo / Emblem */
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid rgba(82, 183, 136, 0.3);
+      border-radius: 9999px;
+      margin-bottom: 12px;
+      color: #95d5b2;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Plant Animation Container */
+    .plant-container {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 10px;
+    }
+
+    .plant-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .stem, .leaf-left, .leaf-right, .flower {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stem {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+    }
+
+    .leaf-left, .leaf-right {
+      transform: scale(0);
+      transform-origin: center;
+    }
+
+    .flower {
+      transform: scale(0);
+      transform-origin: 50px 30px;
+    }
+
+    .stage-1 .stem { stroke-dashoffset: 40; }
+    .stage-2 .stem { stroke-dashoffset: 20; }
+    .stage-2 .leaf-left { transform: scale(1); }
+    .stage-3 .stem { stroke-dashoffset: 0; }
+    .stage-3 .leaf-left, .stage-3 .leaf-right { transform: scale(1); }
+    .stage-4 .stem { stroke-dashoffset: 0; }
+    .stage-4 .leaf-left, .stage-4 .leaf-right { transform: scale(1.1); }
+    .stage-4 .flower { transform: scale(1); }
+
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .card-subtitle {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    /* Tab Switcher */
+    .auth-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 9px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: rgba(82, 183, 136, 0.25);
+      border: 1px solid rgba(82, 183, 136, 0.4);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .auth-section {
+      display: none;
+    }
+
+    .auth-section.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .phone-input-wrap {
+      display: flex;
+      gap: 8px;
+    }
+
+    .country-code-select {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      padding: 0 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .country-code-select option {
+      background: #121a17;
+      color: var(--text-main);
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    .btn-send-otp {
+      padding: 0 16px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .btn-send-otp:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: var(--accent);
+    }
+
+    .btn-send-otp:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #52b788 0%, #40916c 100%);
+      border: none;
+      border-radius: 12px;
+      color: #0b1411;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 6px;
+      box-shadow: 0 4px 15px rgba(82, 183, 136, 0.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 18px 0;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--card-border);
+    }
+
+    .divider span {
+      padding: 0 10px;
+    }
+
+    .social-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn-social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-social:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-guest {
+      width: 100%;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed var(--card-border);
+      border-radius: 12px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-guest:hover {
+      color: var(--text-main);
+      border-color: var(--accent);
+      background: rgba(82, 183, 136, 0.1);
+    }
+
+    .error-msg {
+      color: var(--error-color);
+      font-size: 0.75rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    /* Simulation Toast */
+    .toast-sms {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 26, 23, 0.95);
+      border: 1px solid var(--accent);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-radius: 14px;
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.85rem;
+      z-index: 100;
+      display: none;
+      animation: fadeInDown 0.3s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translate(-50%, -15px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live Background Video -->
+  <video class="bg-video" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80">
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-green-field-41546-large.mp4" type="video/mp4">
+  </video>
+  
+  <div class="bg-overlay"></div>
+
+  <div id="toastSms" class="toast-sms"></div>
+
+  <div class="fullscreen-wrapper">
+    <div class="login-card">
+      <div class="brand-badge">
+        <span>🌱 AGRO UZHAVAN PORTAL</span>
+      </div>
+
+      <!-- Animated Growing Plant SVG -->
+      <div class="plant-container" id="plantContainer">
+        <svg class="plant-svg" viewBox="0 0 100 100" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 20 90 Q 50 82 80 90" stroke="#745240" stroke-width="5" />
+          <path class="stem" d="M 50 87 Q 48 60 50 30" stroke="#52b788" stroke-width="3.5" />
+          <path class="leaf-left" d="M 49 65 C 30 60 25 45 49 55" fill="#52b788" stroke="#40916c" stroke-width="1" />
+          <path class="leaf-right" d="M 51 50 C 70 45 75 30 51 40" fill="#52b788" stroke="#40916c" stroke-width="1" />
+          <g class="flower">
+            <circle cx="50" cy="30" r="6" fill="#f4a261" />
+            <circle cx="50" cy="23" r="3.5" fill="#e9c46a" />
+            <circle cx="57" cy="30" r="3.5" fill="#e9c46a" />
+            <circle cx="50" cy="37" r="3.5" fill="#e9c46a" />
+            <circle cx="43" cy="30" r="3.5" fill="#e9c46a" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="card-title">Agro Uzhavan</div>
+      <div class="card-subtitle">Intelligent Farming & Crop Management</div>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="tab-btn active" id="tabMobile" role="tab" aria-selected="true" onclick="switchAuthMode('mobile')">Mobile OTP</button>
+        <button class="tab-btn" id="tabPassword" role="tab" aria-selected="false" onclick="switchAuthMode('password')">Password</button>
+      </div>
+
+      <form id="authForm" onsubmit="handleFormSubmit(event)">
+        <div class="auth-section active" id="sectionMobile">
+          <div class="input-group">
+            <label for="phoneNumber">Mobile Number</label>
+            <div class="phone-input-wrap">
+              <select class="country-code-select" id="countryCode">
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+61">🇦🇺 +61</option>
+              </select>
+              <input type="tel" id="phoneNumber" placeholder="9876543210" autocomplete="tel">
+              <button type="button" class="btn-send-otp" id="btnSendOtp" onclick="handleSendOTP()">Get OTP</button>
+            </div>
+            <span class="error-msg" id="phoneError">Please enter a valid 10-digit mobile number.</span>
+          </div>
+          <div class="input-group">
+            <label for="otpCode">OTP Code</label>
+            <input type="text" id="otpCode" placeholder="Enter 6-digit code" maxlength="6" pattern="\d{6}" autocomplete="one-time-code">
+            <span class="error-msg" id="otpError">Enter a valid 6-digit code.</span>
+          </div>
+          <button type="submit" class="btn-primary">Verify &amp; Enter Portal</button>
+        </div>
+
+        <div class="auth-section" id="sectionPassword">
+          <div class="input-group">
+            <label for="userIdInput">User ID or Email</label>
+            <input type="text" id="userIdInput" placeholder="farmer@agro-uzhavan.com" autocomplete="username">
+          </div>
+          <div class="input-group">
+            <label for="passwordInput">Password</label>
+            <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn-primary">Sign In</button>
+        </div>
+      </form>
+
+      <div class="divider">
+        <span>OR CONTINUE WITH</span>
+      </div>
+
+      <div class="social-group">
+        <button type="button" class="btn-social" onclick="handleOAuth('Google')">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.1 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12.5s.7 2.8 1.9 5.2l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.1-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
+          Google
+        </button>
+        
+        <button type="button" class="btn-social" onclick="handleOAuth('Apple')">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.67-.82 1.13-1.96.99-3.1-.98.04-2.17.66-2.87 1.48-.62.72-1.17 1.88-.99 3.01 1.1.09 2.21-.56 2.87-1.39z"/></svg>
+          Apple
+        </button>
+      </div>
+
+      <button type="button" class="btn-guest" onclick="handleGuestLogin()">Continue as Guest Farmer →</button>
+
+      <div class="switch-link" style="margin-top: 14px; font-size: 0.8rem; color: var(--text-dim);">
+        Don't have an account? <a href="/signup.html" style="color: var(--accent); font-weight: 700; text-decoration: none;">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const plantContainer = document.getElementById('plantContainer');
+    const passwordInput = document.getElementById('passwordInput');
+    const phoneInput = document.getElementById('phoneNumber');
+    const otpInput = document.getElementById('otpCode');
+    const phoneError = document.getElementById('phoneError');
+    const otpError = document.getElementById('otpError');
+    const btnSendOtp = document.getElementById('btnSendOtp');
+    const toastSms = document.getElementById('toastSms');
+
+    let activeMode = 'mobile';
+    let otpCountdownTimer = null;
+    let currentGeneratedOtp = '749201';
+
+    function showToast(msg) {
+      if (!toastSms) return;
+      toastSms.innerHTML = msg;
+      toastSms.style.display = 'block';
+      setTimeout(() => {
+        toastSms.style.display = 'none';
+      }, 5000);
+    }
+
+    function switchAuthMode(mode) {
+      activeMode = mode;
+      
+      document.getElementById('tabMobile').classList.toggle('active', mode === 'mobile');
+      document.getElementById('tabMobile').setAttribute('aria-selected', mode === 'mobile');
+      document.getElementById('tabPassword').classList.toggle('active', mode === 'password');
+      document.getElementById('tabPassword').setAttribute('aria-selected', mode === 'password');
+      
+      document.getElementById('sectionMobile').classList.toggle('active', mode === 'mobile');
+      document.getElementById('sectionPassword').classList.toggle('active', mode === 'password');
+
+      hideErrors();
+      resetPlant();
+    }
+
+    function resetPlant() {
+      if (plantContainer) {
+        plantContainer.classList.remove('stage-1', 'stage-2', 'stage-3', 'stage-4');
+      }
+    }
+
+    function hideErrors() {
+      if (phoneError) phoneError.style.display = 'none';
+      if (otpError) otpError.style.display = 'none';
+    }
+
+    if (passwordInput) {
+      passwordInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        const len = val.length;
+        const isComplex = /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val);
+
+        resetPlant();
+
+        if (len > 0 && len < 4) plantContainer.classList.add('stage-1');
+        else if (len >= 4 && len < 8) plantContainer.classList.add('stage-2');
+        else if (len >= 8 && !isComplex) plantContainer.classList.add('stage-3');
+        else if (len >= 8 && isComplex) plantContainer.classList.add('stage-4');
+      });
+    }
+
+    if (phoneInput) {
+      phoneInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        const cleanLen = e.target.value.length;
+
+        if (activeMode === 'mobile') {
+          if (cleanLen >= 10) {
+            plantContainer.classList.add('stage-1');
+            phoneError.style.display = 'none';
+          } else {
+            resetPlant();
+          }
+        }
+      });
+    }
+
+    if (otpInput) {
+      otpInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        if (e.target.value.length === 6) {
+          plantContainer.classList.add('stage-4');
+          otpError.style.display = 'none';
+        }
+      });
+    }
+
+    function handleSendOTP() {
+      const rawNum = phoneInput ? phoneInput.value.trim() : '';
+      if (rawNum.length < 10) {
+        if (phoneError) phoneError.style.display = 'block';
+        return;
+      }
+
+      phoneError.style.display = 'none';
+      plantContainer.classList.add('stage-2');
+
+      currentGeneratedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      showToast(`📲 <strong>SMS Sent:</strong> Your Agro Uzhavan OTP is <span style="color:#52b788;font-weight:bold;letter-spacing:2px;">${currentGeneratedOtp}</span>`);
+      if (otpInput) otpInput.value = currentGeneratedOtp;
+      plantContainer.classList.add('stage-4');
+
+      let secondsLeft = 30;
+      btnSendOtp.disabled = true;
+      btnSendOtp.innerText = `${secondsLeft}s`;
+
+      if (otpCountdownTimer) clearInterval(otpCountdownTimer);
+      otpCountdownTimer = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+          clearInterval(otpCountdownTimer);
+          btnSendOtp.disabled = false;
+          btnSendOtp.innerText = 'Resend OTP';
+        } else {
+          btnSendOtp.innerText = `${secondsLeft}s`;
+        }
+      }, 1000);
+    }
+
+    function saveUserAndRedirect(user) {
+      try {
+        localStorage.setItem('agro_ai_user_profile_v2', JSON.stringify(user));
+      } catch (err) {
+        console.error(err);
+      }
+      window.location.href = '/';
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      if (activeMode === 'mobile') {
+        const rawNum = phoneInput.value.trim();
+        const otpVal = otpInput.value.trim();
+
+        if (rawNum.length < 10) {
+          phoneError.style.display = 'block';
+          return;
+        }
+        if (otpVal.length !== 6) {
+          otpError.style.display = 'block';
+          return;
+        }
+
+        const country = document.getElementById('countryCode').value;
+        const user = {
+          id: 'user-phone-' + Date.now(),
+          name: `Farmer (${rawNum.slice(-4)})`,
+          phone: `${country} ${rawNum}`,
+          provider: 'phone',
+          isGuest: false,
+          role: 'Farmer',
+          location: country === '+91' ? 'Tamil Nadu, India' : 'Agro Region',
+          createdAt: new Date().toISOString(),
+          lastLoginAt: new Date().toISOString(),
+          farmCount: 1
+        };
+        saveUserAndRedirect(user);
+      } else {
+        const userId = document.getElementById('userIdInput').value || 'Farmer';
+        const user = {
+          id: 'user-email-' + Date.now(),
+          name: userId.split('@')[0] || 'Farmer User',
+          email: userId.includes('@') ? userId : `${userId}@agro-uzhavan.com`,
+          provider: 'email',
+          isGuest: false,
+          role: 'Farmer',
+          location: 'Primary Farm',
+          createdAt: new Date().toISOString(),
+          lastLoginAt: new Date().toISOString(),
+          farmCount: 1
+        };
+        saveUserAndRedirect(user);
+      }
+    }
+
+    function handleOAuth(provider) {
+      const user = {
+        id: `user-${provider.toLowerCase()}-` + Date.now(),
+        name: `${provider} Farmer`,
+        email: `farmer@${provider.toLowerCase()}.com`,
+        provider: provider.toLowerCase(),
+        isGuest: false,
+        role: 'Farmer',
+        location: 'Verified Account',
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        farmCount: 1
+      };
+      saveUserAndRedirect(user);
+    }
+
+    function handleGuestLogin() {
+      const guestNumber = Math.floor(1000 + Math.random() * 9000);
+      const user = {
+        id: 'user-guest-' + Date.now(),
+        name: `Guest Farmer #${guestNumber}`,
+        provider: 'guest',
+        isGuest: true,
+        role: 'Farmer',
+        location: 'Tamil Nadu, India',
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        farmCount: 1
+      };
+      saveUserAndRedirect(user);
+    }
+  </script>
+</body>
+</html>

@@ -67,106 +67,106 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">
-            Agronomic Dossier & Intelligence Exports
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 uppercase">
+            {t.agronomyDossier || 'Agronomic Dossier & Intelligence Exports'}
           </span>
-          <h1 className="text-2xl font-extrabold text-slate-100 mt-1">{t.reports} & Audit Generator</h1>
-          <p className="text-xs text-slate-400">Generate high-resolution PDF agronomy audits, bank loan dossiers, and CSV sensor logs</p>
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1">{t.reports}</h1>
+          <p className="text-xs text-slate-500">{t.generateHighRes || 'Generate high-resolution PDF agronomy audits, bank loan dossiers, and CSV sensor logs'}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleExportCSV}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 flex items-center gap-1.5 cursor-pointer transition-all"
+            className="px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-all"
           >
-            <Download className="w-4 h-4 text-emerald-400" />
-            {downloadSuccess ? 'Downloaded CSV!' : 'Export CSV'}
+            <Download className="w-4 h-4 text-emerald-600" />
+            {downloadSuccess ? (t.downloadSuccess || 'Downloaded CSV!') : (t.exportCSV || 'Export CSV')}
           </button>
           <button
             onClick={handleExportPathologyPDF}
-            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 cursor-pointer transition-all"
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer transition-all"
           >
             <FileDown className="w-4 h-4" />
-            Download PDF Report
+            {t.downloadPDF || 'Download PDF Report'}
           </button>
           <button
             onClick={handlePrint}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 flex items-center gap-1.5 cursor-pointer transition-all"
+            className="px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-all"
           >
             <Printer className="w-4 h-4" />
-            Print Preview
+            {t.printPreview || 'Print Preview'}
           </button>
         </div>
       </div>
 
       {/* Report Preview Dossier Sheet */}
-      <div className="p-8 rounded-2xl bg-slate-950 border border-slate-800 space-y-6 max-w-4xl mx-auto shadow-2xl">
+      <div className="p-8 rounded-2xl bg-white border border-emerald-100 space-y-6 max-w-4xl mx-auto shadow-sm">
         {/* Report Header */}
-        <div className="flex items-start justify-between pb-6 border-b border-slate-800">
+        <div className="flex items-start justify-between pb-6 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl text-emerald-400 font-display">AGRO UZHAVAN</span>
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                Official Farm Dossier
+              <span className="font-extrabold text-xl text-emerald-700 font-display">Agro Uzhavan</span>
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
+                {t.officialDossier || 'Official Farm Dossier'}
               </span>
             </div>
-            <h2 className="text-lg font-bold text-slate-100 mt-2">{activeFarm.name}</h2>
-            <p className="text-xs text-slate-400">{activeFarm.locationName} · Lat: {activeFarm.lat.toFixed(4)}, Lng: {activeFarm.lng.toFixed(4)}</p>
+            <h2 className="text-lg font-bold text-slate-900 mt-2">{activeFarm.name}</h2>
+            <p className="text-xs text-slate-500">{activeFarm.locationName} · Lat: {activeFarm.lat.toFixed(4)}, Lng: {activeFarm.lng.toFixed(4)}</p>
           </div>
-          <div className="text-right text-xs text-slate-400 space-y-0.5">
-            <div><b>Report Date:</b> {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
-            <div><b>Auditor:</b> AGRO UZHAVAN Autonomous Engine</div>
-            <div><b>Status:</b> Certified Valid</div>
+          <div className="text-right text-xs text-slate-500 space-y-0.5">
+            <div><b>{t.reportDate || 'Report Date'}:</b> {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+            <div><b>{t.auditor || 'Auditor'}:</b> Agro Uzhavan Autonomous Engine</div>
+            <div><b>{t.status || 'Status'}:</b> {t.certifiedValid || 'Certified Valid'}</div>
           </div>
         </div>
 
         {/* Section 1: Plot Overview */}
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400">1. Farm Topography & Soil Profile</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-700">1. {t.farmTopography || 'Farm Topography & Soil Profile'}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-500 block text-[10px]">Land Area</span>
-              <span className="font-bold text-slate-100">{activeFarm.areaAcres} Acres</span>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.farmSize || 'Land Area'}</span>
+              <span className="font-bold text-slate-900">{activeFarm.areaAcres} {t.acres || 'Acres'}</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-500 block text-[10px]">Soil Classification</span>
-              <span className="font-bold text-slate-100">{activeFarm.soilType}</span>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.soilType || 'Soil Classification'}</span>
+              <span className="font-bold text-slate-900">{activeFarm.soilType}</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-500 block text-[10px]">Irrigation Infrastructure</span>
-              <span className="font-bold text-slate-100">{activeFarm.irrigationType}</span>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.irrigationType || 'Irrigation Infrastructure'}</span>
+              <span className="font-bold text-slate-900">{activeFarm.irrigationType}</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-500 block text-[10px]">Altitude</span>
-              <span className="font-bold text-slate-100">{activeFarm.altitudeMeters} m MSL</span>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.altitude || 'Altitude'}</span>
+              <span className="font-bold text-slate-900">{activeFarm.altitudeMeters} m MSL</span>
             </div>
           </div>
         </div>
 
         {/* Section 2: Active Crop Cycles */}
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400">2. Active Seasonal Crop Inventory</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-700">2. {t.cropInventory || 'Active Seasonal Crop Inventory'}</h3>
           {farmCrops.length > 0 ? (
-            <div className="overflow-x-auto rounded-xl border border-slate-800">
-              <table className="w-full text-left text-xs text-slate-300">
-                <thead className="bg-slate-900 text-slate-400 uppercase text-[10px] font-bold border-b border-slate-800">
+            <div className="overflow-x-auto rounded-xl border border-slate-200">
+              <table className="w-full text-left text-xs text-slate-700">
+                <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200">
                   <tr>
-                    <th className="p-2.5">Crop</th>
-                    <th className="p-2.5">Variety</th>
-                    <th className="p-2.5">Stage</th>
-                    <th className="p-2.5">Area</th>
-                    <th className="p-2.5">Target Yield</th>
+                    <th className="p-2.5">{t.crop || 'Crop'}</th>
+                    <th className="p-2.5">{t.variety || 'Variety'}</th>
+                    <th className="p-2.5">{t.growthStage || 'Stage'}</th>
+                    <th className="p-2.5">{t.plantedArea || 'Area'}</th>
+                    <th className="p-2.5">{t.targetYield || 'Target Yield'}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 font-medium">
+                <tbody className="divide-y divide-slate-100 font-medium">
                   {farmCrops.map((c) => (
                     <tr key={c.id}>
-                      <td className="p-2.5 font-bold text-slate-100">{c.cropName}</td>
+                      <td className="p-2.5 font-bold text-slate-900">{c.cropName}</td>
                       <td className="p-2.5">{c.variety || 'Standard'}</td>
-                      <td className="p-2.5 text-emerald-400">{c.growthStage}</td>
-                      <td className="p-2.5">{c.areaPlantedAcres} Ac</td>
+                      <td className="p-2.5 text-emerald-700 font-bold">{c.growthStage}</td>
+                      <td className="p-2.5">{c.areaPlantedAcres} {t.acres || 'Acres'}</td>
                       <td className="p-2.5 font-mono">{c.targetYieldTonsPerAcre} Q/Ac</td>
                     </tr>
                   ))}
@@ -174,28 +174,28 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
               </table>
             </div>
           ) : (
-            <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400">
-              No crops currently recorded in inventory.
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500">
+              {t.noActiveCrops || 'No crops currently recorded in inventory.'}
             </div>
           )}
         </div>
 
         {/* Section 3: AI Meteorological & Pathology Assessment */}
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400">3. Climatological & Pathology Audit</h3>
-          <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 space-y-2">
-            <p className="font-bold text-slate-100">AI Meteorological Synopsis:</p>
-            <p className="text-slate-400 leading-relaxed">{weather?.aiAnalysis.summary || 'Optimal climatic parameters maintained. Micro-climatic diurnal variation favors healthy transpiration.'}</p>
-            <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
-              <b>Pathology Status: </b>
-              {scans[0] ? `${scans[0].cropGuess}: ${scans[0].diseaseName} (Severity: ${scans[0].severityPercentage}%, Confidence: ${(scans[0].confidenceScore * 100).toFixed(1)}%)` : 'Canopy clean of fungal spore contamination.'}
+          <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-700">3. {t.climatologicalAudit || 'Climatological & Pathology Audit'}</h3>
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2">
+            <p className="font-bold text-slate-900">{t.aiSynopsis || 'AI Meteorological Synopsis:'}</p>
+            <p className="text-slate-600 leading-relaxed">{weather?.aiAnalysis.summary || (t.optimalConditions || 'Optimal climatic parameters maintained. Micro-climatic diurnal variation favors healthy transpiration.')}</p>
+            <div className="pt-2 border-t border-slate-200 text-[11px] text-slate-600">
+              <b>{t.pathologyStatus || 'Pathology Status'}: </b>
+              {scans[0] ? `${scans[0].cropGuess}: ${scans[0].diseaseName} (${t.severityPercentage || 'Severity'}: ${scans[0].severityPercentage}%, ${t.confidenceScore || 'Confidence'}: ${(scans[0].confidenceScore * 100).toFixed(1)}%)` : (t.healthyLeaf || 'Canopy clean of fungal spore contamination.')}
             </div>
           </div>
         </div>
 
         {/* Footer Signature */}
-        <div className="pt-6 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-500">
-          <span>Digitally Signed & Validated via AGRO UZHAVAN Autonomous Cloud</span>
+        <div className="pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
+          <span>{t.digitallySigned || 'Digitally Signed & Validated via Agro Uzhavan Autonomous Cloud'}</span>
           <span>Doc ID: AGRO-AUDIT-{activeFarm.id}-{Date.now().toString().slice(-6)}</span>
         </div>
       </div>

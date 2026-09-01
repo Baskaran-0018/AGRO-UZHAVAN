@@ -117,10 +117,10 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
       <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
         <div>
           <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-800 border border-rose-200 uppercase tracking-wider">
-            Agronomic Pharmacy Directory
+            {t.pesticideDirectory || 'Agronomic Pharmacy Directory'}
           </span>
-          <h1 className="text-2xl font-black text-slate-900 mt-1">{t.medicineGuide} & Safe Dosages</h1>
-          <p className="text-xs text-slate-500 font-medium">Search fungicides, pesticides, bio-controls with automated farm dosage calculators</p>
+          <h1 className="text-2xl font-black text-slate-900 mt-1">{t.medicineGuide} & {t.dosage || 'Safe Dosages'}</h1>
+          <p className="text-xs text-slate-500 font-medium">{t.searchMedicines || 'Search fungicides, pesticides, bio-controls with automated farm dosage calculators'}</p>
         </div>
       </div>
 
@@ -130,7 +130,7 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
           <input
             type="text"
-            placeholder="Search by disease, crop (e.g. Wheat, Tomato), or chemical name..."
+            placeholder={t.searchMedicines || 'Search by disease, crop (e.g. Wheat, Tomato), or chemical name...'}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:border-emerald-500 outline-none"
@@ -146,14 +146,14 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
                 filterType === f ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              {f}
+              {f === 'All' ? (t.allCategories || 'All') : f === 'Organic' ? (t.organic || 'Organic') : (t.chemical || 'Chemical')}
             </button>
           ))}
         </div>
 
         <div className="sm:col-span-3 flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-700">
           <Calculator className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span className="text-slate-500 shrink-0 font-medium">Farm Area:</span>
+          <span className="text-slate-500 shrink-0 font-medium">{t.farmSize || 'Farm Area'}:</span>
           <input
             type="number"
             step="0.5"
@@ -162,7 +162,7 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
             onChange={(e) => setCalcAcreage(Number(e.target.value))}
             className="w-16 bg-white border border-slate-300 px-1.5 py-0.5 rounded text-center text-xs font-bold text-emerald-700 outline-none"
           />
-          <span className="text-slate-500">Acres</span>
+          <span className="text-slate-500">{t.acres || 'Acres'}</span>
         </div>
       </div>
 
@@ -184,9 +184,9 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
                         : 'bg-amber-50 text-amber-800 border-amber-200'
                     }`}
                   >
-                    {med.type} · {med.category}
+                    {isOrg ? (t.organic || 'Organic') : (t.chemical || 'Chemical')} · {med.category}
                   </span>
-                  <span className="text-[10px] text-slate-500 font-mono">PHI: {med.phiDays} Days</span>
+                  <span className="text-[10px] text-slate-500 font-mono">{t.waitingPeriod || 'PHI'}: {med.phiDays} {t.daysActive || 'Days'}</span>
                 </div>
 
                 <h3 className="text-base font-bold text-slate-900">{med.brandName}</h3>
@@ -195,7 +195,7 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
                 {/* Target Pests & Crops */}
                 <div className="mt-3 space-y-2 text-xs">
                   <div>
-                    <span className="text-slate-500 text-[10px] font-bold uppercase block">Target Pests / Pathogens:</span>
+                    <span className="text-slate-500 text-[10px] font-bold uppercase block">{t.targetPests || 'Target Pests / Pathogens:'}</span>
                     <div className="flex flex-wrap gap-1 mt-0.5">
                       {(med.targetPests || []).map((p, i) => (
                         <span key={i} className="px-1.5 py-0.5 rounded bg-slate-50 text-slate-700 text-[10px] border border-slate-200">
@@ -206,7 +206,7 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
                   </div>
 
                   <div>
-                    <span className="text-slate-500 text-[10px] font-bold uppercase block">Approved Crops:</span>
+                    <span className="text-slate-500 text-[10px] font-bold uppercase block">{t.approvedCrops || 'Approved Crops:'}</span>
                     <span className="text-slate-700 text-[11px] font-medium">{(med.targetCrops || []).join(', ')}</span>
                   </div>
                 </div>
@@ -215,11 +215,11 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
               {/* Dynamic Dosage for Farm Area */}
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Dosage per Litre:</span>
+                  <span className="text-slate-500">{t.dosage || 'Dosage per Litre'}:</span>
                   <span className="font-mono font-bold text-slate-800">{med.dosagePerLitre}</span>
                 </div>
                 <div className="flex justify-between items-center pt-1 border-t border-slate-200">
-                  <span className="text-emerald-700 font-bold">Total for {calcAcreage} Acres:</span>
+                  <span className="text-emerald-700 font-bold">{t.totalFor || 'Total for'} {calcAcreage} {t.acres || 'Acres'}:</span>
                   <span className="font-mono font-black text-amber-700">
                     {med.dosagePerAcre.includes('ml')
                       ? `${(parseFloat(med.dosagePerAcre) * calcAcreage).toFixed(0)} ml in ${(200 * calcAcreage).toFixed(0)}L`

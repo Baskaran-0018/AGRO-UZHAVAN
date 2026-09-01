@@ -55,7 +55,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
     } else {
       setPlan(null);
     }
-  }, [activeCrop?.id]);
+  }, [activeCrop?.id, lang]);
 
   async function fetchPlan() {
     if (!activeCrop) return;
@@ -96,17 +96,17 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
         <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
           <div>
             <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
-              Crop Lifecycle Engine
+              {t.cropLifecycleEngine || 'Crop Lifecycle Engine'}
             </span>
             <h1 className="text-2xl font-black text-slate-900 mt-1">{t.cropManagement}</h1>
-            <p className="text-xs text-slate-500 font-medium">Manage stage-wise irrigation, fertilization, and pest protection protocols</p>
+            <p className="text-xs text-slate-500 font-medium">{t.manageStageWise || 'Manage stage-wise irrigation, fertilization, and pest protection protocols'}</p>
           </div>
           <button
             onClick={onOpenAddCrop}
             className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            Add Crop Cycle
+            {t.addCrop || 'Add Crop Cycle'}
           </button>
         </div>
 
@@ -115,16 +115,16 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
             <Sprout className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900">No Active Crops in Farm</h3>
+            <h3 className="text-base font-bold text-slate-900">{t.noActiveCrops || 'No Active Crops in Farm'}</h3>
             <p className="text-xs text-slate-500 mt-1 font-medium">
-              Add your current seasonal crop planting to generate AI-backed daily irrigation and fertigation schedules.
+              {t.addCropPrompt || 'Add your current seasonal crop planting to generate AI-backed daily irrigation and fertigation schedules.'}
             </p>
           </div>
           <button
             onClick={onOpenAddCrop}
             className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer"
           >
-            + Register New Crop
+            + {t.addCrop || 'Register New Crop'}
           </button>
         </div>
       </div>
@@ -144,10 +144,10 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
       <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
         <div>
           <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
-            Crop Lifecycle Engine
+            {t.cropLifecycleEngine || 'Crop Lifecycle Engine'}
           </span>
           <h1 className="text-2xl font-black text-slate-900 mt-1">{t.cropManagement}</h1>
-          <p className="text-xs text-slate-500 font-medium">Manage stage-wise irrigation, fertilization, and pest protection protocols</p>
+          <p className="text-xs text-slate-500 font-medium">{t.manageStageWise || 'Manage stage-wise irrigation, fertilization, and pest protection protocols'}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
             className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            New Crop
+            {t.newCrop || 'New Crop'}
           </button>
         </div>
       </div>
@@ -179,7 +179,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
             <div className="p-6 rounded-2xl bg-white border border-emerald-100 space-y-4 shadow-xs">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-500 block">Cultivated Crop</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">{t.crop || 'Cultivated Crop'}</span>
                   <h2 className="text-xl font-black text-slate-900 mt-0.5">{activeCrop.cropName}</h2>
                   <p className="text-xs text-emerald-700 font-semibold mt-0.5">{activeCrop.variety || 'Standard Variety'}</p>
                 </div>
@@ -191,7 +191,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
               {/* Stage Progress Bar */}
               <div className="space-y-1.5 pt-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">Growth Phase Progress</span>
+                  <span className="text-slate-500 font-medium">{t.growthPhaseProgress || 'Growth Phase Progress'}</span>
                   <span className="font-bold font-mono text-emerald-700">{plan?.stageProgressPct || 45}%</span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
@@ -204,20 +204,20 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
 
               <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-100">
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-slate-500 block text-[10px] uppercase font-bold">Planted Area</span>
-                  <span className="font-bold text-slate-900">{activeCrop.areaPlantedAcres} Acres</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.plantedArea || 'Planted Area'}</span>
+                  <span className="font-bold text-slate-900">{activeCrop.areaPlantedAcres} {t.acres || 'Acres'}</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-slate-500 block text-[10px] uppercase font-bold">Growth Stage</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.growthStage || 'Growth Stage'}</span>
                   <span className="font-bold text-emerald-700 truncate block">{activeCrop.growthStage}</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-slate-500 block text-[10px] uppercase font-bold">Sowing Date</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.sowingDate || 'Sowing Date'}</span>
                   <span className="font-bold text-slate-900">{activeCrop.sowingDate}</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="text-slate-500 block text-[10px] uppercase font-bold">Days Active</span>
-                  <span className="font-bold text-amber-700 font-mono">{plan?.daysSinceSowing || 28} Days</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.daysSinceSowing || 'Days Active'}</span>
+                  <span className="font-bold text-amber-700 font-mono">{plan?.daysSinceSowing || 28} {t.daysActive || 'Days'}</span>
                 </div>
               </div>
             </div>
@@ -226,7 +226,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
             {plan?.irrigation && (
               <div className="p-5 rounded-2xl bg-white border border-emerald-100 space-y-3 shadow-xs">
                 <div className="flex items-center gap-2 text-sky-700 font-bold text-xs uppercase tracking-wider">
-                  <Droplets className="w-4 h-4 text-sky-600" /> Next Irrigation Window
+                  <Droplets className="w-4 h-4 text-sky-600" /> {t.nextIrrigationWindow || 'Next Irrigation Window'}
                 </div>
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
                   <div className="flex items-center justify-between">

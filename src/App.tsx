@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { AgroStore } from './lib/store';
-import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult, DatasetItem, ModelZooItem, MLTrainingState, MLTrainingConfig } from './types/agro';
+import {
+  FarmProfile,
+  CropRecord,
+  WeatherForecastBundle,
+  DiseaseDetectionResult,
+  YieldPredictionResult,
+  DatasetItem,
+  ModelZooItem,
+  MLTrainingState,
+  MLTrainingConfig,
+  UserProfile
+} from './types/agro';
 import { SupportedLang, getLanguageName } from './lib/i18n';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
@@ -10,6 +21,7 @@ import { CropModal } from './components/CropModal';
 import { NotificationsModal } from './components/NotificationsModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { LoginView } from './components/views/LoginView';
 
 // Views
 import { DashboardView } from './components/views/DashboardView';
@@ -27,6 +39,10 @@ import { ReportsView } from './components/views/ReportsView';
 import { AdminPanel } from './components/views/AdminPanel';
 
 export function App() {
+  // Authentication State
+  const [user, setUser] = useState<UserProfile | null>(() => AgroStore.getUser());
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   const [farms, setFarms] = useState<FarmProfile[]>(() => AgroStore.getFarms());
   const [activeFarm, setActiveFarm] = useState<FarmProfile>(() => AgroStore.getActiveFarm());
   const [crops, setCrops] = useState<CropRecord[]>(() => AgroStore.getCrops());
@@ -82,6 +98,18 @@ export function App() {
     } finally {
       setWeatherLoading(false);
     }
+  }
+
+  function handleLoginSuccess(newUser: UserProfile) {
+    setUser(newUser);
+    AgroStore.setUser(newUser);
+    setIsLoginModalOpen(false);
+    confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+  }
+
+  function handleLogout() {
+    setUser(null);
+    AgroStore.logout();
   }
 
   function handleSelectFarm(farm: FarmProfile) {
@@ -179,9 +207,20 @@ export function App() {
     setTrainingState(prev => ({ ...prev, status: 'paused' }));
   }
 
+  // If user is not authenticated, display full-screen LoginView
+  if (!user) {
+    return (
+      <LoginView
+        onLoginSuccess={handleLoginSuccess}
+        lang={lang}
+        onChangeLang={handleChangeLang}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
-      {/* Top Navbar */}
+      {/* Top Navbar with User Account Integration */}
       <Navbar
         farms={farms}
         activeFarm={activeFarm}
@@ -195,6 +234,9 @@ export function App() {
         currentWeatherDesc={weather?.current?.weatherDescription}
         onNavigate={setCurrentView}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+        user={user}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onLogout={handleLogout}
       />
 
       <div className="flex-1 flex overflow-hidden relative">
@@ -372,6 +414,19 @@ export function App() {
         alerts={weather?.alerts || []}
         lang={lang}
       />
+
+      {/* Account Login / Switch Modal */}
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-200">
+          <LoginView
+            onLoginSuccess={handleLoginSuccess}
+            onClose={() => setIsLoginModalOpen(false)}
+            lang={lang}
+            onChangeLang={handleChangeLang}
+            isModal={true}
+          />
+        </div>
+      )}
 
       {/* Mobile Bottom Navigation Bar */}
       <MobileBottomNav

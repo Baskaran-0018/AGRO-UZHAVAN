@@ -90,71 +90,71 @@ export const MapView: React.FC<MapViewProps> = ({ activeFarm, farms, onSelectFar
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">
-            GIS Geospatial Boundary & Sensor Hub (Module 10)
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase">
+            {t.satelliteMap || 'GIS Spatial Telemetry'}
           </span>
-          <h1 className="text-2xl font-extrabold text-slate-100 mt-1">{t.farmMap} & Spatial Telemetry</h1>
-          <p className="text-xs text-slate-400">High-resolution satellite imagery, acreage boundary polygons, and IoT soil probe telemetry</p>
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1">{t.farmMap}</h1>
+          <p className="text-xs text-slate-500">{t.farmBoundary || 'High-resolution satellite imagery, acreage boundary polygons, and IoT soil probe telemetry'}</p>
         </div>
 
         {/* Map Mode Buttons */}
         <div className="flex items-center gap-2">
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
               onClick={() => setMapMode('satellite')}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                mapMode === 'satellite' ? 'bg-emerald-600 text-white' : 'text-slate-400'
+                mapMode === 'satellite' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Satellite
+              {t.satelliteView || 'Satellite'}
             </button>
             <button
               onClick={() => setMapMode('street')}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                mapMode === 'street' ? 'bg-emerald-600 text-white' : 'text-slate-400'
+                mapMode === 'street' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Street / Topo
+              {t.streetView || 'Street / Topo'}
             </button>
           </div>
 
-          <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 cursor-pointer select-none">
+          <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={showSensors}
               onChange={(e) => setShowSensors(e.target.checked)}
-              className="rounded bg-slate-900 border-slate-700 text-emerald-500"
+              className="rounded bg-white border-slate-300 text-emerald-600 focus:ring-emerald-500"
             />
-            <span>IoT Sensors</span>
+            <span>{t.sensors || 'IoT Sensors'}</span>
           </label>
         </div>
       </div>
 
       {/* Map Canvas */}
-      <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
+      <div className="relative w-full h-[540px] rounded-2xl overflow-hidden border border-emerald-100 shadow-sm">
         <div ref={mapContainerRef} className="w-full h-full z-10" />
 
         {/* Map Legend Overlay */}
-        <div className="absolute top-4 left-4 z-20 p-4 rounded-xl bg-slate-950/90 backdrop-blur-md border border-slate-800 text-xs text-slate-200 space-y-2 max-w-xs pointer-events-auto">
-          <div className="font-bold text-slate-100 flex items-center gap-1.5">
-            <MapPin className="w-4 h-4 text-emerald-400" />
+        <div className="absolute top-4 left-4 z-20 p-4 rounded-xl bg-white/95 backdrop-blur-md border border-emerald-100 text-xs text-slate-800 space-y-2 max-w-xs pointer-events-auto shadow-md">
+          <div className="font-bold text-slate-900 flex items-center gap-1.5">
+            <MapPin className="w-4 h-4 text-emerald-600" />
             {activeFarm.name}
           </div>
-          <p className="text-[11px] text-slate-400 leading-tight">{activeFarm.locationName}</p>
-          <div className="pt-2 border-t border-slate-800 space-y-1 text-[11px]">
+          <p className="text-[11px] text-slate-500 leading-tight">{activeFarm.locationName}</p>
+          <div className="pt-2 border-t border-slate-100 space-y-1 text-[11px]">
             <div className="flex justify-between">
-              <span className="text-slate-400">Total Area:</span>
-              <span className="font-bold text-emerald-400">{activeFarm.areaAcres} Acres</span>
+              <span className="text-slate-500">{t.farmSize || 'Total Area'}:</span>
+              <span className="font-bold text-emerald-700">{activeFarm.areaAcres} {t.acres || 'Acres'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">Soil Profile:</span>
-              <span className="font-bold text-slate-200">{activeFarm.soilType}</span>
+              <span className="text-slate-500">{t.soilType || 'Soil Profile'}:</span>
+              <span className="font-bold text-slate-800">{activeFarm.soilType}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">Irrigation:</span>
-              <span className="font-bold text-slate-200">{activeFarm.irrigationType}</span>
+              <span className="text-slate-500">{t.irrigationType || 'Irrigation'}:</span>
+              <span className="font-bold text-slate-800">{activeFarm.irrigationType}</span>
             </div>
           </div>
         </div>

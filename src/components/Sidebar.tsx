@@ -7,16 +7,8 @@ import {
   TrendingUp,
   Pill,
   Mic,
-  Database,
-  Cpu,
-  Boxes,
-  Map,
-  FileText,
-  Shield,
-  Download,
-  X,
-  Sparkles,
-  Smartphone
+  Smartphone,
+  X
 } from 'lucide-react';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
 import { usePwa } from '../lib/pwa';
@@ -43,24 +35,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       group: t.coreIntelligence || 'Smart Agriculture',
       items: [
-        { id: 'dashboard', label: t.dashboard || 'Dashboard', icon: LayoutDashboard, badge: 'Live' },
-        { id: 'weather', label: t.weatherPrediction || 'Weather & Forecast', icon: CloudSun, badge: 'Graphs' },
+        { id: 'dashboard', label: t.dashboard || 'Dashboard', icon: LayoutDashboard, badge: t.live || 'Live' },
+        { id: 'weather', label: t.weatherPrediction || 'Weather & Forecast', icon: CloudSun, badge: t.graphs || 'Graphs' },
         { id: 'cropplanner', label: t.cropManagement || 'Crop Planner', icon: CalendarCheck },
-        { id: 'diseasescanner', label: t.diseaseDetection || 'AI Leaf Doctor', icon: ScanLine, badge: 'Vision' },
+        { id: 'diseasescanner', label: t.diseaseDetection || 'AI Leaf Doctor', icon: ScanLine, badge: t.vision || 'Vision' },
         { id: 'yieldpredictor', label: t.yieldPrediction || 'Yield Estimator', icon: TrendingUp },
         { id: 'medicineguide', label: t.medicineGuide || 'Pesticide & Remedies', icon: Pill },
-        { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: 'Voice' },
-      ]
-    },
-    {
-      group: 'Tools & Analytics',
-      items: [
-        { id: 'datasetmanager', label: 'Dataset Manager', icon: Database },
-        { id: 'modeltraining', label: 'ML Training Studio', icon: Cpu, badge: trainingRunning ? 'Training' : undefined },
-        { id: 'modelzoo', label: 'Model Zoo', icon: Boxes },
-        { id: 'map', label: 'GIS Farm Map', icon: Map },
-        { id: 'reports', label: 'PDF Farm Reports', icon: FileText },
-        { id: 'admin', label: 'System Admin', icon: Shield },
+        { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: t.voice || 'Voice' },
       ]
     }
   ];
@@ -79,13 +60,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="w-9 h-9 rounded-xl bg-white border border-emerald-200 shadow-xs p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
               <img
                 src="/logo.png"
-                alt="AGRO UZHAVAN"
+                alt="Agro Uzhavan"
                 className="w-full h-full object-contain"
               />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-slate-900 leading-none">AGRO UZHAVAN</h3>
-              <p className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider mt-0.5">Intelligent Agriculture</p>
+              <h3 className="font-extrabold text-sm text-slate-900 leading-none">Agro Uzhavan</h3>
+              <p className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider mt-0.5">
+                {t.intelligentAgriculture || 'Intelligent Agriculture'}
+              </p>
             </div>
           </div>
           <button
@@ -158,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-extrabold shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
           >
             <Smartphone className="w-3.5 h-3.5" />
-            <span>Install Mobile App (PWA)</span>
+            <span>{t.installMobileApp || 'Install Mobile App (PWA)'}</span>
           </button>
         )}
 
@@ -171,8 +154,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span className="text-[10px] text-emerald-600 font-mono font-bold">99.8%</span>
           </div>
           <div className="flex items-center justify-between text-[10px] text-slate-500">
-            <span>Vision & Climate ML</span>
-            <span className="text-emerald-700 font-semibold">Active</span>
+            <span>{t.computerVisionPathology || 'Vision & Climate ML'}</span>
+            <span className="text-emerald-700 font-semibold">{t.optimal || 'Active'}</span>
           </div>
         </div>
       </div>

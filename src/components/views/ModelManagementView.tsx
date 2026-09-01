@@ -34,20 +34,20 @@ export const ModelManagementView: React.FC<ModelManagementViewProps> = ({ models
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl bg-white border border-emerald-100 shadow-xs">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30 uppercase">
-            Model Registry & Benchmarks (Module 9)
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-200 uppercase">
+            {t.modelRegistry || 'Model Registry & Benchmarks'}
           </span>
-          <h1 className="text-2xl font-extrabold text-slate-100 mt-1">{t.modelZoo} & Inference Console</h1>
-          <p className="text-xs text-slate-400">Deployed ONNX & PyTorch artifacts with latency benchmarks and live JSON test payloads</p>
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1">{t.modelZoo} & {t.inferenceConsole || 'Inference Console'}</h1>
+          <p className="text-xs text-slate-500">{t.deployedArtifacts || 'Deployed ONNX & PyTorch artifacts with latency benchmarks and live JSON test payloads'}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Model Cards Grid (7 cols) */}
         <div className="lg:col-span-7 space-y-3">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">Deployed Models ({models.length})</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.deployedModels || 'Deployed Models'} ({models.length})</h2>
           <div className="space-y-3">
             {models.map((m) => {
               const isSelected = selectedModel?.id === m.id;
@@ -57,34 +57,34 @@ export const ModelManagementView: React.FC<ModelManagementViewProps> = ({ models
                   onClick={() => setSelectedModel(m)}
                   className={`p-5 rounded-2xl border transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-slate-950 border-emerald-500 shadow-md shadow-emerald-500/10'
-                      : 'bg-slate-900 border-slate-800 hover:border-slate-700'
+                      ? 'bg-emerald-50/60 border-emerald-500 shadow-xs'
+                      : 'bg-white border-slate-200 hover:border-emerald-300'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/60">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
                         {m.targetTask}
                       </span>
-                      <h3 className="text-sm font-bold text-slate-100 mt-1">{m.name}</h3>
+                      <h3 className="text-sm font-bold text-slate-900 mt-1">{m.name}</h3>
                     </div>
-                    <span className="text-xs font-mono font-bold text-emerald-400">
-                      Acc: {m.accuracyPct}%
+                    <span className="text-xs font-mono font-bold text-emerald-700">
+                      {t.accuracy || 'Acc'}: {m.accuracyPct}%
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 text-[11px] text-slate-400 pt-2 border-t border-slate-800">
+                  <div className="grid grid-cols-3 gap-2 text-[11px] text-slate-500 pt-2 border-t border-slate-100">
                     <div>
-                      <span className="text-slate-500 block text-[9px] uppercase font-bold">Framework</span>
-                      <span className="font-mono text-slate-200">{m.framework} ({m.fileFormat})</span>
+                      <span className="text-slate-500 block text-[9px] uppercase font-bold">{t.hardware || 'Framework'}</span>
+                      <span className="font-mono text-slate-800">{m.framework} ({m.fileFormat})</span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[9px] uppercase font-bold">Latency</span>
-                      <span className="font-mono text-amber-300">{m.latencyMs} ms</span>
+                      <span className="text-slate-500 block text-[9px] uppercase font-bold">{t.averageLatency || 'Latency'}</span>
+                      <span className="font-mono text-amber-700 font-bold">{m.latencyMs} ms</span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[9px] uppercase font-bold">Parameters</span>
-                      <span className="font-mono text-slate-200">{m.parametersCount}</span>
+                      <span className="text-slate-500 block text-[9px] uppercase font-bold">{t.features || 'Parameters'}</span>
+                      <span className="font-mono text-slate-800">{m.parametersCount}</span>
                     </div>
                   </div>
                 </div>
@@ -95,37 +95,37 @@ export const ModelManagementView: React.FC<ModelManagementViewProps> = ({ models
 
         {/* Live Inference Console (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4 text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <span className="font-bold text-slate-200 flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-amber-400" /> Live Model Inference Test
+          <div className="p-6 rounded-2xl bg-white border border-emerald-100 space-y-4 text-xs shadow-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                <Zap className="w-4 h-4 text-amber-600" /> {t.liveInferenceTest || 'Live Model Inference Test'}
               </span>
-              <span className="text-[10px] text-emerald-400 font-mono">Target: {selectedModel?.framework}</span>
+              <span className="text-[10px] text-emerald-700 font-mono font-bold">Target: {selectedModel?.framework}</span>
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">Input Feature JSON</label>
+              <label className="block text-slate-700 font-semibold mb-1">{t.inputPayload || 'Input Feature JSON'}</label>
               <textarea
                 rows={5}
                 value={testPayload}
                 onChange={(e) => setTestPayload(e.target.value)}
-                className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-300 outline-none resize-none"
+                className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs text-emerald-800 outline-none resize-none focus:border-emerald-500"
               />
             </div>
 
             <button
               onClick={handleRunInference}
               disabled={isInferencing}
-              className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm shadow-emerald-600/20 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <Play className={`w-3.5 h-3.5 ${isInferencing ? 'animate-spin' : ''}`} />
-              {isInferencing ? 'Executing Tensor Forward Pass...' : 'Run Real-Time Inference'}
+              {isInferencing ? (t.loading || 'Executing Tensor Forward Pass...') : (t.runInference || 'Run Real-Time Inference')}
             </button>
 
             {testOutput && (
               <div className="space-y-1 pt-2">
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Output Tensor / Prediction:</span>
-                <pre className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 text-[11px] font-mono overflow-x-auto">
+                <span className="text-[10px] uppercase font-bold text-slate-500 block">{t.outputPrediction || 'Output Tensor / Prediction'}:</span>
+                <pre className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-emerald-800 text-[11px] font-mono overflow-x-auto">
                   {testOutput}
                 </pre>
               </div>

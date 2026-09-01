@@ -81,12 +81,12 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             className={`relative flex items-center justify-center w-13 h-13 rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-600/40 border-4 border-slate-950 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
               isScanActive ? 'ring-2 ring-emerald-400 ring-offset-2 ring-offset-slate-950 scale-105' : ''
             }`}
-            title="Scan Plant Leaf Disease"
+            title={t.scanPlantLeaf || 'Scan Plant Leaf Disease'}
           >
             <ScanLine className="w-6 h-6 animate-pulse" />
           </button>
           <span className="text-[10px] font-extrabold text-emerald-600 mt-1 tracking-tight">
-            AI Scan
+            {t.aiScan || 'AI Scan'}
           </span>
         </div>
 
@@ -107,7 +107,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             <CalendarCheck className="w-5 h-5" />
           </div>
           <span className="text-[10px] mt-0.5 tracking-tight truncate max-w-[56px]">
-            {t.cropManagement || 'Crops'}
+            {t.crops || t.cropManagement || 'Crops'}
           </span>
         </button>
 
@@ -120,7 +120,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             <Menu className="w-5 h-5" />
           </div>
           <span className="text-[10px] mt-0.5 tracking-tight truncate max-w-[56px]">
-            More
+            {t.more || t.menu || 'More'}
           </span>
         </button>
       </div>

@@ -2,15 +2,11 @@ import React from 'react';
 import {
   CloudSun,
   Sprout,
-  ScanLine,
   TrendingUp,
   Droplets,
   Wind,
   ShieldCheck,
   ArrowRight,
-  Pill,
-  Sparkles,
-  Calendar,
   Plus
 } from 'lucide-react';
 import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult } from '../../types/agro';
@@ -66,23 +62,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span>•</span>
               <span>💧 {t.irrigationType || 'Irrigation'}: <b className="text-white">{activeFarm.irrigationType}</b></span>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => onNavigate('cropplanner')}
-              className="px-4 py-2.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-900 text-xs font-extrabold shadow-md transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <Calendar className="w-4 h-4 text-emerald-700" />
-              {t.cropManagement || 'Crop Management'}
-            </button>
-            <button
-              onClick={() => onNavigate('diseasescanner')}
-              className="px-4 py-2.5 rounded-xl bg-emerald-900/40 hover:bg-emerald-900/60 text-white text-xs font-bold border border-white/30 transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <ScanLine className="w-4 h-4 text-emerald-200" />
-              {t.diseaseDetection || 'Scan Plant Leaf'}
-            </button>
           </div>
         </div>
       </div>
@@ -322,48 +301,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </button>
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Quick Action Matrix */}
-          <div className="p-6 rounded-2xl bg-white border border-emerald-100 space-y-3 shadow-xs">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.coreIntelligence || 'Smart Farm Tools'}</h3>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                onClick={() => onNavigate('diseasescanner')}
-                className="p-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 text-left transition-all cursor-pointer group"
-              >
-                <ScanLine className="w-5 h-5 text-emerald-600 mb-2 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block">{t.diseaseDetection}</span>
-                <span className="text-[10px] text-emerald-700 font-semibold">{t.accuracy || '98.4% Accuracy'}</span>
-              </button>
-
-              <button
-                onClick={() => onNavigate('yieldpredictor')}
-                className="p-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 text-left transition-all cursor-pointer group"
-              >
-                <TrendingUp className="w-5 h-5 text-amber-600 mb-2 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block">{t.yieldPrediction}</span>
-                <span className="text-[10px] text-slate-500">{t.expectedYield}</span>
-              </button>
-
-              <button
-                onClick={() => onNavigate('assistant')}
-                className="p-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 text-left transition-all cursor-pointer group"
-              >
-                <Sparkles className="w-5 h-5 text-teal-600 mb-2 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block">{t.aiAssistant}</span>
-                <span className="text-[10px] text-slate-500">{t.voicePrompt?.slice(0, 14)}...</span>
-              </button>
-
-              <button
-                onClick={() => onNavigate('medicineguide')}
-                className="p-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-300 text-left transition-all cursor-pointer group"
-              >
-                <Pill className="w-5 h-5 text-rose-600 mb-2 group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-slate-800 block">{t.medicineGuide}</span>
-                <span className="text-[10px] text-slate-500">{t.dosage}</span>
-              </button>
             </div>
           </div>
         </div>
