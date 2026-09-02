@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   LayoutDashboard,
   CloudSun,
@@ -8,7 +7,8 @@ import {
   Pill,
   Mic,
   Smartphone,
-  X
+  X,
+  UserCheck
 } from 'lucide-react';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
 import { usePwa } from '../lib/pwa';
@@ -42,6 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'yieldpredictor', label: t.yieldPrediction || 'Yield Estimator', icon: TrendingUp },
         { id: 'medicineguide', label: t.medicineGuide || 'Pesticide & Remedies', icon: Pill },
         { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: t.voice || 'Voice' },
+        { id: 'profile', label: t.farmerProfile || 'Farmer Profile & KYC', icon: UserCheck, badge: t.kyc || 'KYC' },
       ]
     }
   ];

@@ -37,6 +37,7 @@ import { ModelManagementView } from './components/views/ModelManagementView';
 import { MapView } from './components/views/MapView';
 import { ReportsView } from './components/views/ReportsView';
 import { AdminPanel } from './components/views/AdminPanel';
+import { ProfileView } from './components/views/ProfileView';
 
 export function App() {
   // Authentication State
@@ -105,6 +106,11 @@ export function App() {
     AgroStore.setUser(newUser);
     setIsLoginModalOpen(false);
     confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+  }
+
+  function handleUpdateUser(updatedUser: UserProfile) {
+    setUser(updatedUser);
+    AgroStore.setUser(updatedUser);
   }
 
   function handleLogout() {
@@ -386,6 +392,15 @@ export function App() {
 
           {currentView === 'admin' && (
             <AdminPanel
+              lang={lang}
+            />
+          )}
+
+          {currentView === 'profile' && (
+            <ProfileView
+              user={user}
+              onUpdateUser={handleUpdateUser}
+              activeFarm={activeFarm}
               lang={lang}
             />
           )}

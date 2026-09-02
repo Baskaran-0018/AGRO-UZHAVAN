@@ -339,4 +339,45 @@ export interface UserProfile {
   createdAt: string;
   lastLoginAt: string;
   farmCount?: number;
+
+  // Extended Farmer Demographics & KYC
+  farmerId?: string; // e.g. UZHAVAN-TN-2026-8891
+  aadhaarOrGovId?: string; // Masked e.g. XXXX-XXXX-4589
+  gender?: 'Male' | 'Female' | 'Other' | 'Prefer not to say';
+  age?: number;
+  dob?: string;
+
+  // Geographic Details
+  state?: string;
+  district?: string;
+  taluk?: string;
+  village?: string;
+  pincode?: string;
+
+  // Agricultural & Land Details
+  totalLandAcres?: number;
+  landOwnership?: 'Owner / Self-Cultivated' | 'Tenant Farmer' | 'Leased Land' | 'Sharecropper';
+  soilType?: SoilType;
+  irrigationSource?: 'Borewell & Drip' | 'Canal & Flood' | 'Sprinkler' | 'Open Well' | 'Rainfed';
+  farmingExperienceYears?: number;
+  primaryCrops?: string[];
+  farmingMethod?: 'Organic / Natural' | 'Conventional / Integrated' | 'Hydroponic' | 'Zero Budget Natural Farming (ZBNF)';
+  livestock?: string[];
+  machinery?: string[];
+
+  // Government Welfare Schemes & Finance
+  pmKisanBeneficiaryId?: string;
+  kisanCreditCardHolder?: boolean;
+  cropInsurancePolicyNumber?: string;
+  bankName?: string;
+  accountNumberMasked?: string;
+  ifscCode?: string;
+
+  // Notification & Advisory Preferences
+  preferredLanguage?: string;
+  voiceAdvisoryEnabled?: boolean;
+  weatherSmsAlerts?: boolean;
+  pestOutbreakAlerts?: boolean;
+  marketPriceAlerts?: boolean;
+  emergencyContact?: string;
 }

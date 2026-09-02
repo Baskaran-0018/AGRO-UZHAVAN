@@ -45,6 +45,9 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'Farm GIS Map',
     reports: 'Diagnostic Reports',
     adminPanel: 'System & GPU',
+    farmerProfile: 'Farmer Profile & KYC',
+    kyc: 'KYC',
+    profileSaved: 'Farmer Profile & Agricultural Data saved successfully!',
 
     // Nav Groups
     coreIntelligence: 'Core Intelligence',
@@ -368,6 +371,9 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'खेत का नक्शा',
     reports: 'निदान रिपोर्ट्स',
     adminPanel: 'सिस्टम एवं जीपीयू',
+    farmerProfile: 'किसान प्रोफाइल एवं केवाईसी',
+    kyc: 'KYC',
+    profileSaved: 'किसान प्रोफाइल एवं कृषि डेटा सफलतापूर्वक सहेजा गया!',
 
     // Nav Groups
     coreIntelligence: 'प्रमुख बुद्धिमत्ता',
@@ -691,6 +697,9 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'பண்ணை வரைபடம்',
     reports: 'நோய் அறிக்கைகள்',
     adminPanel: 'கணினி & GPU',
+    farmerProfile: 'விவசாயி சுயவிவரம் & KYC',
+    kyc: 'KYC',
+    profileSaved: 'விவசாயி விவரங்கள் மற்றும் நிலத் தகவல்கள் வெற்றிகரமாக சேமிக்கப்பட்டன!',
 
     // Nav Groups
     coreIntelligence: 'முதன்மை நுண்ணறிவு',

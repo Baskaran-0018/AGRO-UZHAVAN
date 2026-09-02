@@ -195,6 +195,21 @@ export class AgroStore {
     }
   }
 
+  static updateUserProfile(partial: Partial<UserProfile>): UserProfile {
+    const current = this.getUser() || {
+      id: 'usr-' + Date.now(),
+      name: 'Farmer Member',
+      provider: 'guest',
+      isGuest: true,
+      role: 'Farmer',
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString()
+    };
+    const updated: UserProfile = { ...current, ...partial, lastLoginAt: new Date().toISOString() };
+    this.setUser(updated);
+    return updated;
+  }
+
   static logout() {
     localStorage.removeItem(this.USER_KEY);
   }

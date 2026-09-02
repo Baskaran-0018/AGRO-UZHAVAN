@@ -254,6 +254,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   )}
 
                   <div className="space-y-1 text-xs">
+                    <button
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                        onNavigate('profile');
+                      }}
+                      className="w-full flex items-center gap-2.5 p-2 rounded-lg text-emerald-800 hover:text-emerald-950 hover:bg-emerald-50 font-bold transition-colors text-left cursor-pointer"
+                    >
+                      <UserIcon className="w-4 h-4 text-emerald-600" />
+                      <span>{t.farmerProfile || 'Farmer Profile & KYC'}</span>
+                    </button>
+
                     {onOpenLogin && (
                       <button
                         onClick={() => {
@@ -262,7 +273,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                         className="w-full flex items-center gap-2.5 p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-50 font-medium transition-colors text-left cursor-pointer"
                       >
-                        <UserIcon className="w-4 h-4 text-slate-400" />
+                        <LogIn className="w-4 h-4 text-slate-400" />
                         <span>{t.switchToLogin || 'Switch Account'}</span>
                       </button>
                     )}
