@@ -1,6 +1,6 @@
 {
   "framework": "vite",
-  "buildCommand": "vite build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
     {
@@ -8,7 +8,7 @@
       "destination": "/api"
     },
     {
-      "source": "/((?!api/|icons/|favicon.svg|manifest.webmanifest|manifest.json|sw.js|assets/|login.html|signup.html|register.html).*)",
+      "source": "/((?!api/.*|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
