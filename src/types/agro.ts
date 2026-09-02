@@ -182,6 +182,7 @@ export interface DiseaseDetectionResult {
   dosage: string;
   applicationMethod: string;
   safetyInstructions: string[];
+  ppePrecautions?: string[];
   preventionTips: string[];
   recoveryTime: string;
   spreadRisk: string;

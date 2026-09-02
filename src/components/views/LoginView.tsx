@@ -53,6 +53,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
   onChangeLang,
   isModal = false,
 }) => {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const [authMethod, setAuthMethod] = useState<'phone' | 'email' | 'social'>('phone');
   const [isSubmitting, setIsSubmitting] = useState<AuthProviderType | null>(null);
 
