@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
+import { getLocalizedDiseaseDiagnostic } from '../../lib/diseaseDictionary';
 
 interface DashboardViewProps {
   activeFarm: FarmProfile;
@@ -36,7 +37,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const cur = weather?.current;
   const activeCrops = crops.filter(c => c.farmId === activeFarm.id && c.status === 'active');
-  const recentScan = scans[0];
+  const rawRecentScan = scans[0];
+  const recentScan = rawRecentScan ? getLocalizedDiseaseDiagnostic(rawRecentScan, lang) : null;
   const latestYield = yields[0];
 
   return (

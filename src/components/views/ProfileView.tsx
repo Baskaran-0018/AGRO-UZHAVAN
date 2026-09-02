@@ -30,6 +30,7 @@ import {
 import confetti from 'canvas-confetti';
 import { UserProfile, FarmProfile, SoilType } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS, LANGUAGES } from '../../lib/i18n';
+import { getProfileTranslations } from '../../lib/profileTranslations';
 
 interface ProfileViewProps {
   user: UserProfile;
@@ -100,6 +101,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   lang,
 }) => {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  const pt = getProfileTranslations(lang);
   const [activeTab, setActiveTab] = useState<'kyc' | 'land' | 'crops' | 'schemes' | 'alerts' | 'idcard'>('kyc');
   const [isSaved, setIsSaved] = useState(false);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
@@ -289,7 +291,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                  <span>KYC Verified Member</span>
+                  <span>{pt.kycVerifiedMember}</span>
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">
                   ID: {farmerId}
@@ -303,7 +305,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300">
                 <span className="flex items-center gap-1 text-emerald-300 font-semibold">
                   <Sprout className="w-3.5 h-3.5" />
-                  <span>{role} · {totalLandAcres} Acres</span>
+                  <span>{role} · {totalLandAcres} {pt.acres}</span>
                 </span>
                 <span className="text-slate-500">•</span>
                 <span className="flex items-center gap-1 text-slate-300">
@@ -318,7 +320,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           <div className="flex flex-col sm:flex-row md:flex-col items-start md:items-end gap-3 w-full md:w-auto">
             <div className="w-full sm:w-48 bg-slate-800/80 rounded-2xl p-3 border border-slate-700">
               <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-1.5">
-                <span>Profile Strength</span>
+                <span>{pt.profileStrength}</span>
                 <span className="text-emerald-400">{completenessPct}%</span>
               </div>
               <div className="w-full h-2 rounded-full bg-slate-700 overflow-hidden">
@@ -336,7 +338,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
-                <span>Save Profile</span>
+                <span>{pt.saveProfile}</span>
               </button>
 
               <button
@@ -346,7 +348,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 title="View Smart Pass"
               >
                 <IdCard className="w-4 h-4 text-emerald-400" />
-                <span className="hidden sm:inline">Smart ID</span>
+                <span className="hidden sm:inline">{pt.smartId}</span>
               </button>
             </div>
           </div>
@@ -364,7 +366,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             onClick={() => setIsSaved(false)}
             className="text-xs font-extrabold text-emerald-700 hover:underline cursor-pointer"
           >
-            Dismiss
+            {pt.dismiss}
           </button>
         </div>
       )}
@@ -372,12 +374,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       {/* Tab Navigation Menu */}
       <div className="flex overflow-x-auto gap-2 p-1.5 rounded-2xl bg-white border border-emerald-100 shadow-xs no-scrollbar">
         {[
-          { id: 'kyc', label: 'Farmer KYC & Identity', icon: User },
-          { id: 'land', label: 'Land & Geography', icon: MapPin },
-          { id: 'crops', label: 'Soil, Crops & Livestock', icon: Sprout },
-          { id: 'schemes', label: 'Government Welfare & Bank', icon: Landmark },
-          { id: 'alerts', label: 'Advisory Preferences', icon: Bell },
-          { id: 'idcard', label: 'Digital Smart Card', icon: IdCard },
+          { id: 'kyc', label: pt.farmerKycTab, icon: User },
+          { id: 'land', label: pt.landGeoTab, icon: MapPin },
+          { id: 'crops', label: pt.soilCropsTab, icon: Sprout },
+          { id: 'schemes', label: pt.welfareBankTab, icon: Landmark },
+          { id: 'alerts', label: pt.advisoryPrefTab, icon: Bell },
+          { id: 'idcard', label: pt.smartPassTab, icon: IdCard },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;

@@ -1,10 +1,18 @@
 import { DiseaseDetectionResult, FarmProfile } from '../types/agro';
+import { SupportedLang, TRANSLATIONS } from './i18n';
+import { getLocalizedDiseaseDiagnostic } from './diseaseDictionary';
 
 export function generateDiagnosticReportPDF(
-  result: DiseaseDetectionResult,
+  rawResult: DiseaseDetectionResult,
   farm?: FarmProfile,
-  reportTitle = 'Plant Pathology & Agronomic Prescription Report'
+  reportTitle?: string,
+  lang: SupportedLang = 'en'
 ) {
+  const result = getLocalizedDiseaseDiagnostic(rawResult, lang);
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
+  const titleText = reportTitle || `${t.diseaseDetection || 'Plant Pathology & Agronomic Prescription'} - ${result.cropGuess}`;
+
   const dateStr = new Date(result.timestamp || Date.now()).toLocaleDateString('en-GB', {
     day: '2-digit',
     month: 'short',
@@ -16,10 +24,10 @@ export function generateDiagnosticReportPDF(
 
   const htmlContent = `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="UTF-8">
-  <title>${reportTitle} - ${result.cropGuess}</title>
+  <title>${titleText}</title>
   <style>
     @media print {
       body { margin: 0; padding: 15mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -187,23 +195,23 @@ export function generateDiagnosticReportPDF(
   <div class="header-bar">
     <div>
       <h1 class="brand-title">Agro Uzhavan</h1>
-      <div class="brand-subtitle">Intelligent Agriculture & Precision Diagnostics</div>
+      <div class="brand-subtitle">${t.intelligentAgriculture || 'Intelligent Agriculture & Precision Diagnostics'}</div>
     </div>
     <div class="doc-meta">
-      <div>Report ID: <strong>${docId}</strong></div>
-      <div>Date & Time: <strong>${dateStr}</strong></div>
-      <div>Model Engine: <strong>${result.architectureModel || 'Vision Transformer (ViT-B16)'}</strong></div>
+      <div>${t.reportId || 'Report ID'}: <strong>${docId}</strong></div>
+      <div>${t.reportDate || 'Date & Time'}: <strong>${dateStr}</strong></div>
+      <div>${t.modelEngine || 'Model Engine'}: <strong>${result.architectureModel || 'Gemini Vision AI'}</strong></div>
     </div>
   </div>
 
   ${farm ? `
   <div class="card" style="margin-bottom: 16px;">
-    <div class="card-title">Target Farm Location & Metadata</div>
+    <div class="card-title">${t.farmLocation || 'Target Farm Location & Metadata'}</div>
     <div style="display: flex; justify-content: space-between; font-size: 12px;">
-      <div><strong>Farm:</strong> ${farm.name}</div>
-      <div><strong>Location:</strong> ${farm.locationName}</div>
-      <div><strong>Soil Type:</strong> ${farm.soilType}</div>
-      <div><strong>Area:</strong> ${farm.areaAcres} Acres</div>
+      <div><strong>${t.farm || 'Farm'}:</strong> ${farm.name}</div>
+      <div><strong>${t.location || 'Location'}:</strong> ${farm.locationName}</div>
+      <div><strong>${t.soilType || 'Soil Type'}:</strong> ${farm.soilType}</div>
+      <div><strong>${t.farmSize || 'Area'}:</strong> ${farm.areaAcres} ${t.acres || 'Acres'}</div>
     </div>
   </div>
   ` : ''}
@@ -214,13 +222,15 @@ export function generateDiagnosticReportPDF(
     <div style="flex: 1;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
         <span class="badge ${result.isHealthy ? 'badge-healthy' : 'badge-diseased'}">
-          ${result.isHealthy ? 'HEALTHY SPECIMEN' : (result.diseaseStage || 'INFECTED')}
+          ${result.isHealthy ? (t.healthyLeaf || 'HEALTHY SPECIMEN') : (result.diseaseStage || t.infected || 'INFECTED')}
         </span>
-        <span style="font-size: 11px; color: #64748b;">Confidence: <strong>${(result.confidenceScore * 100).toFixed(1)}%</strong></span>
+        <span style="font-size: 11px; color: #64748b;">${t.confidenceScore || 'Confidence'}: <strong>${(result.confidenceScore * 100).toFixed(1)}%</strong></span>
       </div>
-      <div style="font-size: 16px; font-weight: 800; color: #0f172a;">${result.cropGuess}</div>
-      <div style="font-size: 13px; font-weight: 600; color: #e11d48; margin-top: 2px;">
-        ${result.diseaseName} <span style="font-weight: 400; font-style: italic; color: #64748b;">(${result.scientificName || 'N/A'})</span>
+      <div style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
+        ${result.diseaseName}
+      </div>
+      <div style="font-size: 12px; color: #475569; font-style: italic;">
+        ${t.cropSpecies || 'Identified Specimen'}: ${result.cropGuess} · <em>${result.scientificName || ''}</em>
       </div>
     </div>
   </div>
@@ -228,101 +238,83 @@ export function generateDiagnosticReportPDF(
 
   <div class="grid-4">
     <div class="card">
-      <div class="card-title">Diagnostic Finding</div>
-      <div class="card-value" style="color: ${result.isHealthy ? '#059669' : '#e11d48'}; font-size: 13px;">${result.diseaseName}</div>
+      <div class="card-title">${t.severityPercentage || 'Severity Level'}</div>
+      <div class="card-value" style="color: ${result.severityPercentage > 40 ? '#b91c1c' : result.severityPercentage > 15 ? '#b45309' : '#047857'}">
+        ${result.severityPercentage}%
+      </div>
     </div>
     <div class="card">
-      <div class="card-title">Confidence Score</div>
-      <div class="card-value">${(result.confidenceScore * 100).toFixed(1)}%</div>
+      <div class="card-title">${t.affectedArea || 'Affected Canopy'}</div>
+      <div class="card-value">${result.affectedLeafAreaPct}%</div>
     </div>
     <div class="card">
-      <div class="card-title">Canopy Severity</div>
-      <div class="card-value" style="color: ${result.severityPercentage > 50 ? '#e11d48' : '#d97706'}">${result.severityPercentage}%</div>
+      <div class="card-title">${t.infectionStage || 'Infection Stage'}</div>
+      <div class="card-value" style="font-size: 12px;">${result.diseaseStage}</div>
     </div>
     <div class="card">
-      <div class="card-title">Spread Vector Risk</div>
-      <div class="card-value">${result.spreadRisk || 'Moderate'}</div>
+      <div class="card-title">${t.riskLevel || 'Spread Risk'}</div>
+      <div class="card-value" style="font-size: 12px; color: ${result.spreadRisk === 'High' ? '#b91c1c' : '#047857'}">
+        ${result.spreadRisk || 'Moderate'}
+      </div>
     </div>
   </div>
 
-  <div class="card" style="margin-bottom: 16px;">
-    <div class="card-title">Etiology & Causal Factors</div>
-    <p style="margin: 0; color: #334155; font-size: 12px;">${result.cause || 'Analysis indicates localized cellular breakdown consistent with foliar pathogens.'}</p>
+  <div class="section-title">1. ${t.causalPathogen || 'Causal Agent & Epidemiology'}</div>
+  <p style="margin: 0 0 12px 0; color: #334155; line-height: 1.6;">
+    ${result.cause}
+  </p>
+
+  <div class="section-title">2. ${t.visualSymptoms || 'Visual Foliar Diagnostic Symptoms'}</div>
+  <ul>
+    ${result.symptoms.map(s => `<li>${s}</li>`).join('')}
+  </ul>
+
+  <div class="grid-2" style="margin-top: 16px;">
+    <div class="card" style="border-left: 4px solid #10b981;">
+      <div class="card-title" style="color: #047857;">🌱 ${t.organicTreatments || 'Biological & Organic Protocol'}</div>
+      <ul>
+        ${result.organicTreatment.map(t => `<li>${t}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="card" style="border-left: 4px solid #ef4444;">
+      <div class="card-title" style="color: #b91c1c;">🧪 ${t.chemicalTreatments || 'Chemical Protection & Fungicides'}</div>
+      <ul>
+        ${result.chemicalTreatment.map(t => `<li>${t}</li>`).join('')}
+      </ul>
+    </div>
   </div>
 
-  ${result.symptoms && result.symptoms.length > 0 ? `
-  <div class="section-title">Observable Symptoms</div>
-  <div class="card" style="margin-bottom: 16px;">
-    <ul>
-      ${(result.symptoms || []).map(s => `<li>${s}</li>`).join('')}
-    </ul>
+  ${result.dosage ? `
+  <div class="card" style="margin-top: 16px; background-color: #f0fdf4; border-color: #bbf7d0;">
+    <div class="card-title" style="color: #166534;">📐 ${t.dosageAdvice || 'Recommended Spray Dosage & Application Timing'}</div>
+    <p style="margin: 0; color: #14532d; font-weight: 500;">
+      ${result.dosage} ${result.applicationMethod ? `(${result.applicationMethod})` : ''}
+    </p>
   </div>
   ` : ''}
 
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title" style="color: #059669;">Organic & Bio-Control Protocol</div>
-      <ul>
-        ${(result.organicTreatment || []).map(item => `<li>${item}</li>`).join('')}
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-title" style="color: #b45309;">Chemical Fungicides & Pesticides</div>
-      <ul>
-        ${(result.chemicalTreatment || []).map(item => `<li>${item}</li>`).join('')}
-      </ul>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">Dosage & Spraying Specification</div>
-      <div style="font-size: 12px; margin-bottom: 6px;"><strong>Prescription:</strong> ${result.dosage || 'Standard spray volume'}</div>
-      <div style="font-size: 12px;"><strong>Application:</strong> ${result.applicationMethod || 'Foliar ground sprayer'}</div>
-      ${result.recoveryTime ? `<div style="font-size: 12px; margin-top: 6px;"><strong>Recovery Horizon:</strong> ${result.recoveryTime}</div>` : ''}
-    </div>
-    <div class="card">
-      <div class="card-title" style="color: #dc2626;">PPE & Field Safety Standards</div>
-      <ul>
-        ${(result.safetyInstructions || []).map(s => `<li>${s}</li>`).join('')}
-      </ul>
-    </div>
-  </div>
-
-  ${result.preventionTips && result.preventionTips.length > 0 ? `
-  <div class="section-title">Long-Term Agronomic Prevention</div>
-  <div class="card">
-    <ul>
-      ${(result.preventionTips || []).map(tip => `<li>${tip}</li>`).join('')}
-    </ul>
-  </div>
+  ${result.ppePrecautions && result.ppePrecautions.length > 0 ? `
+  <div class="section-title">3. ${t.safetyGuidelines || 'Personal Protective Equipment (PPE) & Harvest Safety'}</div>
+  <ul>
+    ${result.ppePrecautions.map(p => `<li>${p}</li>`).join('')}
+  </ul>
   ` : ''}
 
   <div class="footer">
-    <div>Generated by Agro Uzhavan Autonomous Diagnostic Engine · Certified Valid</div>
-    <div>Document Signature: SHA256:${Math.random().toString(36).substring(2, 12).toUpperCase()}</div>
+    <div>
+      ${t.digitallySigned || 'Digitally Generated by Agro Uzhavan Autonomous AI Engine'} · ${t.certifiedValid || 'Certified Agronomy Dossier'}
+    </div>
+    <div>
+      ${t.page || 'Page'} 1 / 1
+    </div>
   </div>
 </body>
 </html>
-`;
+  `;
 
-  // Create a printable iframe/window or trigger download
   const printWindow = window.open('', '_blank');
   if (printWindow) {
-    printWindow.document.open();
     printWindow.document.write(htmlContent);
     printWindow.document.close();
-    printWindow.focus();
-  } else {
-    // Fallback: download as standalone self-contained HTML file
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `AGRO_Report_${result.cropGuess.replace(/[^a-zA-Z0-9]/g, '_')}_${docId}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   }
 }

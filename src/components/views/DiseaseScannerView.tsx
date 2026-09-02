@@ -36,6 +36,7 @@ import { SupportedLang, TRANSLATIONS, getLanguageName } from '../../lib/i18n';
 import { generateDiagnosticReportPDF } from '../../lib/pdfReportGenerator';
 import { optimizeImageForVision } from '../../lib/imageOptimizer';
 import { SAMPLE_SPECIMENS, SampleSpecimen } from '../../lib/sampleLeaves';
+import { getLocalizedDiseaseDiagnostic } from '../../lib/diseaseDictionary';
 
 interface DiseaseScannerViewProps {
   onAddScan: (scan: DiseaseDetectionResult) => void;
@@ -282,9 +283,11 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
     }
   }
 
+  const activeResult = currentResult ? getLocalizedDiseaseDiagnostic(currentResult, lang) : null;
+
   function handleDownloadReport() {
-    if (!currentResult) return;
-    generateDiagnosticReportPDF(currentResult, activeFarm);
+    if (!activeResult) return;
+    generateDiagnosticReportPDF(activeResult, activeFarm, undefined, lang);
   }
 
   return (
@@ -301,7 +304,7 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
             </span>
           </div>
           <h1 className="text-2xl font-black text-slate-900">{t.diseaseDetection} & Leaf Diagnosis</h1>
-          <p className="text-xs text-slate-500 font-medium">Upload plant leaf imagery for instant disease diagnosis, severity mapping, accuracy benchmarking, and prescriptions</p>
+          <p className="text-xs text-slate-500 font-medium">{t.uploadLeafPrompt || 'Upload plant leaf imagery for instant disease diagnosis, severity mapping, accuracy benchmarking, and prescriptions'}</p>
         </div>
 
         <div className="flex items-center gap-2.5">
@@ -314,15 +317,15 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
             }`}
           >
             <BarChart3 className="w-4 h-4" />
-            {showAccuracyGraph ? 'Hide Accuracy Graph' : 'View Accuracy Graph'}
+            {showAccuracyGraph ? (t.hideAccuracyGraph || 'Hide Accuracy Graph') : (t.viewAccuracyGraph || 'View Accuracy Graph')}
           </button>
-          {currentResult && (
+          {activeResult && (
             <button
               onClick={handleDownloadReport}
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 flex items-center gap-2 cursor-pointer transition-all"
             >
               <Download className="w-4 h-4" />
-              {t.downloadPdf || 'Download Diagnostic Report'}
+              {t.downloadPdf || t.downloadReport || 'Download Diagnostic Report'}
             </button>
           )}
         </div>
@@ -335,9 +338,9 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <Activity className="w-5 h-5 text-emerald-600" />
-                <h2 className="text-lg font-bold text-slate-900">Plant Disease Model Accuracy Benchmark</h2>
+                <h2 className="text-lg font-bold text-slate-900">{t.diseaseModelBenchmark || 'Plant Disease Model Accuracy Benchmark'}</h2>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">Validated against agricultural pathology datasets (140,000+ leaf specimens)</p>
+              <p className="text-xs text-slate-500 mt-0.5">{t.datasetValidated || 'Validated against agricultural pathology datasets (140,000+ leaf specimens)'}</p>
             </div>
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
@@ -432,11 +435,11 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                     className="w-full h-full object-cover"
                   />
                   {/* Heatmap overlay */}
-                  {useHeatmap && currentResult && !currentResult.isHealthy && !isScanning && (
+                  {useHeatmap && activeResult && !activeResult.isHealthy && !isScanning && (
                     <div className="absolute inset-0 bg-radial from-rose-500/20 via-transparent to-transparent pointer-events-none flex items-center justify-center">
                       <div className="border-2 border-dashed border-rose-500 bg-rose-500/15 backdrop-blur-[1px] rounded-xl w-3/5 h-3/5 flex items-start justify-start p-2 shadow-sm">
                         <span className="px-2 py-0.5 rounded bg-rose-900 text-white text-[10px] font-bold shadow-xs">
-                          {currentResult.diseaseName} ({currentResult.severityPercentage}%)
+                          {activeResult.diseaseName} ({activeResult.severityPercentage}%)
                         </span>
                       </div>
                     </div>
@@ -466,8 +469,8 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                     <ScanLine className="w-8 h-8" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-900">No Leaf Image Uploaded</p>
-                    <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Upload a photo of your field crop leaf or capture directly from camera for instant diagnosis</p>
+                    <p className="text-sm font-bold text-slate-900">{t.noLeafUploaded || 'No Leaf Image Uploaded'}</p>
+                    <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">{t.uploadLeafPrompt || 'Upload a photo of your field crop leaf or capture directly from camera for instant diagnosis'}</p>
                   </div>
                 </div>
               )}
@@ -488,12 +491,12 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
               {isScanning ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Diagnosing Pathogen & Disease...</span>
+                  <span>{t.analyzingLeaf || 'Diagnosing Pathogen & Disease...'}</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4 text-emerald-200" />
-                  <span>Analyze Leaf Disease</span>
+                  <span>{t.analyzeLeaf || 'Analyze Leaf Disease'}</span>
                 </>
               )}
             </button>
@@ -521,7 +524,7 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                 className="py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-800 hover:text-emerald-800 text-xs font-bold border border-slate-200 hover:border-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all"
               >
                 <Upload className="w-4 h-4 text-emerald-600" />
-                Upload Leaf Photo
+                {t.uploadPhoto || 'Upload Leaf Photo'}
               </button>
               <button
                 onClick={() => cameraInputRef.current?.click() || fileInputRef.current?.click()}
@@ -529,33 +532,36 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                 className="py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-bold border border-slate-200 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all"
               >
                 <Camera className="w-4 h-4 text-emerald-600" />
-                Capture Camera
+                {t.camera || 'Capture Camera'}
               </button>
             </div>
 
             {/* Quick Test Leaf Specimens */}
             <div className="pt-2 border-t border-slate-100 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-slate-700">Quick Test Leaf Specimens:</span>
-                <span className="text-[10px] text-slate-500 font-medium">Click to diagnose</span>
+                <span className="text-[11px] font-bold text-slate-700">{t.quickTestSpecimens || 'Quick Test Leaf Specimens:'}</span>
+                <span className="text-[10px] text-slate-500 font-medium">{t.clickToDiagnose || 'Click to diagnose'}</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                {SAMPLE_SPECIMENS.map((specimen) => (
-                  <button
-                    key={specimen.id}
-                    onClick={() => handleSelectSample(specimen)}
-                    disabled={isScanning}
-                    className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold text-left truncate transition-all border cursor-pointer ${
-                      selectedSpecimenId === specimen.id
-                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                        : specimen.isHealthy
-                        ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
-                        : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200'
-                    }`}
-                  >
-                    {specimen.name}
-                  </button>
-                ))}
+                {SAMPLE_SPECIMENS.map((specimen) => {
+                  const localizedSpecimenDiag = getLocalizedDiseaseDiagnostic(specimen.diagnostic, lang);
+                  return (
+                    <button
+                      key={specimen.id}
+                      onClick={() => handleSelectSample(specimen)}
+                      disabled={isScanning}
+                      className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold text-left truncate transition-all border cursor-pointer ${
+                        selectedSpecimenId === specimen.id
+                          ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                          : specimen.isHealthy
+                          ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
+                          : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200'
+                      }`}
+                    >
+                      {localizedSpecimenDiag?.diseaseName ? localizedSpecimenDiag.diseaseName.split('(')[0] : specimen.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -567,7 +573,7 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                   onChange={(e) => setUseHeatmap(e.target.checked)}
                   className="rounded bg-white border-slate-300 text-emerald-600 focus:ring-0 cursor-pointer"
                 />
-                Show Pathology Heatmap
+                {t.showHeatmap || 'Show Pathology Heatmap'}
               </label>
               <span className="text-[10px] text-emerald-700 font-bold font-mono flex items-center gap-1">
                 <Zap className="w-3 h-3 text-emerald-600" /> Multimodal Vision
@@ -579,42 +585,45 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
           {scans.length > 0 && (
             <div className="p-5 rounded-2xl bg-white border border-emerald-100 space-y-3 shadow-xs">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Recent Diagnostic Scans</h3>
-                <span className="text-[10px] text-slate-500 font-bold">{scans.length} Scans</span>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.recentScans || 'Recent Diagnostic Scans'}</h3>
+                <span className="text-[10px] text-slate-500 font-bold">{scans.length} {t.scans || 'Scans'}</span>
               </div>
               <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                {scans.map((scan, i) => (
-                  <button
-                    key={scan.id || i}
-                    onClick={() => {
-                      setSelectedImage(scan.imageUrl || null);
-                      setCurrentResult(scan);
-                      setSelectedSpecimenId(null);
-                    }}
-                    className={`w-full p-2.5 rounded-xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
-                      currentResult?.id === scan.id
-                        ? 'bg-emerald-50/80 border-emerald-400'
-                        : 'bg-slate-50 border-slate-200 hover:border-emerald-300'
-                    }`}
-                  >
-                    {scan.imageUrl ? (
-                      <img src={scan.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 text-slate-500">
-                        <ImageIcon className="w-5 h-5" />
+                {scans.map((scan, i) => {
+                  const localizedScan = getLocalizedDiseaseDiagnostic(scan, lang);
+                  return (
+                    <button
+                      key={scan.id || i}
+                      onClick={() => {
+                        setSelectedImage(scan.imageUrl || null);
+                        setCurrentResult(scan);
+                        setSelectedSpecimenId(null);
+                      }}
+                      className={`w-full p-2.5 rounded-xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
+                        currentResult?.id === scan.id
+                          ? 'bg-emerald-50/80 border-emerald-400'
+                          : 'bg-slate-50 border-slate-200 hover:border-emerald-300'
+                      }`}
+                    >
+                      {scan.imageUrl ? (
+                        <img src={scan.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 text-slate-500">
+                          <ImageIcon className="w-5 h-5" />
+                        </div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-slate-900 truncate">{localizedScan.diseaseName}</span>
+                          <span className={`text-[10px] font-bold ${scan.isHealthy ? 'text-emerald-700' : 'text-rose-600'}`}>
+                            {scan.isHealthy ? (t.healthy || 'Healthy') : `${scan.severityPercentage}%`}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-slate-500 block truncate">{localizedScan.cropGuess}</span>
                       </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-900 truncate">{scan.diseaseName}</span>
-                        <span className={`text-[10px] font-bold ${scan.isHealthy ? 'text-emerald-700' : 'text-rose-600'}`}>
-                          {scan.isHealthy ? 'Healthy' : `${scan.severityPercentage}%`}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-slate-500 block truncate">{scan.cropGuess}</span>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -622,7 +631,7 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
 
         {/* Right Column: Complete Diagnosis & Prescriptions (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          {currentResult ? (
+          {activeResult ? (
             <>
               {/* Primary Diagnostic Banner */}
               <div className="p-6 rounded-2xl bg-white border border-emerald-100 space-y-4 shadow-xs">
@@ -630,32 +639,32 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                   <div>
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-900 bg-emerald-100/80 px-2.5 py-0.5 rounded-lg border border-emerald-300">
-                        {currentResult.cropGuess}
+                        {activeResult.cropGuess}
                       </span>
-                      {currentResult.scientificName && (
+                      {activeResult.scientificName && (
                         <span className="text-xs text-slate-500 font-serif italic">
-                          ({currentResult.scientificName})
+                          ({activeResult.scientificName})
                         </span>
                       )}
                     </div>
                     {/* Prominent Exact Disease Name Title */}
                     <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                      <span className={currentResult.isHealthy ? 'text-emerald-600' : 'text-rose-600'}>
-                        {currentResult.isHealthy ? '🌿' : '⚠️'}
+                      <span className={activeResult.isHealthy ? 'text-emerald-600' : 'text-rose-600'}>
+                        {activeResult.isHealthy ? '🌿' : '⚠️'}
                       </span>
-                      <span>{currentResult.diseaseName}</span>
+                      <span>{activeResult.diseaseName}</span>
                     </h2>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <span
                       className={`px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border shadow-xs ${
-                        currentResult.isHealthy
+                        activeResult.isHealthy
                           ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                           : 'bg-rose-100 text-rose-800 border-rose-300'
                       }`}
                     >
-                      {currentResult.isHealthy ? (t.healthySpecimen || 'Healthy Specimen') : currentResult.diseaseStage || (t.activeInfection || 'Active Infection')}
+                      {activeResult.isHealthy ? (t.healthySpecimen || 'Healthy Specimen') : activeResult.diseaseStage || (t.activeInfection || 'Active Infection')}
                     </span>
                     <button
                       onClick={handleDownloadReport}
@@ -671,43 +680,43 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{t.exactDiagnosis || 'Exact Diagnosis'}</span>
-                    <span className={`text-xs font-extrabold block truncate ${currentResult.isHealthy ? 'text-emerald-700' : 'text-rose-600'}`}>
-                      {currentResult.diseaseName}
+                    <span className={`text-xs font-extrabold block truncate ${activeResult.isHealthy ? 'text-emerald-700' : 'text-rose-600'}`}>
+                      {activeResult.diseaseName}
                     </span>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{t.aiConfidence || 'AI Confidence'}</span>
                     <span className="text-xs font-black text-emerald-700 block font-mono">
-                      {(currentResult.confidenceScore * 100).toFixed(1)}%
+                      {(activeResult.confidenceScore * 100).toFixed(1)}%
                     </span>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{t.severityLevel || 'Severity Level'}</span>
-                    <span className={`text-xs font-black block font-mono ${currentResult.isHealthy ? 'text-emerald-700' : 'text-amber-600'}`}>
-                      {currentResult.severityPercentage}%
+                    <span className={`text-xs font-black block font-mono ${activeResult.isHealthy ? 'text-emerald-700' : 'text-amber-600'}`}>
+                      {activeResult.severityPercentage}%
                     </span>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{t.spreadRisk || 'Spread Risk'}</span>
                     <span className="text-xs font-extrabold text-slate-800 block">
-                      {currentResult.spreadRisk || (t.optimal || 'Low')}
+                      {activeResult.spreadRisk || (t.optimal || 'Low')}
                     </span>
                   </div>
                 </div>
 
-                {currentResult.cause && (
+                {activeResult.cause && (
                   <div className="p-4 rounded-xl bg-emerald-50/50 border border-emerald-200/80 text-xs space-y-1 font-medium">
                     <span className="font-bold text-emerald-950 block">{t.causalPathology || 'Causal Pathology & Environmental Etiology:'}</span>
-                    <span className="text-slate-700 leading-relaxed block">{currentResult.cause}</span>
+                    <span className="text-slate-700 leading-relaxed block">{activeResult.cause}</span>
                   </div>
                 )}
 
                 {/* Symptoms List */}
-                {currentResult.symptoms && currentResult.symptoms.length > 0 && (
+                {activeResult.symptoms && activeResult.symptoms.length > 0 && (
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
                     <span className="font-bold text-slate-900 block uppercase tracking-wider text-[10px]">{t.symptomsList || 'Observable Pathological Symptoms:'}</span>
                     <ul className="space-y-1 text-slate-700 font-medium">
-                      {currentResult.symptoms.map((sym, idx) => (
+                      {activeResult.symptoms.map((sym, idx) => (
                         <li key={idx} className="flex items-start gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0"></span>
                           <span>{sym}</span>
@@ -726,7 +735,7 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                     <ShieldCheck className="w-4 h-4 text-emerald-600" /> {t.organicProtocol || 'Organic & Bio-Control Protocol'}
                   </div>
                   <ul className="space-y-2 text-xs text-slate-700 font-medium">
-                    {(currentResult.organicTreatment || []).map((item, i) => (
+                    {(activeResult.organicTreatment || []).map((item, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mt-1.5 shrink-0"></span>
                         <span>{item}</span>
@@ -741,7 +750,7 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                     <Pill className="w-4 h-4 text-amber-600" /> {t.chemicalProtocol || 'Chemical Treatment & Fungicides'}
                   </div>
                   <ul className="space-y-2 text-xs text-slate-700 font-medium">
-                    {(currentResult.chemicalTreatment || []).map((item, i) => (
+                    {(activeResult.chemicalTreatment || []).map((item, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0"></span>
                         <span>{item}</span>
@@ -757,20 +766,20 @@ export const DiseaseScannerView: React.FC<DiseaseScannerViewProps> = ({
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                     <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.recommendedDosage || 'Recommended Dosage'}</span>
-                    <span className="text-slate-800 font-semibold">{currentResult.dosage || 'Standard spray volume'}</span>
+                    <span className="text-slate-800 font-semibold">{activeResult.dosage || 'Standard spray volume'}</span>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                     <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.applicationMethod || 'Application Method'}</span>
-                    <span className="text-slate-800 font-semibold">{currentResult.applicationMethod || 'Foliar ground sprayer'}</span>
+                    <span className="text-slate-800 font-semibold">{activeResult.applicationMethod || 'Foliar ground sprayer'}</span>
                   </div>
                 </div>
 
                 {/* Safety PPE */}
-                {currentResult.safetyInstructions && currentResult.safetyInstructions.length > 0 && (
+                {activeResult.safetyInstructions && activeResult.safetyInstructions.length > 0 && (
                   <div className="pt-2 border-t border-slate-100">
                     <span className="text-[10px] font-bold uppercase text-slate-500 block mb-1.5">{t.mandatoryPPE || 'Mandatory PPE & Safety Guidelines'}</span>
                     <div className="space-y-1.5 text-slate-700 text-[11px] font-medium">
-                      {(currentResult.safetyInstructions || []).map((s, i) => (
+                      {(activeResult.safetyInstructions || []).map((s, i) => (
                         <div key={i} className="flex items-center gap-2">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                           <span>{s}</span>

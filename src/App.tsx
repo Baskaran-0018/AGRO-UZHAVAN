@@ -326,6 +326,7 @@ export function App() {
             <DiseaseScannerView
               onAddScan={handleAddScan}
               scans={scans}
+              activeFarm={activeFarm}
               lang={lang}
             />
           )}

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { FileSpreadsheet, Download, Printer, CheckCircle2, FileText, Sparkles, FileDown } from 'lucide-react';
+import { Download, Printer, CheckCircle2, FileText, Sparkles, FileDown, ShieldAlert, Activity } from 'lucide-react';
 import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
 import { generateDiagnosticReportPDF } from '../../lib/pdfReportGenerator';
+import { getLocalizedDiseaseDiagnostic } from '../../lib/diseaseDictionary';
 
 interface ReportsViewProps {
   activeFarm: FarmProfile;
@@ -22,7 +23,6 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   lang,
 }) => {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
-  const [reportType, setReportType] = useState<'comprehensive' | 'weather' | 'yield' | 'pathology'>('comprehensive');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   function handlePrint() {
@@ -31,7 +31,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
   function handleExportPathologyPDF() {
     if (scans.length > 0) {
-      generateDiagnosticReportPDF(scans[0], activeFarm, `Agronomy & Pathology Dossier - ${activeFarm.name}`);
+      generateDiagnosticReportPDF(scans[0], activeFarm, undefined, lang);
     } else {
       handlePrint();
     }
@@ -39,21 +39,30 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
   function handleExportCSV() {
     const csvContent = "data:text/csv;charset=utf-8," + [
-      ["Report Type", "Farm Name", "Location", "Soil Type", "Acres", "Date"],
-      [reportType.toUpperCase(), activeFarm.name, activeFarm.locationName, activeFarm.soilType, activeFarm.areaAcres, new Date().toISOString().slice(0, 10)],
+      [t.reports || "Report Type", t.farm || "Farm Name", t.location || "Location", t.soilType || "Soil Type", t.acres || "Acres", t.reportDate || "Date"],
+      ["AGRONOMY DOSSIER", activeFarm.name, activeFarm.locationName, activeFarm.soilType, activeFarm.areaAcres, new Date().toISOString().slice(0, 10)],
       [],
-      ["Crop Name", "Variety", "Growth Stage", "Planted Acres", "Sowing Date"],
+      [t.crop || "Crop Name", t.variety || "Variety", t.growthStage || "Growth Stage", t.plantedArea || "Planted Acres", t.sowingDate || "Sowing Date"],
       ...(crops || []).filter(c => c && c.farmId === activeFarm.id).map(c => [c.cropName, c.variety || 'Standard', c.growthStage, c.areaPlantedAcres, c.sowingDate]),
       [],
-      ["Recent Disease Diagnostic Logs"],
-      ["Date", "Crop", "Diagnosis", "Severity %", "Confidence %"],
-      ...(scans || []).map(s => [s.timestamp ? s.timestamp.slice(0, 10) : '', s.cropGuess, s.diseaseName, s.severityPercentage, (s.confidenceScore * 100).toFixed(1)]),
+      [t.diseaseDiagnostics || "Recent Disease Diagnostic Logs"],
+      [t.reportDate || "Date", t.crop || "Crop", t.exactDiagnosis || "Diagnosis", t.severityPercentage || "Severity %", t.confidenceScore || "Confidence %"],
+      ...(scans || []).map(s => {
+        const localized = getLocalizedDiseaseDiagnostic(s, lang);
+        return [
+          s.timestamp ? s.timestamp.slice(0, 10) : '',
+          localized.cropGuess,
+          localized.diseaseName,
+          s.severityPercentage,
+          (s.confidenceScore * 100).toFixed(1)
+        ];
+      }),
     ].map(e => e.join(",")).join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `AGRO_AI_Report_${activeFarm.name.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("download", `AGRO_Report_${activeFarm.name.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -63,6 +72,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   }
 
   const farmCrops = crops.filter(c => c.farmId === activeFarm.id);
+  const localizedScans = scans.map(s => getLocalizedDiseaseDiagnostic(s, lang));
+  const primaryScan = localizedScans[0];
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
@@ -89,7 +100,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-600/20 flex items-center gap-1.5 cursor-pointer transition-all"
           >
             <FileDown className="w-4 h-4" />
-            {t.downloadPDF || 'Download PDF Report'}
+            {t.downloadPDF || t.downloadReport || 'Download PDF Report'}
           </button>
           <button
             onClick={handlePrint}
@@ -188,10 +199,45 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <p className="text-slate-600 leading-relaxed">{weather?.aiAnalysis.summary || (t.optimalConditions || 'Optimal climatic parameters maintained. Micro-climatic diurnal variation favors healthy transpiration.')}</p>
             <div className="pt-2 border-t border-slate-200 text-[11px] text-slate-600">
               <b>{t.pathologyStatus || 'Pathology Status'}: </b>
-              {scans[0] ? `${scans[0].cropGuess}: ${scans[0].diseaseName} (${t.severityPercentage || 'Severity'}: ${scans[0].severityPercentage}%, ${t.confidenceScore || 'Confidence'}: ${(scans[0].confidenceScore * 100).toFixed(1)}%)` : (t.healthyLeaf || 'Canopy clean of fungal spore contamination.')}
+              {primaryScan ? `${primaryScan.cropGuess}: ${primaryScan.diseaseName} (${t.severityPercentage || 'Severity'}: ${primaryScan.severityPercentage}%, ${t.confidenceScore || 'Confidence'}: ${(primaryScan.confidenceScore * 100).toFixed(1)}%)` : (t.healthyLeaf || 'Canopy clean of fungal spore contamination.')}
             </div>
           </div>
         </div>
+
+        {/* Section 4: Detailed Disease Diagnostic Findings */}
+        {localizedScans.length > 0 && (
+          <div className="space-y-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-700">4. {t.diseaseDiagnostics || 'Disease Diagnostic Logs & Pathological Findings'}</h3>
+            <div className="overflow-x-auto rounded-xl border border-slate-200">
+              <table className="w-full text-left text-xs text-slate-700">
+                <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200">
+                  <tr>
+                    <th className="p-2.5">{t.crop || 'Crop'}</th>
+                    <th className="p-2.5">{t.exactDiagnosis || 'Diagnosis'}</th>
+                    <th className="p-2.5">{t.infectionStage || 'Stage'}</th>
+                    <th className="p-2.5">{t.severityLevel || 'Severity'}</th>
+                    <th className="p-2.5">{t.aiConfidence || 'Confidence'}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {localizedScans.map((scan, idx) => (
+                    <tr key={scan.id || idx}>
+                      <td className="p-2.5 font-bold text-slate-900">{scan.cropGuess}</td>
+                      <td className="p-2.5 text-emerald-800 font-bold">{scan.diseaseName}</td>
+                      <td className="p-2.5 text-slate-600">{scan.diseaseStage}</td>
+                      <td className="p-2.5 font-mono">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${scan.isHealthy ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                          {scan.severityPercentage}%
+                        </span>
+                      </td>
+                      <td className="p-2.5 font-mono text-emerald-700 font-bold">{(scan.confidenceScore * 100).toFixed(1)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* Footer Signature */}
         <div className="pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
