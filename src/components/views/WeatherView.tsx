@@ -30,6 +30,7 @@ import {
 import { FarmProfile, WeatherForecastBundle } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
 import { getWeatherCodeDescription } from '../../server/weatherService';
+import { translateText, getLocalizedLocation } from '../../lib/universalTranslator';
 
 interface WeatherViewProps {
   activeFarm: FarmProfile;
@@ -78,7 +79,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
             <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
               {t.weatherPrediction || 'Weather Prediction & Graphs'}
             </span>
-            <span className="text-xs text-slate-500 font-medium">· {activeFarm.locationName}</span>
+            <span className="text-xs text-slate-500 font-medium">· {getLocalizedLocation(activeFarm.locationName, lang)}</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 mt-1.5">{t.weatherPrediction} & {t.microClimate || 'Microclimate Analytics'}</h1>
         </div>
@@ -104,8 +105,8 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
               <CloudSun className="w-16 h-16 text-amber-300 shrink-0" />
               <div>
                 <span className="text-5xl font-black font-display">{cur ? Math.round(cur.temp) : 28}°C</span>
-                <p className="text-sm font-bold text-emerald-100">{cur?.weatherDescription || (t.optimal || 'Mainly Clear')}</p>
-                <p className="text-xs text-emerald-200">Feels like {cur ? Math.round(cur.feelsLike) : 30}°C</p>
+                <p className="text-sm font-bold text-emerald-100">{translateText(cur?.weatherDescription, lang) || (t.optimal || 'Mainly Clear')}</p>
+                <p className="text-xs text-emerald-200">{t.feelsLike || 'Feels like'} {cur ? Math.round(cur.feelsLike) : 30}°C</p>
               </div>
             </div>
           </div>
@@ -125,7 +126,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
             </div>
             <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-xs">
               <span className="text-emerald-200 block text-[10px] uppercase font-bold">{t.sprayingIndex || 'Spraying'}</span>
-              <span className="font-extrabold text-base text-amber-200">{daily[0]?.sprayingIndex || (t.optimal || 'Optimal')}</span>
+              <span className="font-extrabold text-base text-amber-200">{translateText(daily[0]?.sprayingIndex || 'Optimal', lang)}</span>
             </div>
           </div>
         </div>
@@ -138,18 +139,18 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
           </div>
 
           <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs space-y-1.5">
-            <p className="font-bold text-emerald-900 text-sm">{weather?.aiAnalysis?.headline || (t.optimal || 'Optimal Farm Weather Trajectory')}</p>
-            <p className="leading-relaxed text-slate-700 font-medium">{weather?.aiAnalysis?.summary || 'Favorable thermal ranges present for healthy crop vegetative and grain growth.'}</p>
+            <p className="font-bold text-emerald-900 text-sm">{translateText(weather?.aiAnalysis?.headline, lang) || (t.optimal || 'Optimal Farm Weather Trajectory')}</p>
+            <p className="leading-relaxed text-slate-700 font-medium">{translateText(weather?.aiAnalysis?.summary || 'Favorable thermal ranges present for healthy crop vegetative and grain growth.', lang)}</p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3 text-xs">
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[10px] font-bold uppercase text-slate-500 block mb-1">{t.sprayingIndex || 'Spraying Recommendations'}</span>
-              <p className="text-slate-800 font-medium">{weather?.aiAnalysis?.sprayingConditions || 'Wind speed < 14 km/h provides suitable chemical deposition window without foliar drift.'}</p>
+              <p className="text-slate-800 font-medium">{translateText(weather?.aiAnalysis?.sprayingConditions || 'Wind speed < 14 km/h provides suitable chemical deposition window without foliar drift.', lang)}</p>
             </div>
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[10px] font-bold uppercase text-slate-500 block mb-1">{t.irrigationSchedule || 'Irrigation Advisory'}</span>
-              <p className="text-slate-800 font-medium">{weather?.aiAnalysis?.irrigationRecommendation || 'Maintain scheduled root zone moisture saturation during morning hours.'}</p>
+              <p className="text-slate-800 font-medium">{translateText(weather?.aiAnalysis?.irrigationRecommendation || 'Maintain scheduled root zone moisture saturation during morning hours.', lang)}</p>
             </div>
           </div>
 
@@ -162,7 +163,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
               ]).slice(0, 4).map((adv, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0"></span>
-                  <span className="truncate">{adv}</span>
+                  <span className="truncate">{translateText(adv, lang)}</span>
                 </div>
               ))}
             </div>
