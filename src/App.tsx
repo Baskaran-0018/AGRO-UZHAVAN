@@ -29,6 +29,7 @@ import { WeatherView } from './components/views/WeatherView';
 import { CropPlannerView } from './components/views/CropPlannerView';
 import { YieldPredictorView } from './components/views/YieldPredictorView';
 import { DiseaseScannerView } from './components/views/DiseaseScannerView';
+import { TurmericScannerView } from './components/views/TurmericScannerView';
 import { MedicineGuideView } from './components/views/MedicineGuideView';
 import { AssistantView } from './components/views/AssistantView';
 import { DatasetManagerView } from './components/views/DatasetManagerView';
@@ -324,6 +325,15 @@ export function App() {
 
           {currentView === 'diseasescanner' && (
             <DiseaseScannerView
+              onAddScan={handleAddScan}
+              scans={scans}
+              activeFarm={activeFarm}
+              lang={lang}
+            />
+          )}
+
+          {currentView === 'turmericscanner' && (
+            <TurmericScannerView
               onAddScan={handleAddScan}
               scans={scans}
               activeFarm={activeFarm}
