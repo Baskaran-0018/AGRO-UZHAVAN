@@ -12,6 +12,7 @@ import {
 import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
 import { getLocalizedDiseaseDiagnostic } from '../../lib/diseaseDictionary';
+import { translateText, getLocalizedFarmName, getLocalizedLocation } from '../../lib/universalTranslator';
 
 interface DashboardViewProps {
   activeFarm: FarmProfile;
@@ -185,7 +186,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-slate-900">{t.weatherPrediction || 'Weather & Microclimate Advisory'}</h2>
-                  <p className="text-xs text-slate-500">{activeFarm.locationName}</p>
+                  <p className="text-xs text-slate-500">{getLocalizedLocation(activeFarm.locationName, lang)}</p>
                 </div>
               </div>
               <button
@@ -201,11 +202,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
                 <h3 className="text-sm font-bold text-emerald-950">
-                  {weather?.aiAnalysis?.headline || (t.optimal || 'Optimal Farm Climate Conditions')}
+                  {translateText(weather?.aiAnalysis?.headline, lang) || (t.optimal || 'Optimal Farm Climate Conditions')}
                 </h3>
               </div>
               <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                {weather?.aiAnalysis?.summary || 'Atmospheric metrics are favorable for active photosynthesis and field irrigation.'}
+                {translateText(weather?.aiAnalysis?.summary || 'Atmospheric metrics are favorable for active photosynthesis and field irrigation.', lang)}
               </p>
             </div>
 
@@ -213,18 +214,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.rainProb || 'Rain Prob'}</span>
-                <span className="text-sm font-bold text-slate-800 block">{weather?.nextHour?.summary || (t.optimal || 'Clear')}</span>
+                <span className="text-sm font-bold text-slate-800 block">{translateText(weather?.nextHour?.summary, lang) || (t.optimal || 'Clear')}</span>
                 <span className="text-[10px] text-emerald-700 font-bold">{weather?.nextHour?.rainProb || 0}%</span>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.sprayingIndex || 'Spraying Window'}</span>
-                <span className="text-sm font-bold text-emerald-700 block">{weather?.daily?.[0]?.sprayingIndex || (t.optimal || 'Optimal')}</span>
+                <span className="text-sm font-bold text-emerald-700 block">{translateText(weather?.daily?.[0]?.sprayingIndex || 'Optimal', lang)}</span>
                 <span className="text-[10px] text-slate-500">&lt; 14 km/h</span>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.solarRad || 'Solar Irradiance'}</span>
                 <span className="text-sm font-bold text-amber-700 block">{cur?.solarRadiationWm2 || 650} W/m²</span>
-                <span className="text-[10px] text-slate-500">Index</span>
+                <span className="text-[10px] text-slate-500">{translateText('Index', lang)}</span>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">{t.soilMoistureLayer || 'Soil Moisture'}</span>
@@ -247,7 +248,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold shrink-0 mt-0.5">
                       {idx + 1}
                     </span>
-                    <span className="font-medium">{item}</span>
+                    <span className="font-medium">{translateText(item, lang)}</span>
                   </div>
                 ))}
               </div>

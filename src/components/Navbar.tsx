@@ -19,6 +19,7 @@ import {
 import { FarmProfile, UserProfile } from '../types/agro';
 import { LANGUAGES, SupportedLang, TRANSLATIONS } from '../lib/i18n';
 import { usePwa } from '../lib/pwa';
+import { getLocalizedUserName, getLocalizedFarmName, getLocalizedRole } from '../lib/universalTranslator';
 
 interface NavbarProps {
   farms: FarmProfile[];
@@ -58,7 +59,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const { isInstalled, promptInstall } = usePwa();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const currentLangMeta = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -121,7 +124,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 {farms.map((f) => (
                   <option key={f.id} value={f.id} className="bg-white text-slate-800">
-                    {f.name} ({f.areaAcres} Ac)
+                    {getLocalizedFarmName(f.name, lang)} ({f.areaAcres} {t.acres || 'Ac'})
                   </option>
                 ))}
               </select>
@@ -139,41 +142,66 @@ export const Navbar: React.FC<NavbarProps> = ({
           {currentTemp !== undefined && (
             <button
               onClick={() => onNavigate('weather')}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-50/80 border border-amber-200 hover:border-amber-400 text-xs text-slate-700 hover:text-amber-900 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-xs font-bold text-slate-700 hover:text-emerald-800 transition-all cursor-pointer"
             >
-              <CloudSun className="w-4 h-4 text-amber-500" />
-              <span className="font-bold text-slate-800">{Math.round(currentTemp)}°C</span>
-              <span className="text-[11px] text-slate-500 truncate max-w-[90px] hidden lg:inline">
-                {currentWeatherDesc || 'Clear'}
-              </span>
+              <CloudSun className="w-4 h-4 text-amber-500 shrink-0" />
+              <span>{Math.round(currentTemp)}°C</span>
+              {currentWeatherDesc && (
+                <span className="hidden lg:inline text-slate-500 font-normal text-[11px] truncate max-w-[80px]">
+                  {currentWeatherDesc}
+                </span>
+              )}
             </button>
           )}
 
-          {/* Clean Professional Language Selector */}
-          <div className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-            <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <select
-              value={lang}
-              onChange={(e) => onChangeLang(e.target.value as SupportedLang)}
-              className="bg-transparent text-xs font-semibold text-slate-700 outline-none cursor-pointer pr-1 max-w-[85px] truncate"
+          {/* Multilingual Selector */}
+          <div className="relative">
+            <button
+              onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition-colors cursor-pointer"
             >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code} className="bg-white text-slate-800">
-                  {l.nativeName}
-                </option>
-              ))}
-            </select>
+              <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>{currentLangMeta.nativeName}</span>
+              <ChevronDown className="w-3 h-3 text-slate-400" />
+            </button>
+
+            {isLangMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-200 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                  {t.chooseLanguage || 'Choose Language'}
+                </div>
+                <div className="space-y-0.5 max-h-60 overflow-y-auto">
+                  {LANGUAGES.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        onChangeLang(l.code);
+                        setIsLangMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                        lang === l.code
+                          ? 'bg-emerald-50 text-emerald-800'
+                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                      }`}
+                    >
+                      <span>{l.nativeName}</span>
+                      <span className="text-[10px] text-slate-400 font-normal">{l.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Notifications Button */}
+          {/* Notifications Bell */}
           <button
             onClick={onOpenNotifications}
-            className="relative p-1.5 sm:p-2 rounded-xl bg-slate-50 border border-slate-200 hover:border-amber-400 text-slate-600 hover:text-amber-600 transition-colors cursor-pointer"
-            aria-label="Alerts"
+            className="relative p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            title={t.alerts}
           >
             <Bell className="w-4 h-4" />
             {alertCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[9px] font-bold text-white bg-amber-500 rounded-full border-2 border-white">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] font-black flex items-center justify-center animate-pulse">
                 {alertCount}
               </span>
             )}
@@ -211,7 +239,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 )}
                 <div className="hidden sm:flex flex-col text-left max-w-[100px]">
                   <span className="text-xs font-bold text-slate-800 truncate leading-none">
-                    {user.name}
+                    {getLocalizedUserName(user.name, lang)}
                   </span>
                   <span className="text-[9px] text-emerald-700 font-bold uppercase tracking-wider mt-0.5">
                     {user.isGuest ? (t.guestPass || 'Guest Pass') : user.provider === 'phone' ? (t.mobileOtp || 'Mobile OTP') : user.provider}
@@ -232,10 +260,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-xs font-extrabold text-slate-900 truncate">{user.name}</h4>
+                      <h4 className="text-xs font-extrabold text-slate-900 truncate">{getLocalizedUserName(user.name, lang)}</h4>
                       <p className="text-[11px] text-slate-500 truncate">{user.phone || user.email || (user.isGuest ? (t.guestFarmer || 'Guest Farmer') : (t.verifiedUser || 'Verified User'))}</p>
                       <span className="inline-block mt-0.5 text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 uppercase">
-                        {user.role || (user.isGuest ? (t.guestMode || 'Guest Mode') : user.provider === 'phone' ? (t.phoneVerified || 'Phone Verified') : user.provider)}
+                        {getLocalizedRole(user.role, lang) || (user.isGuest ? (t.guestMode || 'Guest Mode') : user.provider === 'phone' ? (t.phoneVerified || 'Phone Verified') : user.provider)}
                       </span>
                     </div>
                   </div>
