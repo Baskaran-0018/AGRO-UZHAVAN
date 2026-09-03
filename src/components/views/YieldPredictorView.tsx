@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TrendingUp, Sparkles, AlertTriangle, CheckCircle, Calculator, Sliders, DollarSign, Sprout } from 'lucide-react';
 import { FarmProfile, CropRecord, YieldPredictionResult } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
+import { getLocalizedCropName, translateText } from '../../lib/universalTranslator';
 import { CROPS_CATALOG } from '../../data/cropsData';
 
 interface YieldPredictorViewProps {
@@ -102,10 +103,14 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:border-emerald-500 focus:outline-none"
             >
               {farmCrops.map(c => (
-                <option key={c.id} value={c.cropName}>{c.cropName} ({t.activeFarm || 'Registered Crop'})</option>
+                <option key={c.id} value={c.cropName}>
+                  {getLocalizedCropName(c.cropName, lang)} ({t.activeFarm || 'Registered Crop'})
+                </option>
               ))}
               {CROPS_CATALOG.map(c => (
-                <option key={c.name} value={c.name}>{c.name}</option>
+                <option key={c.name} value={c.name}>
+                  {getLocalizedCropName(c.name, lang)}
+                </option>
               ))}
             </select>
           </div>
@@ -203,7 +208,7 @@ export const YieldPredictorView: React.FC<YieldPredictorViewProps> = ({
               <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t.yieldPrediction || 'Projection Output'}</span>
-                  <h3 className="text-xl font-black text-slate-900 mt-0.5">{currentResult.crop}</h3>
+                  <h3 className="text-xl font-black text-slate-900 mt-0.5">{getLocalizedCropName(currentResult.crop, lang)}</h3>
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                   {currentResult.modelUsed}

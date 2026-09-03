@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { FarmProfile, CropRecord, CropManagementPlan } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS, getLanguageName } from '../../lib/i18n';
+import { getLocalizedCropName, getLocalizedGrowthStage, translateText } from '../../lib/universalTranslator';
 import { CROPS_CATALOG } from '../../data/cropsData';
 
 interface CropPlannerViewProps {
@@ -158,7 +159,9 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
               className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 outline-none cursor-pointer"
             >
               {farmCrops.map(c => (
-                <option key={c.id} value={c.id}>{c.cropName} ({c.variety || 'Standard'})</option>
+                <option key={c.id} value={c.id}>
+                  {getLocalizedCropName(c.cropName, lang)} ({translateText(c.variety, lang) || 'Standard'})
+                </option>
               ))}
             </select>
           )}
@@ -180,11 +183,11 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">{t.crop || 'Cultivated Crop'}</span>
-                  <h2 className="text-xl font-black text-slate-900 mt-0.5">{activeCrop.cropName}</h2>
-                  <p className="text-xs text-emerald-700 font-semibold mt-0.5">{activeCrop.variety || 'Standard Variety'}</p>
+                  <h2 className="text-xl font-black text-slate-900 mt-0.5">{getLocalizedCropName(activeCrop.cropName, lang)}</h2>
+                  <p className="text-xs text-emerald-700 font-semibold mt-0.5">{translateText(activeCrop.variety, lang) || 'Standard Variety'}</p>
                 </div>
                 <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  {activeCrop.status.toUpperCase()}
+                  {translateText(activeCrop.status, lang).toUpperCase()}
                 </span>
               </div>
 
@@ -209,7 +212,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.growthStage || 'Growth Stage'}</span>
-                  <span className="font-bold text-emerald-700 truncate block">{activeCrop.growthStage}</span>
+                  <span className="font-bold text-emerald-700 truncate block">{getLocalizedGrowthStage(activeCrop.growthStage, lang)}</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.sowingDate || 'Sowing Date'}</span>
@@ -230,12 +233,12 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                 </div>
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Scheduled:</span>
+                    <span className="text-slate-600">{t.schedule || 'Scheduled'}:</span>
                     <span className="font-bold text-slate-900">{plan.irrigation.nextWatering}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Volume:</span>
-                    <span className="font-mono text-sky-700 font-bold">{plan.irrigation.volumeLitersPerAcre.toLocaleString()} L/Acre</span>
+                    <span className="text-slate-600">{t.volume || 'Volume'}:</span>
+                    <span className="font-mono text-sky-700 font-bold">{plan.irrigation.volumeLitersPerAcre.toLocaleString()} L/{t.acres || 'Acre'}</span>
                   </div>
                 </div>
                 <p className="text-[11px] text-slate-500 leading-relaxed italic">{plan.irrigation.smartNotes}</p>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Bell, AlertTriangle, CloudRain, Thermometer, Droplets, ShieldAlert, Smartphone, Mail, Send, CheckCircle2 } from 'lucide-react';
 import { WeatherAlert } from '../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
+import { translateText } from '../lib/universalTranslator';
 
 interface NotificationsModalProps {
   isOpen: boolean;
@@ -132,7 +133,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                 <div className="flex items-start justify-between gap-3 mb-1.5">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className={`w-4 h-4 ${isHigh ? 'text-rose-400' : 'text-amber-400'}`} />
-                    <h3 className="text-sm font-bold text-slate-100">{a.title}</h3>
+                    <h3 className="text-sm font-bold text-slate-100">{translateText(a.title, lang)}</h3>
                   </div>
                   <span
                     className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
@@ -141,19 +142,19 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                         : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                     }`}
                   >
-                    {a.severity}
+                    {translateText(a.severity, lang)}
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 mb-2 leading-relaxed">{a.description}</p>
+                <p className="text-xs text-slate-400 mb-2 leading-relaxed">{translateText(a.description, lang)}</p>
 
                 <div className="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
-                  <span className="font-semibold text-emerald-400">Action Plan: </span>
-                  <span className="text-slate-300">{a.recommendedAction}</span>
+                  <span className="font-semibold text-emerald-400">{t.fieldAdvisory || 'Action Plan'}: </span>
+                  <span className="text-slate-300">{translateText(a.recommendedAction, lang)}</span>
                 </div>
 
                 <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-800/60 text-[11px] text-slate-500">
-                  <span>Type: {a.type}</span>
+                  <span>{t.type || 'Type'}: {translateText(a.type, lang)}</span>
                   <button
                     onClick={() => handleSendTest(a)}
                     className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"

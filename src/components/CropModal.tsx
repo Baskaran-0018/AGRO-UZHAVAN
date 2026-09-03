@@ -3,6 +3,7 @@ import { X, Sprout, Check } from 'lucide-react';
 import { CropRecord, GrowthStage, CropCategory, FarmProfile } from '../types/agro';
 import { CROPS_CATALOG } from '../data/cropsData';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
+import { getLocalizedCropName, getLocalizedGrowthStage } from '../lib/universalTranslator';
 
 interface CropModalProps {
   isOpen: boolean;
@@ -106,7 +107,7 @@ export const CropModal: React.FC<CropModalProps> = ({
             >
               {CROPS_CATALOG.map((c) => (
                 <option key={c.name} value={c.name}>
-                  {c.icon} {c.name} ({c.scientificName})
+                  {c.icon} {getLocalizedCropName(c.name, lang)} ({c.scientificName})
                 </option>
               ))}
             </select>
@@ -164,7 +165,7 @@ export const CropModal: React.FC<CropModalProps> = ({
                 className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:border-emerald-500 outline-none cursor-pointer"
               >
                 {STAGES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>{getLocalizedGrowthStage(s, lang)}</option>
                 ))}
               </select>
             </div>

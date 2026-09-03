@@ -12,7 +12,15 @@ import {
 import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
 import { getLocalizedDiseaseDiagnostic } from '../../lib/diseaseDictionary';
-import { translateText, getLocalizedFarmName, getLocalizedLocation } from '../../lib/universalTranslator';
+import {
+  translateText,
+  getLocalizedFarmName,
+  getLocalizedLocation,
+  getLocalizedSoilType,
+  getLocalizedIrrigation,
+  getLocalizedCropName,
+  getLocalizedGrowthStage
+} from '../../lib/universalTranslator';
 
 interface DashboardViewProps {
   activeFarm: FarmProfile;
@@ -53,17 +61,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-white/20 text-white border border-white/30 backdrop-blur-xs">
                 {t.activeFarm || 'Active Farm'}
               </span>
-              <span className="text-xs text-emerald-100 font-medium">· {activeFarm.locationName}</span>
+              <span className="text-xs text-emerald-100 font-medium">· {getLocalizedLocation(activeFarm.locationName, lang)}</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-              {activeFarm.name}
+              {getLocalizedFarmName(activeFarm.name, lang)}
             </h1>
             <div className="text-xs sm:text-sm text-emerald-100 mt-2 flex flex-wrap items-center gap-3 font-medium">
               <span>🌾 <b className="text-white">{activeFarm.areaAcres}</b> {t.acres || 'Acres'}</span>
               <span>•</span>
-              <span>🌱 {t.soilType || 'Soil'}: <b className="text-white">{activeFarm.soilType}</b></span>
+              <span>🌱 {t.soilType || 'Soil'}: <b className="text-white">{getLocalizedSoilType(activeFarm.soilType, lang)}</b></span>
               <span>•</span>
-              <span>💧 {t.irrigationType || 'Irrigation'}: <b className="text-white">{activeFarm.irrigationType}</b></span>
+              <span>💧 {t.irrigationType || 'Irrigation'}: <b className="text-white">{getLocalizedIrrigation(activeFarm.irrigationType, lang)}</b></span>
             </div>
           </div>
         </div>
@@ -87,7 +95,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {cur ? Math.round(cur.temp) : 28}°C
             </span>
             <span className="text-xs text-slate-600 font-medium">
-              {cur?.weatherDescription || t.optimal || 'Clear'}
+              {cur?.weatherDescription ? translateText(cur.weatherDescription, lang) : (t.optimal || 'Clear')}
             </span>
           </div>
           <div className="mt-3 flex items-center justify-between text-[11px] text-slate-600 pt-2.5 border-t border-slate-100">
@@ -120,7 +128,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </span>
           </div>
           <div className="mt-3 flex items-center justify-between text-[11px] text-slate-600 pt-2.5 border-t border-slate-100">
-            <span className="truncate font-medium">{activeCrops[0]?.cropName || t.addCrop || 'Register Crop'}</span>
+            <span className="truncate font-medium">{activeCrops[0]?.cropName ? getLocalizedCropName(activeCrops[0].cropName, lang) : (t.addCrop || 'Register Crop')}</span>
             <ArrowRight className="w-3.5 h-3.5 text-emerald-600 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
@@ -282,13 +290,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40 transition-all cursor-pointer"
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <h4 className="text-sm font-bold text-slate-900 truncate">{crop.cropName}</h4>
+                      <h4 className="text-sm font-bold text-slate-900 truncate">{getLocalizedCropName(crop.cropName, lang)}</h4>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
-                        {crop.growthStage.split(' ')[0]}
+                        {getLocalizedGrowthStage(crop.growthStage, lang).split(' ')[0]}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-xs text-slate-600">
-                      <span>{t.variety || 'Variety'}: {crop.variety || 'Standard'}</span>
+                      <span>{t.variety || 'Variety'}: {translateText(crop.variety, lang) || 'Standard'}</span>
                       <span className="font-bold text-slate-800">{crop.areaPlantedAcres} {t.acres || 'Acres'}</span>
                     </div>
                   </div>

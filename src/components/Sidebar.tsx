@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
 import { usePwa } from '../lib/pwa';
+import { translateText } from '../lib/universalTranslator';
 
 interface SidebarProps {
   currentView: string;
@@ -36,14 +37,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       group: t.coreIntelligence || 'Smart Agriculture',
       items: [
-        { id: 'dashboard', label: t.dashboard || 'Dashboard', icon: LayoutDashboard, badge: t.liveBadge || t.live || 'Live' },
-        { id: 'weather', label: t.weatherPrediction || 'Weather & Forecast', icon: CloudSun, badge: t.graphsBadge || t.graphs || 'Graphs' },
+        { id: 'dashboard', label: t.dashboard || 'Dashboard', icon: LayoutDashboard, badge: translateText('Live', lang) },
+        { id: 'weather', label: t.weatherPrediction || 'Weather & Forecast', icon: CloudSun, badge: translateText('Graphs', lang) },
         { id: 'cropplanner', label: t.cropManagement || 'Crop Planner', icon: CalendarCheck },
-        { id: 'diseasescanner', label: t.diseaseDetection || 'AI Leaf Doctor', icon: ScanLine, badge: t.visionBadge || t.vision || 'Vision' },
+        { id: 'diseasescanner', label: t.diseaseDetection || 'AI Leaf Doctor', icon: ScanLine, badge: translateText('Vision', lang) },
         { id: 'yieldpredictor', label: t.yieldPrediction || 'Yield Estimator', icon: TrendingUp },
         { id: 'medicineguide', label: t.medicineGuide || 'Pesticide & Remedies', icon: Pill },
-        { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: t.voiceBadge || t.voice || 'Voice' },
-        { id: 'profile', label: t.farmerProfile || 'Farmer Profile & KYC', icon: UserCheck, badge: t.kycBadge || t.kyc || 'KYC' },
+        { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: translateText('Voice', lang) },
+        { id: 'profile', label: t.farmerProfile || 'Farmer Profile & KYC', icon: UserCheck, badge: translateText('KYC', lang) },
       ]
     }
   ];

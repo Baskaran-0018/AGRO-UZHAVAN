@@ -23,13 +23,49 @@ export function getLanguageName(code: SupportedLang): string {
   return meta ? meta.name : 'English';
 }
 
-export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
+const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
   en: {
     // Brand & Applet
     appTitle: 'Agro Uzhavan',
     tagline: 'Agro Uzhavan',
     v3Badge: 'v3.7',
     version: 'Version',
+
+    // Role, Navigation & Badges
+    farmer: 'Farmer',
+    live: 'Live',
+    graphs: 'Graphs',
+    vision: 'Vision',
+    voice: 'Voice',
+    variety: 'Variety',
+    chooseLanguage: 'Choose Language',
+    intelligentAgriculture: 'Intelligent Agriculture',
+    feelsLike: 'Feels like',
+    schedule: 'Scheduled',
+    volume: 'Volume',
+    active: 'Active',
+    daysActive: 'Days',
+    totalFor: 'Total for',
+    weatherForecast: 'Weather Forecast',
+    activeInfection: 'Active Infection',
+    healthySpecimen: 'Healthy Specimen',
+    exactDiagnosis: 'Exact Diagnosis',
+    aiConfidence: 'AI Confidence',
+    severityLevel: 'Severity Level',
+    causalPathology: 'Causal Pathology & Environmental Etiology',
+    symptomsList: 'Observable Pathological Symptoms',
+    chemicalProtocol: 'Chemical Treatment & Fungicides',
+    recommendedDosage: 'Recommended Dosage',
+    applicationMethod: 'Application Method',
+    mandatoryPPE: 'Mandatory PPE & Safety Guidelines',
+    hideAccuracyGraph: 'Hide Accuracy Graph',
+    viewAccuracyGraph: 'View Accuracy Graph',
+    diseaseModelBenchmark: 'Plant Disease Model Accuracy Benchmark',
+    datasetValidated: 'Validated against agricultural pathology datasets (140,000+ leaf specimens)',
+    manageStageWise: 'Manage stage-wise irrigation, fertilization, and pest protection protocols',
+    addCropPrompt: 'Add your current seasonal crop planting to generate AI-backed daily irrigation and fertigation schedules.',
+    registeredCrops: 'Registered Crops',
+    downloadReport: 'Download Diagnostic Report',
 
     // Navigation Items
     dashboard: 'Dashboard',
@@ -357,6 +393,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     v3Badge: 'संस्करण 3.7',
     version: 'संस्करण',
 
+    // Role, Navigation & Badges
+    farmer: 'किसान',
+    live: 'लाइव',
+    graphs: 'ग्राफ',
+    vision: 'विजन',
+    voice: 'आवाज़',
+    variety: 'किस्म',
+    chooseLanguage: 'भाषा चुनें',
+    intelligentAgriculture: 'बुद्धिमान कृषि',
+    feelsLike: 'महसूस होता है',
+    schedule: 'निर्धारित',
+    volume: 'मात्रा',
+    active: 'सक्रिय',
+    daysActive: 'दिन',
+    totalFor: 'कुल',
+    weatherForecast: 'मौसम पूर्वानुमान',
+    activeInfection: 'सक्रिय संक्रमण',
+    healthySpecimen: 'स्वस्थ नमूना',
+    exactDiagnosis: 'सटीक निदान',
+    aiConfidence: 'एआई विश्वास',
+    severityLevel: 'गंभीरता स्तर',
+    causalPathology: 'रोगजनक कारण एवं पर्यावरणीय प्रभाव',
+    symptomsList: 'पहचान योग्य रोग लक्षण',
+    chemicalProtocol: 'रासायनिक उपचार एवं कवकनाशी',
+    recommendedDosage: 'अनुशंसित खुराक',
+    applicationMethod: 'प्रयोग विधि',
+    mandatoryPPE: 'अनिवार्य सुरक्षा उपकरण एवं दिशानिर्देश',
+    hideAccuracyGraph: 'सटीकता ग्राफ छिपाएं',
+    viewAccuracyGraph: 'सटीकता ग्राफ देखें',
+    diseaseModelBenchmark: 'पादप रोग मॉडल सटीकता बेंचमार्क',
+    datasetValidated: 'कृषि रोग विज्ञान डेटासेट (140,000+ पत्तियों) द्वारा प्रमाणित',
+    manageStageWise: 'चरणबद्ध सिंचाई, उर्वरक और कीट सुरक्षा प्रोटोकॉल प्रबंधित करें',
+    addCropPrompt: 'दैनिक सिंचाई और उर्वरक कार्यक्रम तैयार करने के लिए अपनी मौसमी फसल जोड़ें।',
+    registeredCrops: 'पंजीकृत फसलें',
+    downloadReport: 'निदान रिपोर्ट डाउनलोड करें',
+
     // Navigation Items
     dashboard: 'डैशबोर्ड',
     weatherPrediction: 'मौसम पूर्वानुमान',
@@ -682,6 +754,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     tagline: 'Agro Uzhavan',
     v3Badge: 'பதிப்பு 3.7',
     version: 'பதிப்பு',
+
+    // Role, Navigation & Badges
+    farmer: 'விவசாயி',
+    live: 'நேரலை',
+    graphs: 'வரைபடம்',
+    vision: 'பார்வை',
+    voice: 'குரல்',
+    variety: 'ரக வகை',
+    chooseLanguage: 'மொழியை தேர்வு செய்க',
+    intelligentAgriculture: 'நுண்ணறிவு வேளாண்மை',
+    feelsLike: 'உணரப்படுவது',
+    schedule: 'திட்டமிடப்பட்டது',
+    volume: 'அளவு',
+    active: 'செயலில்',
+    daysActive: 'நாட்கள்',
+    totalFor: 'மொத்தம்',
+    weatherForecast: 'வானிலை முன்னறிவிப்பு',
+    activeInfection: 'தீவிர தொற்று',
+    healthySpecimen: 'ஆரோக்கியமான மாதிரி',
+    exactDiagnosis: 'துல்லியமான நோய் கண்டறிதல்',
+    aiConfidence: 'AI துல்லியம்',
+    severityLevel: 'தீவிர நிலை',
+    causalPathology: 'நோய்க்கான காரணம் & சுற்றுச்சூழல் காரணிகள்',
+    symptomsList: 'தென்படும் நோய்க் குறிகள்',
+    chemicalProtocol: 'ரசாயன சிகிச்சை & பூஞ்சாணக்கொல்லி',
+    recommendedDosage: 'பரிந்துரைக்கப்பட்ட மருந்தளவு',
+    applicationMethod: 'தெளிக்கும் முறை',
+    mandatoryPPE: 'கட்டாய பாதுகாப்பு உபகரணங்கள் & வழிகாட்டல்கள்',
+    hideAccuracyGraph: 'துல்லிய வரைபடத்தை மறைக்கவும்',
+    viewAccuracyGraph: 'துல்லிய வரைபடத்தை பார்க்கவும்',
+    diseaseModelBenchmark: 'பயிர் நோய் மாதிரி துல்லிய அளவீடு',
+    datasetValidated: 'வேளாண் நோயியல் தரவுத்தொகுப்பால் (140,000+ இலைகள்) சரிபார்க்கப்பட்டது',
+    manageStageWise: 'பயிர் வளர்ச்சி நிலைக்கேற்ப பாசனம், உரமிடல் மற்றும் பூச்சி கட்டுப்பாடு முறைகளை நிர்வகிக்கவும்',
+    addCropPrompt: 'தினசரி பாசனம் மற்றும் உரமிடும் திட்டங்களைப் பெற உங்கள் பருவப் பயிரை சேர்க்கவும்.',
+    registeredCrops: 'பதிவு செய்யப்பட்ட பயிர்கள்',
+    downloadReport: 'நோய் அறிக்கையை பதிவிறக்குக',
 
     // Navigation Items
     dashboard: 'முகப்பு பலகை',
@@ -1009,6 +1117,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     v3Badge: 'వెర్షన్ 3.7',
     version: 'వెర్షన్',
 
+    // Role, Navigation & Badges
+    farmer: 'రైతు',
+    live: 'లైవ్',
+    graphs: 'గ్రాఫ్‌లు',
+    vision: 'విజన్',
+    voice: 'వాయిస్',
+    variety: 'రకం',
+    chooseLanguage: 'భాషను ఎంచుకోండి',
+    intelligentAgriculture: 'తెలివైన వ్యవసాయం',
+    feelsLike: 'అనిపిస్తుంది',
+    schedule: 'షెడ్యూల్ చేయబడింది',
+    volume: 'పరిమాణం',
+    active: 'క్రియాశీలక',
+    daysActive: 'రోజులు',
+    totalFor: 'మొత్తం',
+    weatherForecast: 'వాతావరణ సూచన',
+    activeInfection: 'క్రియాశీల సంక్రమణ',
+    healthySpecimen: 'ఆరోగ్యకరమైన నమూనా',
+    exactDiagnosis: 'ఖచ్చితమైన నిర్ధారణ',
+    aiConfidence: 'AI విశ్వసనీయత',
+    severityLevel: 'తీవ్రత స్థాయి',
+    causalPathology: 'కారణ రోగ లక్షణాలు & పర్యావరణ ప్రభావం',
+    symptomsList: 'గమనించదగిన వ్యాధి లక్షణాలు',
+    chemicalProtocol: 'రసాయన చికిత్స & శిలీంధ్రనాశినులు',
+    recommendedDosage: 'సిఫార్సు చేసిన మోతాదు',
+    applicationMethod: 'వినియోగ విధానం',
+    mandatoryPPE: 'తప్పనిసరి భద్రతా పరికరాలు & మార్గదర్శకాలు',
+    hideAccuracyGraph: 'ఖచ్చితత్వ గ్రాఫ్‌ను దాచండి',
+    viewAccuracyGraph: 'ఖచ్చితత్వ గ్రాఫ్‌ను చూడండి',
+    diseaseModelBenchmark: 'మొక్కల వ్యాధి మోడల్ ఖచ్చితత్వ బెంచ్‌మార్క్',
+    datasetValidated: 'వ్యవసాయ పాథాలజీ డేటాసెట్‌లతో ధృవీకరించబడింది',
+    manageStageWise: 'దశలవారీగా నీటిపారుదల, ఎరువులు మరియు తెగుళ్ల సంరక్షణను నిర్వహించండి',
+    addCropPrompt: 'రోజువారీ నీటిపారుదల మరియు ఎరువుల షెడ్యూల్‌ను రూపొందించడానికి మీ పంటను జోడించండి.',
+    registeredCrops: 'నమోదిత పంటలు',
+    downloadReport: 'రోగ నిర్ధారణ నివేదికను డౌన్‌లోడ్ చేయండి',
+
     // Navigation Items
     dashboard: 'డ్యాష్‌బోర్డ్',
     weatherPrediction: 'వాతావరణ సలహా',
@@ -1331,6 +1475,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     tagline: 'Agro Uzhavan',
     v3Badge: 'ಆವೃತ್ತಿ 3.7',
     version: 'ಆವೃತ್ತಿ',
+
+    // Role, Navigation & Badges
+    farmer: 'ರೈತ',
+    live: 'ಲೈವ್',
+    graphs: 'ಗ್ರಾಫ್‌ಗಳು',
+    vision: 'ದೃಷ್ಟಿ',
+    voice: 'ಧ್ವನಿ',
+    variety: 'ತಳಿ',
+    chooseLanguage: 'ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+    intelligentAgriculture: 'ಬುದ್ಧಿವಂತ ಕೃಷಿ',
+    feelsLike: 'ಅನಿಸುತ್ತದೆ',
+    schedule: 'ನಿಗದಿಯಾಗಿದೆ',
+    volume: 'ಪ್ರಮಾಣ',
+    active: 'ಸಕ್ರಿಯ',
+    daysActive: 'ದಿನಗಳು',
+    totalFor: 'ಒಟ್ಟು',
+    weatherForecast: 'ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ',
+    activeInfection: 'ಸಕ್ರಿಯ ಸೋಂಕು',
+    healthySpecimen: 'ಆರೋಗ್ಯಕರ ಮಾದರಿ',
+    exactDiagnosis: 'ನಿಖರವಾದ ರೋಗನಿರ್ಣಯ',
+    aiConfidence: 'AI ವಿಶ್ವಾಸಾರ್ಹತೆ',
+    severityLevel: 'ತೀವ್ರತೆಯ ಮಟ್ಟ',
+    causalPathology: 'ರೋಗದ ಕಾರಣ ಮತ್ತು ಪರಿಸರ ಪ್ರಭಾವ',
+    symptomsList: 'ಕಾಣಿಸುವ ರೋಗ ಲಕ್ಷಣಗಳು',
+    chemicalProtocol: 'ರಾಸಾಯನಿಕ ಚಿಕಿತ್ಸೆ ಮತ್ತು ಶಿಲೀಂಧ್ರನಾಶಕಗಳು',
+    recommendedDosage: 'ಶಿಫಾರಸು ಮಾಡಿದ ಪ್ರಮಾಣ',
+    applicationMethod: 'ಬಳಕೆಯ ವಿಧಾನ',
+    mandatoryPPE: 'ಕಡ್ಡಾಯ ಸುರಕ್ಷತಾ ಮಾರ್ಗಸೂಚಿಗಳು',
+    hideAccuracyGraph: 'ನಿಖರತೆಯ ಗ್ರಾಫ್ ಮರೆಮಾಡಿ',
+    viewAccuracyGraph: 'ನಿಖರತೆಯ ಗ್ರಾಫ್ ವೀಕ್ಷಿಸಿ',
+    diseaseModelBenchmark: 'ಸಸ್ಯ ರೋಗ ಮಾದರಿಯ ನಿಖರತೆಯ ಮಾನದಂಡ',
+    datasetValidated: 'ಕೃಷಿ ರೋಗಶಾಸ್ತ್ರದ ಡೇಟಾಸೆಟ್‌ಗಳಿಂದ ದೃಢೀಕರಿಸಲಾಗಿದೆ',
+    manageStageWise: 'ಹಂತವಾರು ನೀರಾವರಿ, ಗೊಬ್ಬರ ಮತ್ತು ಕೀಟ ಸಂರಕ್ಷಣಾ ನಿಯಮಗಳನ್ನು ನಿರ್ವಹಿಸಿ',
+    addCropPrompt: 'ದೈನಂದಿನ ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿಯನ್ನು ರಚಿಸಲು ನಿಮ್ಮ ಬೆಳೆ ಸೇರಿಸಿ.',
+    registeredCrops: 'ನೋಂದಾಯಿತ ಬೆಳೆಗಳು',
+    downloadReport: 'ವರದಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ',
 
     // Navigation Items
     dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
@@ -1655,6 +1835,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     v3Badge: 'आवृत्ती 3.7',
     version: 'आवृत्ती',
 
+    // Role, Navigation & Badges
+    farmer: 'शेतकरी',
+    live: 'थेट',
+    graphs: 'आलेख',
+    vision: 'दृष्टी',
+    voice: 'आवाज',
+    variety: 'जात',
+    chooseLanguage: 'भाषा निवडा',
+    intelligentAgriculture: 'बुद्धिमान शेती',
+    feelsLike: 'जाणवते',
+    schedule: 'नियोजित',
+    volume: 'प्रमाण',
+    active: 'सक्रिय',
+    daysActive: 'दिवस',
+    totalFor: 'एकूण',
+    weatherForecast: 'हवामान अंदाज',
+    activeInfection: 'सक्रिय संसर्ग',
+    healthySpecimen: 'निरोगी नमुना',
+    exactDiagnosis: 'तंतोतंत निदान',
+    aiConfidence: 'AI आत्मविश्वास',
+    severityLevel: 'तीव्रता पातळी',
+    causalPathology: 'रोगकारक कारणे आणि पर्यावरणीय प्रभाव',
+    symptomsList: 'निरीक्षणयोग्य रोग लक्षणे',
+    chemicalProtocol: 'रासायनिक उपचार आणि बुरशीनाशके',
+    recommendedDosage: 'शिफारस केलेले प्रमाण',
+    applicationMethod: 'वापरण्याची पद्धत',
+    mandatoryPPE: 'अनिवार्य सुरक्षा मार्गदर्शक तत्त्वे',
+    hideAccuracyGraph: 'अचूकता आलेख लपवा',
+    viewAccuracyGraph: 'अचूकता आलेख पहा',
+    diseaseModelBenchmark: 'वनस्पती रोग मॉडेल अचूकता बेंचमार्क',
+    datasetValidated: 'कृषी पॅथॉलॉजी डेटासेटद्वारे प्रमाणित',
+    manageStageWise: 'टप्प्याटप्प्याने सिंचन, खत व्यवस्थापन आणि कीड संरक्षण व्यवस्थापित करा',
+    addCropPrompt: 'दैनंदिन सिंचन आणि खत वेळापत्रक मिळवण्यासाठी तुमचे पीक जोडा.',
+    registeredCrops: 'नोंदणीकृत पिके',
+    downloadReport: 'निदान अहवाल डाउनलोड करा',
+
     // Navigation Items
     dashboard: 'डॅशबोर्ड',
     weatherPrediction: 'हवामान सल्ला',
@@ -1977,6 +2193,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     tagline: 'Agro Uzhavan',
     v3Badge: 'সংস্করণ ৩.৭',
     version: 'সংস্করণ',
+
+    // Role, Navigation & Badges
+    farmer: 'কৃষক',
+    live: 'লাইভ',
+    graphs: 'গ্রাফ',
+    vision: 'দৃষ্টি',
+    voice: 'ভয়েস',
+    variety: 'জাত',
+    chooseLanguage: 'ভাষা নির্বাচন করুন',
+    intelligentAgriculture: 'বুদ্ধিমান কৃষি',
+    feelsLike: 'অনুভূত হয়',
+    schedule: 'নির্ধারিত',
+    volume: 'পরিমাণ',
+    active: 'সক্রিয়',
+    daysActive: 'দিন',
+    totalFor: 'মোট',
+    weatherForecast: 'আবহাওয়া পূর্বাভাস',
+    activeInfection: 'সক্রিয় সংক্রমণ',
+    healthySpecimen: 'সুস্থ নমুনা',
+    exactDiagnosis: 'সঠিক রোগ নির্ণয়',
+    aiConfidence: 'AI আত্মবিশ্বাস',
+    severityLevel: 'তীব্রতার মাত্রা',
+    causalPathology: 'রোগের কারণ ও পরিবেশগত প্রভাব',
+    symptomsList: 'দৃশ্যমান রোগের লক্ষণ',
+    chemicalProtocol: 'রাসায়নিক চিকিৎসা ও ছত্রাকনাশক',
+    recommendedDosage: 'প্রস্তাবিত মাত্রা',
+    applicationMethod: 'প্রয়োগের পদ্ধতি',
+    mandatoryPPE: 'বাধ্যতামূলক সুরক্ষা নির্দেশিকা',
+    hideAccuracyGraph: 'গ্রাফ লুকান',
+    viewAccuracyGraph: 'গ্রাফ দেখুন',
+    diseaseModelBenchmark: 'উদ্ভিদ রোগ মডেলের নির্ভুলতা বেঞ্চমার্ক',
+    datasetValidated: 'কৃষি প্যাথলজি ডেটাসেট দ্বারা যাচাইকৃত',
+    manageStageWise: 'পর্যায়ক্রমিক সেচ, সার এবং বালাই ব্যবস্থাপনা পরিচালনা করুন',
+    addCropPrompt: 'দৈনিক সেচ ও সার সময়সূচী পেতে আপনার ফসল যুক্ত করুন।',
+    registeredCrops: 'নিবন্ধিত ফসল',
+    downloadReport: 'ডায়াগনস্টিক রিপোর্ট ডাউনলোড করুন',
 
     // Navigation Items
     dashboard: 'ড্যাশবোর্ড',
@@ -2301,6 +2553,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     v3Badge: 'આવૃત્તિ ૩.૭',
     version: 'આવૃત્તિ',
 
+    // Role, Navigation & Badges
+    farmer: 'ખેડૂત',
+    live: 'લાઈવ',
+    graphs: 'ગ્રાફ',
+    vision: 'દ્રષ્ટિ',
+    voice: 'અવાજ',
+    variety: 'જાત',
+    chooseLanguage: 'ભાષા પસંદ કરો',
+    intelligentAgriculture: 'બુદ્ધિશાળી કૃષિ',
+    feelsLike: 'લાગે છે',
+    schedule: 'નિયુક્ત',
+    volume: 'જથ્થો',
+    active: 'સક્રિય',
+    daysActive: 'દિવસો',
+    totalFor: 'કુલ',
+    weatherForecast: 'હવામાન આગાહી',
+    activeInfection: 'સક્રિય ચેપ',
+    healthySpecimen: 'તંદુરસ્ત નમૂનો',
+    exactDiagnosis: 'ચોક્કસ નિદાન',
+    aiConfidence: 'AI વિશ્વસનીયતા',
+    severityLevel: 'તીવ્રતા સ્તર',
+    causalPathology: 'રોગના કારણો અને પર્યાવરણીય પરિબળો',
+    symptomsList: 'જોઈ શકાય તેવા રોગના લક્ષણો',
+    chemicalProtocol: 'રાસાયણિક સારવાર અને ફૂગનાશક',
+    recommendedDosage: 'ભલામણ કરેલ માત્રા',
+    applicationMethod: 'ઉપયોગની પદ્ધતિ',
+    mandatoryPPE: 'ફરજિયાત સુરક્ષા માર્ગદર્શિકા',
+    hideAccuracyGraph: 'ગ્રાફ છુપાવો',
+    viewAccuracyGraph: 'ગ્રાફ જુઓ',
+    diseaseModelBenchmark: 'વનસ્પતિ રોગ મોડેલ ચોકસાઈ બેન્ચમાર્ક',
+    datasetValidated: 'કૃષિ રોગવિજ્ઞાન ડેટાસેટ્સ દ્વારા માન્ય',
+    manageStageWise: 'તબક્કાવાર પિયત, ખાતર અને જીવાત સંરક્ષણ વ્યવસ્થાપિત કરો',
+    addCropPrompt: 'દૈનિક પિયત અને ખાતર સમયપત્રક મેળવવા માટે તમારો પાક ઉમેરો.',
+    registeredCrops: 'નોંધાયેલ પાકો',
+    downloadReport: 'રિપોર્ટ ડાઉનલોડ કરો',
+
     // Navigation Items
     dashboard: 'ડેશબોર્ડ',
     weatherPrediction: 'હવામાન સલાહ',
@@ -2624,6 +2912,42 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     v3Badge: 'ਸੰਸਕਰਣ 3.7',
     version: 'ਸੰਸਕਰਣ',
 
+    // Role, Navigation & Badges
+    farmer: 'ਕਿਸਾਨ',
+    live: 'ਲਾਈਵ',
+    graphs: 'ਗ੍ਰਾਫ਼',
+    vision: 'ਦ੍ਰਿਸ਼ਟੀ',
+    voice: 'ਆਵਾਜ਼',
+    variety: 'ਕਿਸਮ',
+    chooseLanguage: 'ਭਾਸ਼ਾ ਚੁਣੋ',
+    intelligentAgriculture: 'ਬੁੱਧੀਮਾਨ ਖੇਤੀਬਾੜੀ',
+    feelsLike: 'ਮਹਿਸੂਸ ਹੁੰਦਾ ਹੈ',
+    schedule: 'ਤੈਅ ਕੀਤਾ',
+    volume: 'ਮਾਤਰਾ',
+    active: 'ਸਰਗਰਮ',
+    daysActive: 'ਦਿਨ',
+    totalFor: 'ਕੁੱਲ',
+    weatherForecast: 'ਮੌਸਮ ਦੀ ਭਵਿੱਖਬਾਣੀ',
+    activeInfection: 'ਸਰਗਰਮ ਲਾਗ',
+    healthySpecimen: 'ਸਿਹਤਮੰਦ ਨਮੂਨਾ',
+    exactDiagnosis: 'ਸਹੀ ਨਿਦਾਨ',
+    aiConfidence: 'AI ਭਰੋਸਾ',
+    severityLevel: 'ਗੰਭੀਰਤਾ ਦਾ ਪੱਧਰ',
+    causalPathology: 'ਰੋਗ ਦੇ ਕਾਰਨ ਅਤੇ ਵਾਤਾਵਰਣ ਦੇ ਕਾਰਕ',
+    symptomsList: 'ਵੇਖਣਯੋਗ ਰੋਗ ਦੇ ਲੱਛਣ',
+    chemicalProtocol: 'ਰਸਾਇਣਕ ਇਲਾਜ ਅਤੇ ਉੱਲੀਨਾਸ਼ਕ',
+    recommendedDosage: 'ਸਿਫ਼ਾਰਸ਼ ਕੀਤੀ ਖੁਰਾਕ',
+    applicationMethod: 'ਵਰਤੋਂ ਦਾ ਤਰੀਕਾ',
+    mandatoryPPE: 'ਲਾਜ਼ਮੀ ਸੁਰੱਖਿਆ ਦਿਸ਼ਾ-ਨਿਰਦੇਸ਼',
+    hideAccuracyGraph: 'ਗ੍ਰਾਫ਼ ਲੁਕਾਓ',
+    viewAccuracyGraph: 'ਗ੍ਰਾਫ਼ ਵੇਖੋ',
+    diseaseModelBenchmark: 'ਪੌਦਿਆਂ ਦੀ ਬਿਮਾਰੀ ਮਾਡਲ ਸ਼ੁੱਧਤਾ ਬੈਂਚਮਾਰਕ',
+    datasetValidated: 'ਖੇਤੀਬਾੜੀ ਪੈਥੋਲੋਜੀ ਡੇਟਾਸੈੱਟਾਂ ਦੁਆਰਾ ਪ੍ਰਮਾਣਿਤ',
+    manageStageWise: 'ਪੜਾਅਵਾਰ ਸਿੰਚਾਈ, ਖਾਦ ਅਤੇ ਕੀੜੇ-ਮਕੌੜਿਆਂ ਦੀ ਸੁਰੱਖਿਆ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ',
+    addCropPrompt: 'ਰੋਜ਼ਾਨਾ ਸਿੰਚਾਈ ਅਤੇ ਖਾਦ ਦੀ ਸਮਾਂ-ਸਾਰਣੀ ਤਿਆਰ ਕਰਨ ਲਈ ਆਪਣੀ ਫਸਲ ਸ਼ਾਮਲ ਕਰੋ।',
+    registeredCrops: 'ਰਜਿਸਟਰਡ ਫਸਲਾਂ',
+    downloadReport: 'ਰਿਪੋਰਟ ਡਾਊਨਲੋਡ ਕਰੋ',
+
     // Navigation Items
     dashboard: 'ਡੈਸ਼ਬੋਰਡ',
     weatherPrediction: 'ਮੌਸਮ ਸਲਾਹ',
@@ -2942,6 +3266,27 @@ export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
 };
 
 /**
+ * Universal Proxy wrapper to guarantee 100% complete translation coverage with seamless English fallback.
+ */
+export const TRANSLATIONS: Record<SupportedLang, Record<string, string>> = new Proxy(RAW_TRANSLATIONS, {
+  get(target, lang: SupportedLang) {
+    const langDict = target[lang] || target.en;
+    const enDict = target.en;
+    return new Proxy(langDict, {
+      get(dict, key: string) {
+        if (key in dict && dict[key] !== undefined && dict[key] !== '') {
+          return dict[key];
+        }
+        if (key in enDict && enDict[key] !== undefined) {
+          return enDict[key];
+        }
+        return (dict as any)[key];
+      }
+    });
+  }
+});
+
+/**
  * Type-safe localization helper with parameter substitution and fallback to English.
  */
 export function t(
@@ -2958,3 +3303,4 @@ export function t(
   }
   return text;
 }
+

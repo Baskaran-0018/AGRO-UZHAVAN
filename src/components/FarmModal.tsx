@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, MapPin, Search, Plus, Check } from 'lucide-react';
 import { FarmProfile, SoilType } from '../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
+import { getLocalizedSoilType, getLocalizedLocation } from '../lib/universalTranslator';
 
 interface FarmModalProps {
   isOpen: boolean;
@@ -191,7 +192,7 @@ export const FarmModal: React.FC<FarmModalProps> = ({
                 className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:border-emerald-500 outline-none cursor-pointer"
               >
                 {SOIL_OPTIONS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>{getLocalizedSoilType(s, lang)}</option>
                 ))}
               </select>
             </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pill, Search, ShieldCheck, AlertTriangle, Calculator, Sparkles } from 'lucide-react';
 import { FarmProfile } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
+import { getLocalizedCropName, translateText } from '../../lib/universalTranslator';
 
 interface MedicineGuideViewProps {
   activeFarm: FarmProfile;
@@ -184,7 +185,7 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
                         : 'bg-amber-50 text-amber-800 border-amber-200'
                     }`}
                   >
-                    {isOrg ? (t.organic || 'Organic') : (t.chemical || 'Chemical')} · {med.category}
+                    {isOrg ? (t.organic || 'Organic') : (t.chemical || 'Chemical')} · {translateText(med.category, lang)}
                   </span>
                   <span className="text-[10px] text-slate-500 font-mono">{t.waitingPeriod || 'PHI'}: {med.phiDays} {t.daysActive || 'Days'}</span>
                 </div>
@@ -199,7 +200,7 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
                     <div className="flex flex-wrap gap-1 mt-0.5">
                       {(med.targetPests || []).map((p, i) => (
                         <span key={i} className="px-1.5 py-0.5 rounded bg-slate-50 text-slate-700 text-[10px] border border-slate-200">
-                          {p}
+                          {translateText(p, lang)}
                         </span>
                       ))}
                     </div>
@@ -207,7 +208,9 @@ export const MedicineGuideView: React.FC<MedicineGuideViewProps> = ({ activeFarm
 
                   <div>
                     <span className="text-slate-500 text-[10px] font-bold uppercase block">{t.approvedCrops || 'Approved Crops:'}</span>
-                    <span className="text-slate-700 text-[11px] font-medium">{(med.targetCrops || []).join(', ')}</span>
+                    <span className="text-slate-700 text-[11px] font-medium">
+                      {(med.targetCrops || []).map(c => getLocalizedCropName(c, lang)).join(', ')}
+                    </span>
                   </div>
                 </div>
               </div>
