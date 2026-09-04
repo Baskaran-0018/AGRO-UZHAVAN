@@ -29,7 +29,6 @@ import { WeatherView } from './components/views/WeatherView';
 import { CropPlannerView } from './components/views/CropPlannerView';
 import { YieldPredictorView } from './components/views/YieldPredictorView';
 import { DiseaseScannerView } from './components/views/DiseaseScannerView';
-import { TurmericScannerView } from './components/views/TurmericScannerView';
 import { MedicineGuideView } from './components/views/MedicineGuideView';
 import { AssistantView } from './components/views/AssistantView';
 import { DatasetManagerView } from './components/views/DatasetManagerView';
@@ -39,6 +38,8 @@ import { MapView } from './components/views/MapView';
 import { ReportsView } from './components/views/ReportsView';
 import { AdminPanel } from './components/views/AdminPanel';
 import { ProfileView } from './components/views/ProfileView';
+
+import { loadWeatherData } from './lib/weatherClient';
 
 export function App() {
   // Authentication State
@@ -90,13 +91,12 @@ export function App() {
   async function fetchWeather() {
     setWeatherLoading(true);
     try {
-      const res = await fetch(`/api/weather?lat=${activeFarm.lat}&lon=${activeFarm.lng}&place=${encodeURIComponent(activeFarm.locationName)}&lang=${getLanguageName(lang)}`);
-      if (res.ok) {
-        const data = await res.json();
+      const data = await loadWeatherData(activeFarm, lang);
+      if (data) {
         setWeather(data);
       }
     } catch (err) {
-      console.warn('Weather fetch error:', err);
+      console.warn('Weather load error:', err);
     } finally {
       setWeatherLoading(false);
     }
@@ -325,15 +325,6 @@ export function App() {
 
           {currentView === 'diseasescanner' && (
             <DiseaseScannerView
-              onAddScan={handleAddScan}
-              scans={scans}
-              activeFarm={activeFarm}
-              lang={lang}
-            />
-          )}
-
-          {currentView === 'turmericscanner' && (
-            <TurmericScannerView
               onAddScan={handleAddScan}
               scans={scans}
               activeFarm={activeFarm}

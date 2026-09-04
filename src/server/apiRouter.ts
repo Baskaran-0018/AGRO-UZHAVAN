@@ -3,7 +3,9 @@ import { generateCropPlan, detectPlantDiseaseVision, askAgriAssistant } from './
 
 export async function handleApiRequest(path: string, body: any, query: Record<string, string>): Promise<{ status: number; data: any }> {
   try {
-    if (path === '/api/weather') {
+    const cleanPath = (path || '').split('?')[0].replace(/\/+$/, '');
+
+    if (cleanPath === '/api/weather' || cleanPath === '/weather' || cleanPath.endsWith('/weather')) {
       const lat = parseFloat(query.lat || body.lat || '30.901');
       const lon = parseFloat(query.lon || body.lon || '75.8573');
       const place = query.place || body.place || 'Punjab Farm';
@@ -12,12 +14,12 @@ export async function handleApiRequest(path: string, body: any, query: Record<st
       return { status: 200, data: weather };
     }
 
-    if (path === '/api/gemini/crop-plan') {
+    if (cleanPath === '/api/gemini/crop-plan' || cleanPath.endsWith('/crop-plan')) {
       const plan = await generateCropPlan(body);
       return { status: 200, data: plan };
     }
 
-    if (path === '/api/gemini/disease-detect') {
+    if (cleanPath === '/api/gemini/disease-detect' || cleanPath.endsWith('/disease-detect')) {
       const { image, mimeType, lang } = body;
       if (!image) {
         return { status: 400, data: { error: 'Image base64 is required' } };
@@ -26,7 +28,7 @@ export async function handleApiRequest(path: string, body: any, query: Record<st
       return { status: 200, data: result };
     }
 
-    if (path === '/api/gemini/assistant') {
+    if (cleanPath === '/api/gemini/assistant' || cleanPath.endsWith('/assistant')) {
       const { history, farmContext, language } = body;
       const res = await askAgriAssistant({
         history: history || [],
@@ -36,7 +38,7 @@ export async function handleApiRequest(path: string, body: any, query: Record<st
       return { status: 200, data: res };
     }
 
-    if (path === '/api/places/search') {
+    if (cleanPath === '/api/places/search' || cleanPath.endsWith('/places/search') || cleanPath.endsWith('/search')) {
       const q = query.q || body.q || '';
       if (!q || q.length < 2) {
         return { status: 200, data: [] };
