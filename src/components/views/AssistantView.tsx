@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { FarmProfile } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS, LANGUAGES, getLanguageName } from '../../lib/i18n';
+import { translateText } from '../../lib/universalTranslator';
 
 const BROWSER_LANG_CODES: Record<string, string> = {
   en: 'en-IN',
@@ -321,10 +322,10 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
   }
 
   const QUICK_QUESTIONS = [
-    t.sampleQuery1 || 'How should I adjust drip irrigation based on this week\'s weather?',
-    t.sampleQuery2 || 'What is the best NPK fertilizer ratio for active vegetative stage?',
-    t.sampleQuery3 || 'How do I treat yellow rust on wheat organically?',
-    t.sampleQuery4 || 'What are the optimal weather conditions to spray fungicide?'
+    translateText('How should I adjust drip irrigation based on this week\'s weather?', selectedLang),
+    translateText('What is the best NPK fertilizer ratio for active vegetative stage?', selectedLang),
+    translateText('How do I treat yellow rust on wheat organically?', selectedLang),
+    translateText('What are the optimal weather conditions to spray fungicide?', selectedLang)
   ];
 
   return (
@@ -338,15 +339,15 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase">
-                {t.multilingualVoiceAI || 'AgriVoice AI Assistant'}
+                {translateText(t.multilingualVoiceAI || 'AgriVoice AI Assistant', selectedLang)}
               </span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                {activeFarm.name}
+                {translateText(activeFarm.name, selectedLang)}
               </span>
             </div>
-            <h1 className="text-2xl font-black text-slate-900 mt-1">{t.aiAssistant}</h1>
+            <h1 className="text-2xl font-black text-slate-900 mt-1">{translateText(t.aiAssistant, selectedLang)}</h1>
             <p className="text-xs text-slate-500 font-medium">
-              {t.voicePrompt || 'Grounded agronomy reasoning in 9 regional languages with instant speech synthesis'}
+              {translateText(t.voicePrompt || 'Grounded agronomy reasoning in 9 regional languages with instant speech synthesis', selectedLang)}
             </p>
           </div>
         </div>
@@ -367,7 +368,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
               }`}
             >
               <Radio className="w-3.5 h-3.5" />
-              <span>Voice Hub</span>
+              <span>{translateText('Voice Hub', selectedLang)}</span>
             </button>
             <button
               onClick={() => {
@@ -381,7 +382,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>AI Chat</span>
+              <span>{translateText('AI Chat', selectedLang)}</span>
             </button>
           </div>
 
@@ -429,7 +430,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
                     ? 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-600/30 ring-4 ring-rose-500/20'
                     : 'bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-emerald-600/30 hover:scale-105'
                 }`}
-                title={isListening ? 'Tap to finish speech' : 'Tap to speak query'}
+                title={isListening ? translateText(t.stop || 'Stop', selectedLang) : translateText(t.tapToSpeak || 'Tap to speak query', selectedLang)}
               >
                 {isListening ? <MicOff className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
               </button>
@@ -438,13 +439,13 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
             {/* Dynamic Status Text */}
             <p className="mt-6 text-sm font-bold text-slate-800 tracking-wide">
               {isListening
-                ? (t.listening || 'Listening... Speak your crop or field query')
+                ? translateText(t.listening || 'Listening... Speak your crop or field query', selectedLang)
                 : isProcessing
-                ? (t.analyzingLeaf || 'Analyzing field parameters & agronomist database...')
-                : (t.tapToSpeak || 'Tap microphone and speak your farming query')}
+                ? translateText(t.analyzingLeaf || 'Analyzing field parameters & agronomist database...', selectedLang)
+                : translateText(t.tapToSpeak || 'Tap microphone and speak your farming query', selectedLang)}
             </p>
             <p className="text-xs text-slate-500 mt-1 font-medium">
-              Supports live speech in {LANGUAGES.find(l => l.code === selectedLang)?.nativeName} · Soil & Crop contextualized
+              {translateText('Supports live speech in', selectedLang)} {LANGUAGES.find(l => l.code === selectedLang)?.nativeName} · {translateText('Soil & Crop contextualized', selectedLang)}
             </p>
 
             {/* Audio Waveform Equalizer */}
@@ -463,7 +464,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
           {transcript && (
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
               <p className="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">
-                {t.detectedQuery || 'Detected Spoken Query'}
+                {translateText(t.detectedQuery || 'Detected Spoken Query', selectedLang)}
               </p>
               <p className="text-sm text-slate-900 italic font-semibold">
                 "{transcript}"
@@ -478,7 +479,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
                 <div className="flex items-center space-x-2">
                   <Sparkles className="w-5 h-5 text-emerald-600" />
                   <h3 className="font-bold text-base text-emerald-900">
-                    {voiceResponse.title}
+                    {translateText(voiceResponse.title, selectedLang)}
                   </h3>
                 </div>
 
@@ -490,32 +491,32 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
                   {isPlaying ? (
                     <>
                       <VolumeX className="w-3.5 h-3.5 text-rose-600" />
-                      <span className="text-rose-700">{t.stop || 'Stop'}</span>
+                      <span className="text-rose-700">{translateText(t.stop || 'Stop', selectedLang)}</span>
                     </>
                   ) : (
                     <>
                       <Volume2 className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>{t.listen || 'Listen Audio'}</span>
+                      <span>{translateText(t.listen || 'Listen Audio', selectedLang)}</span>
                     </>
                   )}
                 </button>
               </div>
 
               <p className="text-xs leading-relaxed text-slate-700 font-medium whitespace-pre-line">
-                {voiceResponse.advice}
+                {translateText(voiceResponse.advice, selectedLang)}
               </p>
 
               {/* Recommended Field Actions Checklist */}
               {voiceResponse.actionItems && voiceResponse.actionItems.length > 0 && (
                 <div className="space-y-2 pt-3 border-t border-emerald-200">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 block">
-                    {t.actionHeader || 'Recommended Field Actions'}
+                    {translateText(t.actionHeader || 'Recommended Field Actions', selectedLang)}
                   </span>
                   <div className="grid sm:grid-cols-1 gap-2">
                     {voiceResponse.actionItems.map((item, idx) => (
                       <div key={idx} className="flex items-start space-x-2 text-xs text-slate-800 bg-white p-2.5 rounded-xl border border-emerald-100">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
-                        <span className="font-semibold">{item}</span>
+                        <span className="font-semibold">{translateText(item, selectedLang)}</span>
                       </div>
                     ))}
                   </div>
@@ -527,7 +528,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
           {/* Quick Query Pills */}
           <div className="pt-2 border-t border-slate-100 space-y-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
-              Frequently Asked Farm Queries:
+              {translateText('Frequently Asked Farm Queries:', selectedLang)}
             </span>
             <div className="flex flex-wrap gap-2">
               {QUICK_QUESTIONS.map((q, i) => (
@@ -578,7 +579,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
                         <button
                           onClick={() => speakResponse(m.content)}
                           className="hover:text-emerald-600 cursor-pointer flex items-center gap-1"
-                          title={t.listen || 'Read aloud'}
+                          title={translateText(t.listen || 'Read aloud', selectedLang)}
                         >
                           <Volume2 className="w-3.5 h-3.5" />
                         </button>
@@ -596,7 +597,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
                 </div>
                 <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-emerald-700 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 animate-spin" />
-                  <span>{t.analyzingLeaf || 'AgroGenius AI is reasoning agronomy parameters...'}</span>
+                  <span>{translateText(t.analyzingLeaf || 'AgroGenius AI is reasoning agronomy parameters...', selectedLang)}</span>
                 </div>
               </div>
             )}
@@ -626,7 +627,7 @@ export const AssistantView: React.FC<AssistantViewProps> = ({ activeFarm, lang: 
           >
             <input
               type="text"
-              placeholder={t.typeOrSpeak || 'Type your farming question in any regional language...'}
+              placeholder={translateText(t.typeOrSpeak || 'Type your farming question in any regional language...', selectedLang)}
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:border-emerald-500 outline-none"

@@ -31,6 +31,7 @@ import confetti from 'canvas-confetti';
 import { UserProfile, FarmProfile, SoilType } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS, LANGUAGES } from '../../lib/i18n';
 import { getProfileTranslations } from '../../lib/profileTranslations';
+import { translateText, getLocalizedLocation } from '../../lib/universalTranslator';
 
 interface ProfileViewProps {
   user: UserProfile;
@@ -299,18 +300,18 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
-                <span>{name || 'Farmer Member'}</span>
+                <span>{name || translateText('Farmer Member', lang)}</span>
               </h1>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300">
                 <span className="flex items-center gap-1 text-emerald-300 font-semibold">
                   <Sprout className="w-3.5 h-3.5" />
-                  <span>{role} · {totalLandAcres} {pt.acres}</span>
+                  <span>{translateText(role, lang)} · {totalLandAcres} {pt.acres}</span>
                 </span>
                 <span className="text-slate-500">•</span>
                 <span className="flex items-center gap-1 text-slate-300">
                   <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{village}, {district}, {state}</span>
+                  <span>{village}, {district}, {translateText(state, lang)}</span>
                 </span>
               </div>
             </div>
@@ -345,7 +346,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 type="button"
                 onClick={() => setActiveTab('idcard')}
                 className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition-all flex items-center gap-1.5 cursor-pointer"
-                title="View Smart Pass"
+                title={translateText('View Smart Pass', lang)}
               >
                 <IdCard className="w-4 h-4 text-emerald-400" />
                 <span className="hidden sm:inline">{pt.smartId}</span>
@@ -406,16 +407,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {activeTab === 'kyc' && (
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-100 shadow-xs space-y-6 animate-in fade-in duration-200">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-lg font-black text-slate-900">Farmer Personal & Identity Details</h2>
+              <h2 className="text-lg font-black text-slate-900">{pt.farmerPersonalTitle || translateText('Farmer Personal & Identity Details', lang)}</h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                Government KYC identification, contact channels, and farming role configuration.
+                {pt.farmerPersonalSub || translateText('Government KYC identification, contact channels, and farming role configuration.', lang)}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Full Name (முழு பெயர்) <span className="text-rose-500">*</span>
+                  {pt.fullName || translateText('Full Name', lang)} <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -432,7 +433,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Primary Mobile Number (கைபேசி எண்) <span className="text-rose-500">*</span>
+                  {pt.primaryMobile || translateText('Primary Mobile Number', lang)} <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -449,7 +450,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Email Address (மின்னஞ்சல்)
+                  {pt.emailAddress || translateText('Email Address', lang)}
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -465,23 +466,23 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Farmer Account Role
+                  {pt.accountRole || translateText('Farmer Account Role', lang)}
                 </label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value as any)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
-                  <option value="Farmer">Farmer (Crop & Field Owner)</option>
-                  <option value="Agronomist">Agronomist (Crop Doctor / Consultant)</option>
-                  <option value="Farm Manager">Farm Manager (Commercial Enterprise)</option>
-                  <option value="Researcher">Agricultural Scientist / Researcher</option>
+                  <option value="Farmer">{translateText('Farmer (Crop & Field Owner)', lang)}</option>
+                  <option value="Agronomist">{translateText('Agronomist (Crop Doctor / Consultant)', lang)}</option>
+                  <option value="Farm Manager">{translateText('Farm Manager (Commercial Enterprise)', lang)}</option>
+                  <option value="Researcher">{translateText('Agricultural Scientist / Researcher', lang)}</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Farmer ID / Kisan Number
+                  {pt.farmerIdLabel || translateText('Farmer ID / Kisan Number', lang)}
                 </label>
                 <input
                   type="text"
@@ -493,7 +494,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Aadhaar / Government ID (Masked)
+                  {pt.aadhaarGovId || translateText('Aadhaar / Government ID (Masked)', lang)}
                 </label>
                 <input
                   type="text"
@@ -505,21 +506,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Gender</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.gender || translateText('Gender', lang)}</label>
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value as any)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
-                  <option value="Male">Male (ஆண்)</option>
-                  <option value="Female">Female (பெண்)</option>
-                  <option value="Other">Other</option>
-                  <option value="Prefer not to say">Prefer not to say</option>
+                  <option value="Male">{translateText('Male', lang)}</option>
+                  <option value="Female">{translateText('Female', lang)}</option>
+                  <option value="Other">{translateText('Other', lang)}</option>
+                  <option value="Prefer not to say">{translateText('Prefer not to say', lang)}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Date of Birth / Age</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.dateOfBirthAge || translateText('Date of Birth / Age', lang)}</label>
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="date"
@@ -531,7 +532,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     type="number"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    placeholder="Age"
+                    placeholder={translateText('Age', lang)}
                     className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 outline-none"
                   />
                 </div>
@@ -544,16 +545,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {activeTab === 'land' && (
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-100 shadow-xs space-y-6 animate-in fade-in duration-200">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-lg font-black text-slate-900">Land Holding & Geospatial Location</h2>
+              <h2 className="text-lg font-black text-slate-900">{pt.landGeoTitle || translateText('Land Holding & Geospatial Location', lang)}</h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                Cultivated land acreage, ownership type, village/taluk jurisdiction, and pin code.
+                {pt.landGeoSub || translateText('Cultivated land acreage, ownership type, village/taluk jurisdiction, and pin code.', lang)}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Total Land Holding in Acres (மொத்த நிலப்பரப்பு) <span className="text-rose-500">*</span>
+                  {pt.totalLandArea || translateText('Total Land Holding in Acres', lang)} <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <Layers className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -570,34 +571,34 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Land Ownership Status</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.landOwnership || translateText('Land Ownership Status', lang)}</label>
                 <select
                   value={landOwnership}
                   onChange={(e) => setLandOwnership(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
-                  <option value="Owner / Self-Cultivated">Owner / Self-Cultivated (சொந்த நிலம்)</option>
-                  <option value="Tenant Farmer">Tenant Farmer (குத்தகை விவசாயி)</option>
-                  <option value="Leased Land">Leased Land (ஒப்பந்த நிலம்)</option>
-                  <option value="Sharecropper">Sharecropper (பங்கு சாகுபடி)</option>
+                  <option value="Owner / Self-Cultivated">{translateText('Owner / Self-Cultivated', lang)}</option>
+                  <option value="Tenant Farmer">{translateText('Tenant Farmer', lang)}</option>
+                  <option value="Leased Land">{translateText('Leased Land', lang)}</option>
+                  <option value="Sharecropper">{translateText('Sharecropper', lang)}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">State (மாநிலம்)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.stateProvince || translateText('State', lang)}</label>
                 <select
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
                   {INDIAN_STATES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s} value={s}>{translateText(s, lang)}</option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">District (மாவட்டம்)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.district || translateText('District', lang)}</label>
                 <input
                   type="text"
                   value={district}
@@ -608,7 +609,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Taluk / Block (வட்டம்)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.talukMandal || translateText('Taluk / Block', lang)}</label>
                 <input
                   type="text"
                   value={taluk}
@@ -619,7 +620,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Village / Locality (கிராமம்)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.villagePanchayat || translateText('Village / Locality', lang)}</label>
                 <input
                   type="text"
                   value={village}
@@ -630,7 +631,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Postal PIN Code (அஞ்சல் குறியீடு)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.pinCode || translateText('Postal PIN Code', lang)}</label>
                 <input
                   type="text"
                   value={pincode}
@@ -641,7 +642,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Farming Experience (Years)</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{translateText('Farming Experience (Years)', lang)}</label>
                 <input
                   type="number"
                   value={farmingExperienceYears}
@@ -658,57 +659,57 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {activeTab === 'crops' && (
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-100 shadow-xs space-y-6 animate-in fade-in duration-200">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-lg font-black text-slate-900">Soil, Irrigation & Agricultural Assets</h2>
+              <h2 className="text-lg font-black text-slate-900">{pt.soilCropsTitle || translateText('Soil, Irrigation & Agricultural Assets', lang)}</h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                Configure your primary soil texture, irrigation machinery, crop portfolio, and livestock holdings.
+                {pt.soilCropsSub || translateText('Configure your primary soil texture, irrigation machinery, crop portfolio, and livestock holdings.', lang)}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Primary Soil Type</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.primarySoilType || translateText('Primary Soil Type', lang)}</label>
                 <select
                   value={soilType}
                   onChange={(e) => setSoilType(e.target.value as SoilType)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
-                  <option value="Alluvial">Alluvial Soil (வண்டல் மண்)</option>
-                  <option value="Black (Regur)">Black Soil / Regur (கரிசல் மண்)</option>
-                  <option value="Red & Yellow">Red & Yellow Soil (செம்மண்)</option>
-                  <option value="Laterite">Laterite Soil (சரளை மண்)</option>
-                  <option value="Sandy Loam">Sandy Loam (மணல் கலந்த வண்டல்)</option>
-                  <option value="Clayey">Clayey Soil (களிமண்)</option>
-                  <option value="Loamy">Loamy Soil (வளமான தோட்ட மண்)</option>
-                  <option value="Saline/Alkaline">Saline / Alkaline Soil (உவர் மண்)</option>
+                  <option value="Alluvial">{translateText('Alluvial Soil', lang)}</option>
+                  <option value="Black (Regur)">{translateText('Black Soil / Regur', lang)}</option>
+                  <option value="Red & Yellow">{translateText('Red & Yellow Soil', lang)}</option>
+                  <option value="Laterite">{translateText('Laterite Soil', lang)}</option>
+                  <option value="Sandy Loam">{translateText('Sandy Loam', lang)}</option>
+                  <option value="Clayey">{translateText('Clayey Soil', lang)}</option>
+                  <option value="Loamy">{translateText('Loamy Soil', lang)}</option>
+                  <option value="Saline/Alkaline">{translateText('Saline / Alkaline Soil', lang)}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Primary Irrigation Source</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.irrigationSource || translateText('Primary Irrigation Source', lang)}</label>
                 <select
                   value={irrigationSource}
                   onChange={(e) => setIrrigationSource(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
-                  <option value="Borewell & Drip">Borewell with Drip Irrigation (ஆழ்துளை & சொட்டுநீர்)</option>
-                  <option value="Canal & Flood">Canal / River Surface Flood (கால்வாய் பாசனம்)</option>
-                  <option value="Sprinkler">Overhead Sprinkler System (தெளிப்பு நீர்)</option>
-                  <option value="Open Well">Open Agri Well (திறந்த கிணறு)</option>
-                  <option value="Rainfed">Rainfed / Monsoon Dependant (மானாவாரி)</option>
+                  <option value="Borewell & Drip">{translateText('Borewell with Drip Irrigation', lang)}</option>
+                  <option value="Canal & Flood">{translateText('Canal / River Surface Flood', lang)}</option>
+                  <option value="Sprinkler">{translateText('Overhead Sprinkler System', lang)}</option>
+                  <option value="Open Well">{translateText('Open Agri Well', lang)}</option>
+                  <option value="Rainfed">{translateText('Rainfed / Monsoon Dependant', lang)}</option>
                 </select>
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Cultivation Methodology</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{pt.cultivationMethodology || translateText('Cultivation Methodology', lang)}</label>
                 <select
                   value={farmingMethod}
                   onChange={(e) => setFarmingMethod(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                 >
-                  <option value="Organic / Natural">Certified Organic / Natural Farming (இயற்கை வேளாண்மை)</option>
-                  <option value="Zero Budget Natural Farming (ZBNF)">Zero Budget Natural Farming (ஜீரோ பட்ஜெட் இயற்கை விவசாயம்)</option>
-                  <option value="Conventional / Integrated">Integrated Pest Management & Conventional (ஒருங்கிணைந்த பயிர் பாதுகாப்பு)</option>
-                  <option value="Hydroponic">Protected Greenhouse / Hydroponic (பசுமைக்குடில் சாகுபடி)</option>
+                  <option value="Organic / Natural">{translateText('Certified Organic / Natural Farming', lang)}</option>
+                  <option value="Zero Budget Natural Farming (ZBNF)">{translateText('Zero Budget Natural Farming', lang)}</option>
+                  <option value="Conventional / Integrated">{translateText('Integrated Pest Management & Conventional', lang)}</option>
+                  <option value="Hydroponic">{translateText('Protected Greenhouse / Hydroponic', lang)}</option>
                 </select>
               </div>
             </div>
@@ -716,7 +717,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             {/* Major Crops Selection Chips */}
             <div className="pt-2">
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                Major Crops Grown (பயிரிடப்படும் முதன்மை பயிர்கள்)
+                {pt.majorCrops || translateText('Major Crops Grown', lang)}
               </label>
               <div className="flex flex-wrap gap-2">
                 {COMMON_CROPS.map((crop) => {
@@ -733,7 +734,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       }`}
                     >
                       {isSelected && <Check className="w-3.5 h-3.5" />}
-                      <span>{crop}</span>
+                      <span>{translateText(crop, lang)}</span>
                     </button>
                   );
                 })}
@@ -743,7 +744,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             {/* Livestock Holdings */}
             <div className="pt-2">
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                Livestock & Animal Husbandry (கால்நடை பராமரிப்பு)
+                {pt.livestock || translateText('Livestock & Animal Husbandry', lang)}
               </label>
               <div className="flex flex-wrap gap-2">
                 {LIVESTOCK_OPTIONS.map((item) => {
@@ -760,7 +761,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       }`}
                     >
                       {isSelected && <Check className="w-3.5 h-3.5" />}
-                      <span>{item}</span>
+                      <span>{translateText(item, lang)}</span>
                     </button>
                   );
                 })}
@@ -770,7 +771,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             {/* Farm Machinery */}
             <div className="pt-2">
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                Farm Machinery & Implements (விவசாய இயந்திரங்கள்)
+                {pt.farmMachinery || translateText('Farm Machinery & Implements', lang)}
               </label>
               <div className="flex flex-wrap gap-2">
                 {MACHINERY_OPTIONS.map((item) => {
@@ -787,7 +788,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       }`}
                     >
                       {isSelected && <Check className="w-3.5 h-3.5" />}
-                      <span>{item}</span>
+                      <span>{translateText(item, lang)}</span>
                     </button>
                   );
                 })}
@@ -800,16 +801,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {activeTab === 'schemes' && (
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-100 shadow-xs space-y-6 animate-in fade-in duration-200">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-lg font-black text-slate-900">Government Welfare Schemes & Banking Verification</h2>
+              <h2 className="text-lg font-black text-slate-900">{pt.welfareBankTitle || translateText('Government Welfare Schemes & Banking Verification', lang)}</h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                Link your PM-KISAN, Kisan Credit Card, crop insurance policy, and DBT direct benefit bank credentials.
+                {pt.welfareBankSub || translateText('Link your PM-KISAN, Kisan Credit Card, crop insurance policy, and DBT direct benefit bank credentials.', lang)}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  PM-KISAN Samman Nidhi ID
+                  {pt.pmKisanId || translateText('PM-KISAN Samman Nidhi ID', lang)}
                 </label>
                 <div className="relative">
                   <Award className="w-4 h-4 text-emerald-600 absolute left-3.5 top-3" />
@@ -825,7 +826,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Crop Insurance Policy (PMFBY)
+                  {pt.cropInsurance || translateText('Crop Insurance Policy (PMFBY)', lang)}
                 </label>
                 <div className="relative">
                   <FileCheck className="w-4 h-4 text-sky-600 absolute left-3.5 top-3" />
@@ -841,7 +842,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Kisan Credit Card (KCC) Holder?
+                  {pt.kccCardHolder || translateText('Kisan Credit Card (KCC) Holder?', lang)}
                 </label>
                 <div className="flex items-center gap-4 pt-1">
                   <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
@@ -852,7 +853,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={() => setKisanCreditCardHolder(true)}
                       className="text-emerald-600 focus:ring-emerald-500"
                     />
-                    <span>Yes, Active KCC Holder (ஆம்)</span>
+                    <span>{translateText('Yes, Active KCC Holder', lang)}</span>
                   </label>
                   <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
                     <input
@@ -862,14 +863,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                       onChange={() => setKisanCreditCardHolder(false)}
                       className="text-emerald-600 focus:ring-emerald-500"
                     />
-                    <span>No / Not Applied</span>
+                    <span>{translateText('No / Not Applied', lang)}</span>
                   </label>
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Direct Benefit Bank Name
+                  {pt.dbtBankName || translateText('Direct Benefit Bank Name', lang)}
                 </label>
                 <div className="relative">
                   <Landmark className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -885,7 +886,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Bank Account Number (Masked)
+                  {pt.bankAccountNo || translateText('Bank Account Number (Masked)', lang)}
                 </label>
                 <input
                   type="text"
@@ -898,7 +899,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Bank Branch IFSC Code
+                  {pt.ifscCode || translateText('Bank Branch IFSC Code', lang)}
                 </label>
                 <input
                   type="text"
@@ -916,16 +917,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         {activeTab === 'alerts' && (
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-100 shadow-xs space-y-6 animate-in fade-in duration-200">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-lg font-black text-slate-900">Communication & Agronomic Advisory Preferences</h2>
+              <h2 className="text-lg font-black text-slate-900">{pt.advisoryTitle || translateText('Communication & Agronomic Advisory Preferences', lang)}</h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                Customize advisory delivery channels, emergency contacts, and multilingual voice settings.
+                {pt.advisorySub || translateText('Customize advisory delivery channels, emergency contacts, and multilingual voice settings.', lang)}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Preferred Advisory Language
+                  {pt.preferredLanguage || translateText('Preferred Advisory Language', lang)}
                 </label>
                 <select
                   value={preferredLanguage}
@@ -942,7 +943,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Emergency Field Contact Number
+                  {pt.emergencyContact || translateText('Emergency Field Contact Number', lang)}
                 </label>
                 <input
                   type="tel"
@@ -962,8 +963,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     <Smartphone className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Daily Weather & Rain Forecast via SMS</h4>
-                    <p className="text-[11px] text-slate-500">Receive morning precipitation and wind speed warnings.</p>
+                    <h4 className="text-xs font-bold text-slate-900">{pt.smsWeatherAlerts || translateText('Daily Weather & Rain Forecast via SMS', lang)}</h4>
+                    <p className="text-[11px] text-slate-500">{pt.smsWeatherDesc || translateText('Receive morning precipitation and wind speed warnings.', lang)}</p>
                   </div>
                 </div>
                 <input
@@ -980,8 +981,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     <AlertCircle className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Pest & Fungal Outbreak Warnings</h4>
-                    <p className="text-[11px] text-slate-500">Regional crop disease alerts in your district.</p>
+                    <h4 className="text-xs font-bold text-slate-900">{pt.pestAlerts || translateText('Pest & Fungal Outbreak Warnings', lang)}</h4>
+                    <p className="text-[11px] text-slate-500">{pt.pestAlertsDesc || translateText('Regional crop disease alerts in your district.', lang)}</p>
                   </div>
                 </div>
                 <input
@@ -998,8 +999,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">AgriVoice AI Audio Readout Enabled</h4>
-                    <p className="text-[11px] text-slate-500">Auto-speak agronomic solutions using native voice synthesis.</p>
+                    <h4 className="text-xs font-bold text-slate-900">{pt.voiceReadout || translateText('AgriVoice AI Audio Readout Enabled', lang)}</h4>
+                    <p className="text-[11px] text-slate-500">{pt.voiceReadoutDesc || translateText('Auto-speak agronomic solutions using native voice synthesis.', lang)}</p>
                   </div>
                 </div>
                 <input
@@ -1034,11 +1035,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     </div>
                     <div>
                       <h3 className="text-sm font-black tracking-tight text-white leading-none">AGRO UZHAVAN</h3>
-                      <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mt-0.5">Farmer Smart Pass</p>
+                      <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mt-0.5">{pt.smartPassTitle || translateText('Farmer Smart Pass', lang)}</p>
                     </div>
                   </div>
                   <div className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[9px] font-extrabold uppercase">
-                    KYC Verified
+                    {pt.govApproved || translateText('KYC Verified', lang)}
                   </div>
                 </div>
 
@@ -1051,38 +1052,38 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   </div>
 
                   <div className="space-y-1 flex-1 min-w-0">
-                    <h4 className="text-base font-black text-white truncate">{name || 'Farmer Member'}</h4>
-                    <p className="text-[11px] text-emerald-300 font-bold">{role} · {totalLandAcres} Acres</p>
-                    <p className="text-[10px] text-slate-400 truncate">{village}, {district}, {state}</p>
-                    <p className="text-[10px] text-slate-400 font-mono">Mobile: {phone || '+91 98765 43210'}</p>
+                    <h4 className="text-base font-black text-white truncate">{name || translateText('Farmer Member', lang)}</h4>
+                    <p className="text-[11px] text-emerald-300 font-bold">{translateText(role, lang)} · {totalLandAcres} {pt.acres}</p>
+                    <p className="text-[10px] text-slate-400 truncate">{village}, {district}, {translateText(state, lang)}</p>
+                    <p className="text-[10px] text-slate-400 font-mono">{translateText('Primary Mobile Number', lang)}: {phone || '+91 98765 43210'}</p>
                   </div>
                 </div>
 
                 {/* Key Badges Matrix */}
                 <div className="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-slate-900/80 border border-emerald-500/20 text-[10px] mb-5">
                   <div>
-                    <span className="text-slate-400 block">Kisan ID:</span>
+                    <span className="text-slate-400 block">{translateText('Kisan ID:', lang)}</span>
                     <strong className="text-emerald-300 font-mono">{farmerId}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">Soil Type:</span>
-                    <strong className="text-slate-200">{soilType}</strong>
+                    <span className="text-slate-400 block">{translateText('Soil Type:', lang)}</span>
+                    <strong className="text-slate-200">{translateText(soilType, lang)}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">PM-KISAN Status:</span>
-                    <strong className="text-teal-300 font-mono">Linked</strong>
+                    <span className="text-slate-400 block">{translateText('PM-KISAN Status:', lang)}</span>
+                    <strong className="text-teal-300 font-mono">{translateText('Linked', lang)}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">Crop Scheme:</span>
-                    <strong className="text-slate-200">PMFBY Insured</strong>
+                    <span className="text-slate-400 block">{translateText('Crop Scheme:', lang)}</span>
+                    <strong className="text-slate-200">{translateText('PMFBY Insured', lang)}</strong>
                   </div>
                 </div>
 
                 {/* Footer with QR Code */}
                 <div className="flex items-center justify-between border-t border-emerald-500/20 pt-4 text-[10px] text-slate-400">
                   <div>
-                    <span className="block text-[9px] uppercase tracking-wider text-slate-500">Authorized Digital Pass</span>
-                    <span className="text-emerald-400 font-mono">Valid thru 2028</span>
+                    <span className="block text-[9px] uppercase tracking-wider text-slate-500">{translateText('Authorized Digital Pass', lang)}</span>
+                    <span className="text-emerald-400 font-mono">{translateText('Valid thru 2028', lang)}</span>
                   </div>
                   <div className="p-1 rounded-xl bg-white text-slate-950 shadow-sm">
                     <QrCode className="w-7 h-7" />
@@ -1099,7 +1100,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 className="px-5 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-emerald-400" />
-                <span>Print Digital Farmer ID</span>
+                <span>{pt.printSmartPass || translateText('Print Digital Farmer ID', lang)}</span>
               </button>
 
               <button
@@ -1108,7 +1109,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                 className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
-                <span>Save All Details</span>
+                <span>{pt.saveProfile || translateText('Save All Details', lang)}</span>
               </button>
             </div>
           </div>
@@ -1119,7 +1120,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           <div className="p-4 rounded-2xl bg-white border border-emerald-100 shadow-xs flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
               <Activity className="w-4 h-4 text-emerald-600" />
-              <span>All updates are synchronized across your active farm and AI recommendations.</span>
+              <span>{translateText('All updates are synchronized across your active farm and AI recommendations.', lang)}</span>
             </div>
 
             <button
@@ -1127,7 +1128,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2 cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              <span>Save Farmer Profile</span>
+              <span>{pt.saveProfile || translateText('Save Farmer Profile', lang)}</span>
             </button>
           </div>
         )}
