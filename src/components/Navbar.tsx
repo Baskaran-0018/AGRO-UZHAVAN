@@ -19,7 +19,7 @@ import {
 import { FarmProfile, UserProfile } from '../types/agro';
 import { LANGUAGES, SupportedLang, TRANSLATIONS } from '../lib/i18n';
 import { usePwa } from '../lib/pwa';
-import { getLocalizedUserName, getLocalizedFarmName, getLocalizedRole } from '../lib/universalTranslator';
+import { getLocalizedUserName, getLocalizedFarmName, getLocalizedRole, translateText } from '../lib/universalTranslator';
 
 interface NavbarProps {
   farms: FarmProfile[];
@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{Math.round(currentTemp)}°C</span>
               {currentWeatherDesc && (
                 <span className="hidden lg:inline text-slate-500 font-normal text-[11px] truncate max-w-[80px]">
-                  {currentWeatherDesc}
+                  {translateText(currentWeatherDesc, lang)}
                 </span>
               )}
             </button>
