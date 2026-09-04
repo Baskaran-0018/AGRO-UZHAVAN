@@ -31,7 +31,7 @@ import confetti from 'canvas-confetti';
 import { UserProfile, FarmProfile, SoilType } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS, LANGUAGES } from '../../lib/i18n';
 import { getProfileTranslations } from '../../lib/profileTranslations';
-import { translateText, getLocalizedLocation } from '../../lib/universalTranslator';
+import { translateText, getLocalizedLocation, getLocalizedUserName } from '../../lib/universalTranslator';
 
 interface ProfileViewProps {
   user: UserProfile;
@@ -41,40 +41,40 @@ interface ProfileViewProps {
 }
 
 const COMMON_CROPS = [
-  'Paddy / Rice (நெல்)',
-  'Wheat (கோதுமை)',
-  'Cotton (பருத்தி)',
-  'Sugarcane (கரும்பு)',
-  'Maize / Corn (மக்காச்சோளம்)',
-  'Tomato (தக்காளி)',
-  'Onion (வெங்காயம்)',
-  'Banana (வாழை)',
-  'Groundnut / Peanut (வேர்க்கடலை)',
-  'Soybean (சோயாபீன்)',
-  'Turmeric (மஞ்சள்)',
-  'Chilli (மிளகாய்)',
-  'Pulses / Gram (பருப்பு வகைகள்)',
-  'Coconut (தென்னை)',
-  'Mustard (கடுகு)'
+  'Paddy / Rice',
+  'Wheat',
+  'Cotton',
+  'Sugarcane',
+  'Maize / Corn',
+  'Tomato',
+  'Onion',
+  'Banana',
+  'Groundnut / Peanut',
+  'Soybean',
+  'Turmeric',
+  'Chilli',
+  'Pulses / Gram',
+  'Coconut',
+  'Mustard'
 ];
 
 const LIVESTOCK_OPTIONS = [
-  'Dairy Cattle (கறவை மாடுகள்)',
-  'Buffaloes (எருமைகள்)',
-  'Goats / Sheep (ஆடுகள்)',
-  'Poultry / Chickens (நாட்டுக்கோழி / பிராய்லர்)',
-  'Fishery / Aquaculture (மீன் பண்ணை)',
+  'Dairy Cattle',
+  'Buffaloes',
+  'Goats / Sheep',
+  'Poultry / Chickens',
+  'Fishery / Aquaculture',
   'None'
 ];
 
 const MACHINERY_OPTIONS = [
-  'Tractor (டிராக்டர்)',
-  'Power Tiller (பவர் டில்லர்)',
-  'Drip Fertigation System (சொட்டுநீர் உரம் அமைப்பு)',
-  'Rotavator (ரோட்டாவேட்டர்)',
-  'Paddy Harvester (அறுவடை இயந்திரம்)',
-  'Solar Water Pump (சூரிய மின் பம்பு)',
-  'Agricultural Drone Sprayer (விவசாய ட்ரோன்)'
+  'Tractor',
+  'Power Tiller',
+  'Drip Fertigation System',
+  'Rotavator',
+  'Paddy Harvester',
+  'Solar Water Pump',
+  'Agricultural Drone Sprayer'
 ];
 
 const INDIAN_STATES = [
@@ -300,7 +300,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
-                <span>{name || translateText('Farmer Member', lang)}</span>
+                <span>{getLocalizedUserName(name, lang) || translateText('Farmer Member', lang)}</span>
               </h1>
 
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300">
@@ -1052,7 +1052,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   </div>
 
                   <div className="space-y-1 flex-1 min-w-0">
-                    <h4 className="text-base font-black text-white truncate">{name || translateText('Farmer Member', lang)}</h4>
+                    <h4 className="text-base font-black text-white truncate">{getLocalizedUserName(name, lang) || translateText('Farmer Member', lang)}</h4>
                     <p className="text-[11px] text-emerald-300 font-bold">{translateText(role, lang)} · {totalLandAcres} {pt.acres}</p>
                     <p className="text-[10px] text-slate-400 truncate">{village}, {district}, {translateText(state, lang)}</p>
                     <p className="text-[10px] text-slate-400 font-mono">{translateText('Primary Mobile Number', lang)}: {phone || '+91 98765 43210'}</p>
