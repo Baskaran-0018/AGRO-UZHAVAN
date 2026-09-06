@@ -253,6 +253,7 @@ export function App() {
             currentView={currentView}
             onSelectView={setCurrentView}
             lang={lang}
+            onChangeLang={handleChangeLang}
             trainingRunning={trainingState.status === 'running'}
           />
         </div>
@@ -271,6 +272,7 @@ export function App() {
                 currentView={currentView}
                 onSelectView={setCurrentView}
                 lang={lang}
+                onChangeLang={handleChangeLang}
                 onCloseMobile={() => setIsMobileMenuOpen(false)}
                 trainingRunning={trainingState.status === 'running'}
               />

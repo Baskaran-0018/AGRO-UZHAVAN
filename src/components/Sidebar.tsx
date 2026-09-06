@@ -12,14 +12,16 @@ import {
   UserCheck,
   Sparkles
 } from 'lucide-react';
-import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
+import { SupportedLang, TRANSLATIONS, LANGUAGES } from '../lib/i18n';
 import { usePwa } from '../lib/pwa';
 import { translateText } from '../lib/universalTranslator';
+import { Globe } from 'lucide-react';
 
 interface SidebarProps {
   currentView: string;
   onSelectView: (view: string) => void;
   lang: SupportedLang;
+  onChangeLang?: (lang: SupportedLang) => void;
   onCloseMobile?: () => void;
   trainingRunning?: boolean;
 }
@@ -28,6 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentView,
   onSelectView,
   lang,
+  onChangeLang,
   onCloseMobile,
   trainingRunning = false,
 }) => {
@@ -135,8 +138,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ))}
       </div>
 
-      {/* Footer System Status & Install Button */}
-      <div className="p-3 border-t border-emerald-100 bg-emerald-50/40 space-y-2">
+      {/* Footer System Status & Language & Install Button */}
+      <div className="p-3 border-t border-emerald-100 bg-emerald-50/40 space-y-2.5">
+        {onChangeLang && (
+          <div className="p-2.5 rounded-xl bg-white border border-emerald-100 space-y-1.5 shadow-xs">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+              <span className="flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5 text-emerald-600" />
+                {t.chooseLanguage || 'Language'}
+              </span>
+              <span className="text-[10px] text-emerald-700 font-bold uppercase">{LANGUAGES.find(l => l.code === lang)?.nativeName}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1 pt-1">
+              {LANGUAGES.slice(0, 6).map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => {
+                    onChangeLang(l.code);
+                    if (onCloseMobile) onCloseMobile();
+                  }}
+                  className={`px-1.5 py-1 rounded-lg text-[10px] font-bold truncate transition-colors cursor-pointer text-center ${
+                    lang === l.code
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'bg-slate-50 text-slate-700 hover:bg-emerald-50 hover:text-emerald-800'
+                  }`}
+                >
+                  {l.nativeName}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {!isInstalled && (
           <button
             onClick={() => {

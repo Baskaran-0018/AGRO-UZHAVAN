@@ -61,21 +61,30 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const langMenuRef = useRef<HTMLDivElement>(null);
   const currentLangMeta = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
 
-  // Close dropdown on outside click
+  // Close dropdown on outside click or touch
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+    function handleClickOutside(event: Event) {
+      const target = event.target as Node;
+      if (userMenuRef.current && !userMenuRef.current.contains(target)) {
         setIsUserMenuOpen(false);
+      }
+      if (langMenuRef.current && !langMenuRef.current.contains(target)) {
+        setIsLangMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-2 shadow-xs w-full max-w-full overflow-hidden">
+    <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-2 shadow-xs w-full max-w-full">
       <div className="flex items-center justify-between gap-1.5 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
         {/* Brand & Mobile Menu Toggle */}
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
@@ -155,10 +164,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           {/* Multilingual Selector */}
-          <div className="relative">
+          <div className="relative" ref={langMenuRef}>
             <button
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors cursor-pointer"
             >
               <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
               <span>{currentLangMeta.nativeName}</span>
@@ -166,11 +175,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {isLangMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-200 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-white border border-slate-200 shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1">
                   {t.chooseLanguage || 'Choose Language'}
                 </div>
-                <div className="space-y-0.5 max-h-60 overflow-y-auto">
+                <div className="space-y-0.5 max-h-64 overflow-y-auto">
                   {LANGUAGES.map((l) => (
                     <button
                       key={l.code}
@@ -178,14 +187,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onChangeLang(l.code);
                         setIsLangMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors cursor-pointer text-left ${
                         lang === l.code
-                          ? 'bg-emerald-50 text-emerald-800'
-                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                          ? 'bg-emerald-500 text-white font-black shadow-xs'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                       }`}
                     >
-                      <span>{l.nativeName}</span>
-                      <span className="text-[10px] text-slate-400 font-normal">{l.name}</span>
+                      <span className="truncate">{l.nativeName}</span>
+                      <span className={`text-[10px] font-normal ${lang === l.code ? 'text-emerald-100' : 'text-slate-400'}`}>{l.name}</span>
                     </button>
                   ))}
                 </div>
