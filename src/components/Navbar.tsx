@@ -75,14 +75,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-3 sm:px-4 py-2 shadow-xs">
-      <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-7xl mx-auto">
+    <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-2 shadow-xs w-full max-w-full overflow-hidden">
+      <div className="flex items-center justify-between gap-1.5 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
         {/* Brand & Mobile Menu Toggle */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
           {onOpenMobileMenu && (
             <button
               onClick={onOpenMobileMenu}
-              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 transition-colors cursor-pointer"
+              className="md:hidden p-1.5 rounded-xl text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 transition-colors cursor-pointer"
               title="Open Navigation Menu"
             >
               <Menu className="w-5 h-5" />
@@ -91,17 +91,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate('dashboard')}
-            className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-none"
+            className="flex items-center gap-2 sm:gap-2.5 text-left group cursor-pointer focus:outline-none min-w-0"
           >
-            <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
+            <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
               <img
                 src="/logo.png"
                 alt="Agro Uzhavan Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 leading-none">
+            <div className="min-w-0">
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 leading-none truncate block">
                 Agro Uzhavan
               </span>
             </div>
@@ -109,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Farm Switcher & Quick Indicators */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           {/* Active Farm Selector */}
           <div className="relative hidden md:flex items-center">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-400 transition-colors">

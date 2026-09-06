@@ -226,7 +226,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Top Navbar with User Account Integration */}
       <Navbar
         farms={farms}
@@ -246,7 +246,7 @@ export function App() {
         onLogout={handleLogout}
       />
 
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 flex overflow-hidden relative w-full max-w-full">
         {/* Desktop Left Navigation Sidebar */}
         <div className="hidden md:flex shrink-0">
           <Sidebar
@@ -279,7 +279,7 @@ export function App() {
         )}
 
         {/* Center Main View Canvas */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8 pb-24 md:pb-8">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 lg:p-8 pb-28 md:pb-8 w-full max-w-full min-w-0">
           {currentView === 'dashboard' && (
             <DashboardView
               activeFarm={activeFarm}

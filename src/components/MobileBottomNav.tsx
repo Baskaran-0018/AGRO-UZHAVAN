@@ -78,8 +78,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         <div className="relative -top-4 flex flex-col items-center">
           <button
             onClick={() => onSelectView('diseasescanner')}
-            className={`relative flex items-center justify-center w-13 h-13 rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-600/40 border-4 border-slate-950 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
-              isScanActive ? 'ring-2 ring-emerald-400 ring-offset-2 ring-offset-slate-950 scale-105' : ''
+            className={`relative flex items-center justify-center w-13 h-13 rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-xl shadow-emerald-600/35 border-4 border-white transition-all hover:scale-105 active:scale-95 cursor-pointer ${
+              isScanActive ? 'ring-2 ring-emerald-500 ring-offset-2 ring-offset-white scale-105' : ''
             }`}
             title={t.scanPlantLeaf || 'Scan Plant Leaf Disease'}
           >

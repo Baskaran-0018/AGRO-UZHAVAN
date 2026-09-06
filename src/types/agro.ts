@@ -8,7 +8,7 @@ export type SoilType =
   | 'Loamy'
   | 'Saline/Alkaline';
 
-export type CropCategory = 'Cereals' | 'Pulses' | 'Cash Crops' | 'Vegetables' | 'Fruits' | 'Spices' | 'Oilseeds';
+export type CropCategory = 'Cereals' | 'Pulses' | 'Cash Crops' | 'Vegetables' | 'Fruits' | 'Spices' | 'Oilseeds' | 'Flowers' | 'Fodder';
 
 export type GrowthStage =
   | 'Germination & Emergence'

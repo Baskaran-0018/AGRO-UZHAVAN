@@ -32,6 +32,8 @@ const CATEGORIES: { id: 'All' | CropCategory; label: string }[] = [
   { id: 'Vegetables', label: 'Vegetables' },
   { id: 'Spices', label: 'Spices & Herbs' },
   { id: 'Fruits', label: 'Fruits & Plantation' },
+  { id: 'Flowers', label: 'Flowers & Floriculture' },
+  { id: 'Fodder', label: 'Fodder & Cover Crops' },
 ];
 
 export const CropModal: React.FC<CropModalProps> = ({
