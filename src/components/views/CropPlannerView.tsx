@@ -25,6 +25,7 @@ import { FarmProfile, CropRecord, CropManagementPlan } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS, getLanguageName } from '../../lib/i18n';
 import { getLocalizedCropName, getLocalizedGrowthStage, translateText } from '../../lib/universalTranslator';
 import { CROPS_CATALOG } from '../../data/cropsData';
+import { generateSyntheticCropPlan } from '../../lib/cropPlanGenerator';
 
 interface CropPlannerViewProps {
   activeFarm: FarmProfile;
@@ -42,13 +43,18 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
   const [completedTasks, setCompletedTasks] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'irrigation' | 'protection'>('daily');
 
-  const activeCrop = farmCrops.find(c => c.id === selectedCropId) || farmCrops[0];
-
+  // Keep selected crop in sync whenever farm or crops list updates
   useEffect(() => {
-    if (farmCrops[0] && !selectedCropId) {
-      setSelectedCropId(farmCrops[0].id);
+    if (farmCrops.length > 0) {
+      if (!selectedCropId || !farmCrops.some(c => c.id === selectedCropId)) {
+        setSelectedCropId(farmCrops[0].id);
+      }
+    } else {
+      setSelectedCropId('');
     }
-  }, [farmCrops]);
+  }, [farmCrops, selectedCropId]);
+
+  const activeCrop = farmCrops.find(c => c.id === selectedCropId) || farmCrops[0];
 
   useEffect(() => {
     if (activeCrop) {
@@ -56,7 +62,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
     } else {
       setPlan(null);
     }
-  }, [activeCrop?.id, lang]);
+  }, [activeCrop?.id, activeCrop?.growthStage, activeFarm?.id, lang]);
 
   async function fetchPlan() {
     if (!activeCrop) return;
@@ -79,9 +85,15 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
       if (res.ok) {
         const data = await res.json();
         setPlan(data);
+      } else {
+        // Fallback to rich client-side agronomic engine
+        const fallback = generateSyntheticCropPlan(activeCrop, activeFarm, lang);
+        setPlan(fallback);
       }
     } catch (err) {
-      console.error('Error fetching crop plan:', err);
+      console.warn('Using client-side synthetic crop plan engine:', err);
+      const fallback = generateSyntheticCropPlan(activeCrop, activeFarm, lang);
+      setPlan(fallback);
     } finally {
       setIsLoading(false);
     }
