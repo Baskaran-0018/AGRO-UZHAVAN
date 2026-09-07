@@ -67,28 +67,9 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
     if (!activeCrop) return;
     setIsLoading(true);
     try {
-      const res = await fetch('/api/gemini/crop-plan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          crop: activeCrop.cropName,
-          variety: activeCrop.variety,
-          soilType: activeFarm.soilType,
-          location: activeFarm.locationName,
-          sowingDate: activeCrop.sowingDate,
-          growthStage: activeCrop.growthStage,
-          areaAcres: activeCrop.areaPlantedAcres,
-          lang: getLanguageName(lang),
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setPlan(data);
-      } else {
-        // Fallback to rich client-side agronomic engine
-        const fallback = generateSyntheticCropPlan(activeCrop, activeFarm, lang);
-        setPlan(fallback);
-      }
+      // Always generate instant, rich client-side localized plan for complete translation fidelity across all 9 languages
+      const clientPlan = generateSyntheticCropPlan(activeCrop, activeFarm, lang);
+      setPlan(clientPlan);
     } catch (err) {
       console.warn('Using client-side synthetic crop plan engine:', err);
       const fallback = generateSyntheticCropPlan(activeCrop, activeFarm, lang);
@@ -326,7 +307,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {morningTasks.length > 0 && (
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
-                          <Sunrise className="w-4 h-4 text-amber-600" /> {translateText('Morning Session (06:00 - 11:00 AM)', lang)}
+                          <Sunrise className="w-4 h-4 text-amber-600" /> {t.morningSession || 'Morning Session (06:00 - 11:00 AM)'}
                         </div>
                         <div className="space-y-2">
                           {morningTasks.map((act, i) => {
@@ -365,7 +346,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {afternoonTasks.length > 0 && (
                       <div className="space-y-2 pt-2">
                         <div className="flex items-center gap-2 text-xs font-bold text-sky-700 uppercase tracking-wider">
-                          <Sun className="w-4 h-4 text-sky-600" /> {translateText('Afternoon Session (12:00 - 04:00 PM)', lang)}
+                          <Sun className="w-4 h-4 text-sky-600" /> {t.afternoonSession || 'Afternoon Session (12:00 - 04:00 PM)'}
                         </div>
                         <div className="space-y-2">
                           {afternoonTasks.map((act, i) => {
@@ -404,7 +385,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {eveningTasks.length > 0 && (
                       <div className="space-y-2 pt-2">
                         <div className="flex items-center gap-2 text-xs font-bold text-indigo-700 uppercase tracking-wider">
-                          <Moon className="w-4 h-4 text-indigo-600" /> {translateText('Evening & Post-Sunset (05:00 - 07:30 PM)', lang)}
+                          <Moon className="w-4 h-4 text-indigo-600" /> {t.eveningSession || 'Evening & Post-Sunset (05:00 - 07:30 PM)'}
                         </div>
                         <div className="space-y-2">
                           {eveningTasks.map((act, i) => {
@@ -446,7 +427,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                   <div className="space-y-5">
                     {/* Weekly recurring plan */}
                     <div className="space-y-3">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{translateText('Weekly Agronomic Rhythm', lang)}</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.weeklyRhythm || 'Weekly Agronomic Rhythm'}</h4>
                       <div className="grid sm:grid-cols-2 gap-3">
                         {weeklyTasks.map((w, idx) => (
                           <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
@@ -465,7 +446,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {/* Monthly Milestones */}
                     {monthlyMilestones.length > 0 && (
                       <div className="space-y-3 pt-2">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{translateText('Phased Monthly Milestones', lang)}</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.monthlyMilestones || 'Phased Monthly Milestones'}</h4>
                         <div className="space-y-2">
                           {monthlyMilestones.map((m, idx) => (
                             <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
@@ -474,7 +455,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                               </div>
                               <div className="flex-1 min-w-0 text-xs">
                                 <span className="font-bold text-slate-900 block">{translateText(m.milestone, lang)}</span>
-                                <span className="text-slate-600 text-[11px] block mt-0.5"><b>{translateText('Focus:', lang)}</b> {translateText(m.focus, lang)}</span>
+                                <span className="text-slate-600 text-[11px] block mt-0.5"><b>{translateText('Focus:', lang) || 'Focus:'}</b> {translateText(m.focus, lang)}</span>
                               </div>
                             </div>
                           ))}
@@ -491,30 +472,30 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {plan.fertilizer && (
                       <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                         <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
-                          <Beaker className="w-4 h-4 text-emerald-600" /> {translateText('Recommended Nutrient & Fertilizer Formula', lang)}
+                          <Beaker className="w-4 h-4 text-emerald-600" /> {t.nutrientFormula || 'Recommended Nutrient & Fertilizer Formula'}
                         </div>
                         <div className="grid sm:grid-cols-2 gap-3 text-xs">
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Recommended Product', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Recommended Product', lang) || 'Recommended Product'}</span>
                             <span className="text-sm font-bold text-slate-900">{translateText(plan.fertilizer.recommendedProduct, lang)}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Dosage per Acre', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Dosage per Acre', lang) || 'Dosage per Acre'}</span>
                             <span className="text-sm font-bold text-amber-700 font-mono">{translateText(plan.fertilizer.dosagePerAcre, lang)}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Target NPK Ratio', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Target NPK Ratio', lang) || 'Target NPK Ratio'}</span>
                             <span className="text-sm font-bold text-emerald-700 font-mono">{plan.fertilizer.npkRatio}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Application Method & Timing', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Application Method & Timing', lang) || 'Application Method & Timing'}</span>
                             <span className="text-xs text-slate-800 font-medium">{translateText(plan.fertilizer.applicationMethod, lang)} ({translateText(plan.fertilizer.timing, lang)})</span>
                           </div>
                         </div>
 
                         {plan.fertilizer.microNutrients && plan.fertilizer.microNutrients.length > 0 && (
                           <div className="pt-2 border-t border-slate-200">
-                            <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">{translateText('Essential Micronutrients', lang)}</span>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">{translateText('Essential Micronutrients', lang) || 'Essential Micronutrients'}</span>
                             <div className="flex flex-wrap gap-2">
                               {plan.fertilizer.microNutrients.map((n, i) => (
                                 <span key={i} className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs font-semibold text-slate-800">
@@ -531,19 +512,19 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {plan.irrigation && (
                       <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                         <div className="flex items-center gap-2 text-sky-700 font-bold text-xs uppercase tracking-wider">
-                          <Droplets className="w-4 h-4 text-sky-600" /> {translateText('Hydraulic & Evapotranspiration Parameters', lang)}
+                          <Droplets className="w-4 h-4 text-sky-600" /> {t.hydraulicParams || 'Hydraulic & Evapotranspiration Parameters'}
                         </div>
                         <div className="grid sm:grid-cols-3 gap-3 text-xs">
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Watering Frequency', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Watering Frequency', lang) || 'Watering Frequency'}</span>
                             <span className="text-xs font-bold text-slate-900">{translateText(plan.irrigation.frequency, lang)}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Volume per Acre', lang)}</span>
-                            <span className="text-xs font-bold text-sky-700 font-mono">{plan.irrigation.volumeLitersPerAcre.toLocaleString()} {translateText('Liters', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Volume per Acre', lang) || 'Volume per Acre'}</span>
+                            <span className="text-xs font-bold text-sky-700 font-mono">{plan.irrigation.volumeLitersPerAcre.toLocaleString()} {t.liters || translateText('Liters', lang) || 'L'}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Distribution Method', lang)}</span>
+                            <span className="text-[10px] text-slate-500 uppercase font-bold block mb-1">{translateText('Distribution Method', lang) || 'Distribution Method'}</span>
                             <span className="text-xs font-bold text-slate-900">{translateText(plan.irrigation.method, lang)}</span>
                           </div>
                         </div>
@@ -558,19 +539,19 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
                     {plan.cropProtection && (
                       <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
                         <div className="flex items-center gap-2 text-rose-700 font-bold text-xs uppercase tracking-wider">
-                          <ShieldAlert className="w-4 h-4 text-rose-600" /> {translateText('Weed & Pathogen Defense', lang)}
+                          <ShieldAlert className="w-4 h-4 text-rose-600" /> {t.weedPathogenDefense || 'Weed & Pathogen Defense'}
                         </div>
                         <div className="space-y-2">
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{translateText('Weeding Protocol', lang)}</span>
+                            <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{translateText('Weeding Protocol', lang) || 'Weeding Protocol'}</span>
                             <span className="text-slate-800 font-medium">{translateText(plan.cropProtection.weedingAction, lang)}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{translateText('Preventative Foliar Spray', lang)}</span>
+                            <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{translateText('Preventative Foliar Spray', lang) || 'Preventative Foliar Spray'}</span>
                             <span className="text-slate-800 font-medium">{translateText(plan.cropProtection.preventativeSpray, lang)}</span>
                           </div>
                           <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{translateText('Pesticide / Bio-Agent Reminder', lang)}</span>
+                            <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">{translateText('Pesticide / Bio-Agent Reminder', lang) || 'Pesticide / Bio-Agent Reminder'}</span>
                             <span className="text-slate-800 font-medium">{translateText(plan.cropProtection.pesticideReminder, lang)}</span>
                           </div>
                         </div>
@@ -579,7 +560,7 @@ export const CropPlannerView: React.FC<CropPlannerViewProps> = ({ activeFarm, cr
 
                     {harvestPrep.length > 0 && (
                       <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{translateText('Harvest Readiness Checklist', lang)}</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t.harvestChecklist || 'Harvest Readiness Checklist'}</h4>
                         <div className="space-y-1.5">
                           {harvestPrep.map((prep, i) => (
                             <div key={i} className="flex items-center gap-2 text-slate-800 font-medium">
