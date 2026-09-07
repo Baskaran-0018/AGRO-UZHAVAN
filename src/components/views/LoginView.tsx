@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { UserProfile, AuthProviderType } from '../../types/agro';
 import { LANGUAGES, SupportedLang, TRANSLATIONS } from '../../lib/i18n';
+import { translateText } from '../../lib/universalTranslator';
 
 interface LoginViewProps {
   onLoginSuccess: (user: UserProfile) => void;
@@ -351,7 +352,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 Agro Uzhavan
               </span>
               <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
-                Intelligent Agriculture
+                {t.intelligentAgriculture || translateText('Intelligent Agriculture', lang)}
               </p>
             </div>
           </div>
@@ -377,7 +378,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
               onClick={handleGuestLogin}
               className="text-xs font-bold text-emerald-300 hover:text-emerald-200 px-3 py-1.5 rounded-xl bg-emerald-950/60 border border-emerald-800/80 hover:bg-emerald-900/60 transition-all cursor-pointer"
             >
-              Skip to App →
+              {t.skipToApp || translateText('Skip to App →', lang)}
             </button>
           </div>
         </header>
@@ -404,10 +405,10 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 <img src="/logo.png" alt="Agro Uzhavan" className="w-full h-full object-contain" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                {t.loginToAgro}
+                {t.loginTitle || t.loginToAgro || translateText('Welcome to Agro Uzhavan', lang)}
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-sm mx-auto">
-                {t.loginSubtitle || 'Sign in to access real-time weather AI, crop planning, yield forecasting, and instant leaf disease diagnostics.'}
+                {t.loginSubtitle || translateText('Sign in to access real-time weather AI, crop planning, yield forecasting, and instant leaf disease diagnostics.', lang)}
               </p>
             </div>
 
@@ -426,7 +427,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 }`}
               >
                 <Smartphone className="w-3.5 h-3.5" />
-                <span>{t.mobileOtp || 'Mobile OTP'}</span>
+                <span>{t.mobileOtp || translateText('Mobile OTP', lang)}</span>
               </button>
 
               <button
@@ -442,7 +443,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 }`}
               >
                 <Mail className="w-3.5 h-3.5" />
-                <span>{t.email || 'Email'}</span>
+                <span>{t.email || t.emailAddress || translateText('Email', lang)}</span>
               </button>
 
               <button
@@ -457,7 +458,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{t.guestAccess || 'Instant / Social'}</span>
+                <span>{t.instantSocial || t.guestAccess || translateText('Instant / Social', lang)}</span>
               </button>
             </div>
 
@@ -469,7 +470,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                   <form onSubmit={handleSendOtp} className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        {t.phone || 'Farmer Mobile Number'}
+                        {t.mobileNumber || t.phone || translateText('Farmer Mobile Number', lang)}
                       </label>
                       <div className="flex rounded-xl border border-slate-300 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 overflow-hidden transition-all bg-white">
                         <select
@@ -488,7 +489,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                           <input
                             type="tel"
                             required
-                            placeholder={t.phone || 'Enter 10-digit number'}
+                            placeholder={t.enterTenDigit || translateText('Enter 10-digit number', lang)}
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="w-full pl-9 pr-3 py-2.5 text-xs font-bold text-slate-900 outline-none"
@@ -496,19 +497,19 @@ export const LoginView: React.FC<LoginViewProps> = ({
                         </div>
                       </div>
                       <p className="text-[11px] text-slate-400 mt-1">
-                        {t.otpNotice || 'We will send a 6-digit verification code to this mobile number.'}
+                        {t.otpNotice || translateText('We will send a 6-digit verification code to this mobile number.', lang)}
                       </p>
                     </div>
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        {t.fullName || 'Your Full Name'} <span className="text-slate-400 font-normal">({t.optional || 'Optional'})</span>
+                        {t.fullName || translateText('Your Full Name', lang)} <span className="text-slate-400 font-normal">({t.optional || translateText('Optional', lang)})</span>
                       </label>
                       <div className="relative">
                         <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                         <input
                           type="text"
-                          placeholder={t.fullName || 'e.g. Ramesh Kumar'}
+                          placeholder={t.fullName || translateText('Your Full Name', lang)}
                           value={phoneUserName}
                           onChange={(e) => setPhoneUserName(e.target.value)}
                           className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-xs font-semibold text-slate-900 outline-none"
@@ -532,7 +533,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                       ) : (
                         <MessageSquare className="w-4 h-4" />
                       )}
-                      <span>{t.sendOtp || 'Send Verification Code (OTP)'}</span>
+                      <span>{t.sendOtp || translateText('Send Verification Code (OTP)', lang)}</span>
                     </button>
                   </form>
                 ) : (
@@ -541,7 +542,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                     <div className="text-center space-y-1">
                       <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>{t.otpSentTo || 'OTP Sent to'} {countryCode} {phone}</span>
+                        <span>{t.otpSentTo || translateText('OTP Sent to', lang)} {countryCode} {phone}</span>
                       </div>
                       <div className="flex items-center justify-center gap-2 pt-1">
                         <button
@@ -552,14 +553,14 @@ export const LoginView: React.FC<LoginViewProps> = ({
                           }}
                           className="text-[11px] text-slate-500 hover:text-emerald-700 font-bold underline cursor-pointer"
                         >
-                          {t.changeNumber || 'Change Number'}
+                          {t.changeNumber || translateText('Change Number', lang)}
                         </button>
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-xs font-bold text-center text-slate-700 mb-2">
-                        {t.enterOtp || 'Enter 6-Digit Verification Code'}
+                        {t.enterSixDigitOtp || t.enterOtp || translateText('Enter 6-Digit Verification Code', lang)}
                       </label>
                       <div className="flex justify-center gap-2 sm:gap-2.5" onPaste={handleOtpPaste}>
                         {otpDigits.map((digit, idx) => (
@@ -589,7 +590,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                     <div className="flex items-center justify-between text-xs px-1">
                       {resendCountdown > 0 ? (
                         <span className="text-slate-400 font-medium">
-                          {t.resendOtp || 'Resend code in'} <strong className="text-slate-700 font-bold">{resendCountdown}s</strong>
+                          {t.resendOtpIn || translateText('Resend code in', lang)} <strong className="text-slate-700 font-bold">{resendCountdown}s</strong>
                         </span>
                       ) : (
                         <button
@@ -598,7 +599,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                           className="text-emerald-700 hover:text-emerald-800 font-extrabold flex items-center gap-1 cursor-pointer"
                         >
                           <RefreshCw className="w-3.5 h-3.5" />
-                          <span>{t.resendOtp || 'Resend OTP Code'}</span>
+                          <span>{t.resendOtp || translateText('Resend OTP Code', lang)}</span>
                         </button>
                       )}
 
@@ -609,7 +610,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                           className="text-teal-700 hover:text-teal-800 font-bold flex items-center gap-1 cursor-pointer bg-teal-50 px-2 py-1 rounded-lg border border-teal-200"
                         >
                           <KeyRound className="w-3 h-3" />
-                          <span>{t.autoFill || 'Auto-Fill Code'}</span>
+                          <span>{t.autoFillCode || t.autoFill || translateText('Auto-Fill Code', lang)}</span>
                         </button>
                       )}
                     </div>
@@ -624,7 +625,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                       ) : (
                         <Check className="w-4 h-4" />
                       )}
-                      <span>{t.verifyOtp || 'Verify & Enter Agro Uzhavan'}</span>
+                      <span>{t.verifyOtp || translateText('Verify & Enter Agro Uzhavan', lang)}</span>
                     </button>
                   </form>
                 )}
@@ -637,13 +638,13 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 {isSignUp && (
                   <>
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">{t.fullName || 'Full Name'}</label>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">{t.fullName || translateText('Full Name', lang)}</label>
                       <div className="relative">
                         <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                         <input
                           type="text"
                           required
-                          placeholder={t.fullName || 'Your full name'}
+                          placeholder={t.fullName || translateText('Your Full Name', lang)}
                           value={emailFullName}
                           onChange={(e) => setEmailFullName(e.target.value)}
                           className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-xs font-semibold text-slate-900 outline-none"
@@ -652,22 +653,22 @@ export const LoginView: React.FC<LoginViewProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">{t.role || 'Account Role'}</label>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">{t.role || translateText('Account Role', lang)}</label>
                       <select
                         value={userRole}
                         onChange={(e) => setUserRole(e.target.value as any)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-xs font-semibold text-slate-900 outline-none bg-white cursor-pointer"
                       >
-                        <option value="Farmer">{t.roleFarmer || 'Farmer (Crop & Field Owner)'}</option>
-                        <option value="Agronomist">{t.roleAgronomist || 'Agronomist (Crop Doctor / Consultant)'}</option>
-                        <option value="Farm Manager">{t.roleManager || 'Farm Manager (Commercial Enterprise)'}</option>
+                        <option value="Farmer">{t.roleFarmer || translateText('Farmer (Crop & Field Owner)', lang)}</option>
+                        <option value="Agronomist">{t.roleAgronomist || translateText('Agronomist (Crop Doctor / Consultant)', lang)}</option>
+                        <option value="Farm Manager">{t.roleManager || translateText('Farm Manager (Commercial Enterprise)', lang)}</option>
                       </select>
                     </div>
                   </>
                 )}
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">{t.email || 'Email Address'}</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t.emailAddress || t.email || translateText('Email Address', lang)}</label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
@@ -682,7 +683,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">{t.password || 'Password'}</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t.password || translateText('Password', lang)}</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
@@ -719,7 +720,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                   ) : (
                     <LogIn className="w-4 h-4" />
                   )}
-                  <span>{isSignUp ? (t.createAccount || 'Create Farm Account') : (t.signInWithEmail || 'Sign In with Email')}</span>
+                  <span>{isSignUp ? (t.createAccount || translateText('Create Farm Account', lang)) : (t.signInWithEmail || translateText('Sign In with Email', lang))}</span>
                 </button>
 
                 <div className="text-center pt-1">
@@ -731,7 +732,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                     }}
                     className="text-xs text-emerald-700 hover:text-emerald-800 font-bold cursor-pointer"
                   >
-                    {isSignUp ? (t.alreadyHaveAccount || 'Already have an account? Sign In') : (t.dontHaveAccount || "Don't have an account? Sign Up")}
+                    {isSignUp ? (t.alreadyHaveAccount || translateText('Already have an account? Sign In', lang)) : (t.dontHaveAccount || translateText("Don't have an account? Sign Up", lang))}
                   </button>
                 </div>
               </form>
@@ -765,7 +766,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                     />
                   </svg>
-                  <span>{t.continueWithGoogle || 'Continue with Google'}</span>
+                  <span>{t.continueGoogle || t.continueWithGoogle || translateText('Continue with Google', lang)}</span>
                 </button>
 
                 {/* Apple Sign-In */}
@@ -778,7 +779,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                   <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 170 170">
                     <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.7-7.83-12-14.37-6.53-9.88-11.63-20.91-15.31-33.1-3.69-12.18-5.53-23.75-5.53-34.72 0-14.12 3.69-26.08 11.07-35.88 7.38-9.8 16.63-14.78 27.75-14.93 4.8 0 10.3 1.25 16.51 3.75 6.21 2.5 10.23 3.8 12.06 3.9 1.62-.1 5.69-1.4 12.2-3.9 6.51-2.5 11.83-3.7 15.96-3.6 11.75.54 21.09 5.09 28.02 13.65-10.23 6.2-15.24 14.89-15.03 26.06.21 8.91 3.64 16.42 10.29 22.52 6.65 6.1 14.48 9.54 23.49 10.33-2.39 7.4-5.33 14.78-8.82 22.14zM119.22 33.02c0-7.39 2.66-14.24 7.98-20.55 5.32-6.31 11.85-10.45 19.59-12.42.43 1.85.65 3.69.65 5.53 0 7.39-2.77 14.46-8.31 21.2-5.54 6.74-12.28 10.82-20.22 12.23-.22-1.96-.33-3.8-.33-5.53z" />
                   </svg>
-                  <span>{t.continueWithApple || 'Sign in with Apple'}</span>
+                  <span>{t.continueApple || t.continueWithApple || translateText('Sign in with Apple', lang)}</span>
                 </button>
 
                 {/* Instant Guest Pass */}
@@ -793,7 +794,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                   ) : (
                     <Sprout className="w-4 h-4 shrink-0 text-emerald-200" />
                   )}
-                  <span>{t.guestLogin || 'Instant Guest Access (No Sign-Up)'}</span>
+                  <span>{t.continueGuest || t.guestLogin || translateText('Instant Guest Access (No Sign-Up)', lang)}</span>
                 </button>
               </div>
             )}
@@ -801,7 +802,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
             {/* Bottom Security Note */}
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>{t.encryptedSecurity || '256-Bit Encrypted · Private Farm Data Guarantee'}</span>
+              <span>{t.encryptedSecurity || t.encryptedPrivacy || translateText('256-Bit Encrypted · Private Farm Data Guarantee', lang)}</span>
             </div>
           </div>
         </div>
@@ -812,19 +813,19 @@ export const LoginView: React.FC<LoginViewProps> = ({
         <footer className="p-6 max-w-7xl mx-auto w-full border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-slate-400">
           <div className="flex items-center gap-2.5">
             <CloudSun className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>{t.weather || 'Real-Time Weather AI'}</span>
+            <span>{t.weatherForecast || t.weather || translateText('Real-Time Weather AI', lang)}</span>
           </div>
           <div className="flex items-center gap-2.5">
             <ScanLine className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{t.diseaseDetection || 'AI Leaf Disease Diagnosis'}</span>
+            <span>{t.computerVisionPathology || t.diseaseDetection || translateText('AI Leaf Disease Diagnosis', lang)}</span>
           </div>
           <div className="flex items-center gap-2.5">
             <TrendingUp className="w-4 h-4 text-sky-400 shrink-0" />
-            <span>{t.yieldPrediction || 'Yield & Revenue Forecasting'}</span>
+            <span>{t.predictiveYieldEngine || t.yieldPrediction || translateText('Yield & Revenue Forecasting', lang)}</span>
           </div>
           <div className="flex items-center gap-2.5">
             <Sparkles className="w-4 h-4 text-teal-400 shrink-0" />
-            <span>{t.multilingualVoiceAI || 'Multilingual Voice AI'}</span>
+            <span>{t.multilingualVoiceAI || translateText('Multilingual Voice AI', lang)}</span>
           </div>
         </footer>
       )}
@@ -860,7 +861,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
                   </svg>
                 )}
                 <span className="font-bold text-sm text-slate-800">
-                  {customSocialModal === 'google' ? 'Google Account Login' : 'Apple ID Login'}
+                  {customSocialModal === 'google' ? translateText('Google Account Login', lang) : translateText('Apple ID Login', lang)}
                 </span>
               </div>
               <button
@@ -873,7 +874,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
             </div>
 
             <p className="text-xs text-slate-500">
-              Enter your {customSocialModal === 'google' ? 'Google' : 'Apple'} credentials to sign in to Agro Uzhavan:
+              {translateText('Enter your credentials to sign in to Agro Uzhavan:', lang)}
             </p>
 
             <form
@@ -884,10 +885,10 @@ export const LoginView: React.FC<LoginViewProps> = ({
               className="space-y-3"
             >
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Your Full Name</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t.fullName || translateText('Your Full Name', lang)}</label>
                 <input
                   type="text"
-                  placeholder="e.g. Anand Sharma"
+                  placeholder={t.fullName || translateText('Your Full Name', lang)}
                   value={socialName}
                   onChange={(e) => setSocialName(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-emerald-500 text-xs font-semibold text-slate-900 outline-none"
@@ -896,7 +897,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {customSocialModal === 'google' ? 'Google Email' : 'Apple ID Email'}
+                  {customSocialModal === 'google' ? translateText('Google Email', lang) : translateText('Apple ID Email', lang)}
                 </label>
                 <input
                   type="email"
@@ -914,14 +915,14 @@ export const LoginView: React.FC<LoginViewProps> = ({
                   onClick={() => setCustomSocialModal(null)}
                   className="flex-1 py-2 px-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
                 >
-                  Cancel
+                  {t.cancel || translateText('Cancel', lang)}
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting !== null}
                   className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white shadow-sm"
                 >
-                  {isSubmitting ? 'Signing in...' : 'Continue'}
+                  {isSubmitting ? translateText('Signing in...', lang) : translateText('Continue', lang)}
                 </button>
               </div>
             </form>
