@@ -45,7 +45,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'weather', label: t.weatherPrediction || 'Weather & Forecast', icon: CloudSun, badge: translateText('Graphs', lang) },
         { id: 'cropplanner', label: t.cropManagement || 'Crop Planner', icon: CalendarCheck },
         { id: 'diseasescanner', label: t.diseaseDetection || 'AI Leaf Doctor', icon: ScanLine, badge: translateText('Vision', lang) },
-        { id: 'turmericscanner', label: t.turmericScanner || 'Turmeric Disease Scanner', icon: Sparkles, badge: 'YOLOv8' },
         { id: 'yieldpredictor', label: t.yieldPrediction || 'Yield Estimator', icon: TrendingUp },
         { id: 'medicineguide', label: t.medicineGuide || 'Pesticide & Remedies', icon: Pill },
         { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: translateText('Voice', lang) },
