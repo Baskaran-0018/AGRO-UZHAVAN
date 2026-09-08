@@ -84,14 +84,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2.5 sm:px-4 py-2 shadow-xs w-full max-w-full">
-      <div className="flex items-center justify-between gap-1.5 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
+    <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2 sm:px-4 py-1.5 sm:py-2 shadow-xs w-full max-w-full overflow-hidden">
+      <div className="flex items-center justify-between gap-1 sm:gap-3 max-w-7xl mx-auto w-full min-w-0">
         {/* Brand & Mobile Menu Toggle */}
-        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2 min-w-0 shrink">
           {onOpenMobileMenu && (
             <button
               onClick={onOpenMobileMenu}
-              className="md:hidden p-1.5 rounded-xl text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 transition-colors cursor-pointer"
+              className="md:hidden p-1 sm:p-1.5 rounded-lg sm:rounded-xl text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 transition-colors cursor-pointer shrink-0"
               title="Open Navigation Menu"
             >
               <Menu className="w-5 h-5" />
@@ -100,16 +100,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate('dashboard')}
-            className="flex items-center gap-2 sm:gap-2.5 text-left group cursor-pointer focus:outline-none min-w-0"
+            className="flex items-center gap-1.5 sm:gap-2.5 text-left group cursor-pointer focus:outline-none min-w-0"
           >
-            <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
+            <div className="relative flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
               <img
                 src="/logo.png"
                 alt="Agro Uzhavan Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 hidden md:block">
               <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 leading-none truncate block">
                 Agro Uzhavan
               </span>
@@ -118,7 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Farm Switcher & Quick Indicators */}
-        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0 min-w-0">
           {/* Active Farm Selector */}
           <div className="relative hidden md:flex items-center">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-400 transition-colors">
@@ -151,9 +151,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           {currentTemp !== undefined && (
             <button
               onClick={() => onNavigate('weather')}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-xs font-bold text-slate-700 hover:text-emerald-800 transition-all cursor-pointer"
+              className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[11px] sm:text-xs font-bold text-slate-700 hover:text-emerald-800 transition-all cursor-pointer shrink-0"
+              title={currentWeatherDesc ? `${Math.round(currentTemp)}°C - ${translateText(currentWeatherDesc, lang)}` : `${Math.round(currentTemp)}°C`}
             >
-              <CloudSun className="w-4 h-4 text-amber-500 shrink-0" />
+              <CloudSun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
               <span>{Math.round(currentTemp)}°C</span>
               {currentWeatherDesc && (
                 <span className="hidden lg:inline text-slate-500 font-normal text-[11px] truncate max-w-[80px]">
@@ -164,14 +165,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           {/* Multilingual Selector */}
-          <div className="relative" ref={langMenuRef}>
+          <div className="relative shrink-0" ref={langMenuRef}>
             <button
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors cursor-pointer"
+              className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[11px] sm:text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors cursor-pointer shrink-0"
             >
               <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>{currentLangMeta.nativeName}</span>
-              <ChevronDown className="w-3 h-3 text-slate-400" />
+              <span className="max-w-[48px] xs:max-w-[70px] sm:max-w-none truncate">{currentLangMeta.nativeName}</span>
+              <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
             </button>
 
             {isLangMenuOpen && (
@@ -205,12 +206,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Notifications Bell */}
           <button
             onClick={onOpenNotifications}
-            className="relative p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            className="relative p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer shrink-0"
             title={t.alerts}
           >
             <Bell className="w-4 h-4" />
             {alertCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] font-black flex items-center justify-center animate-pulse">
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-amber-500 text-white text-[9px] sm:text-[10px] font-black flex items-center justify-center animate-pulse">
                 {alertCount}
               </span>
             )}
@@ -221,7 +222,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={promptInstall}
               title={t.installMobileApp || 'Install AGRO AI App'}
-              className="hidden xs:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 text-xs font-extrabold shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 text-xs font-extrabold shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer shrink-0"
             >
               <Download className="w-3.5 h-3.5 text-emerald-700 animate-bounce" />
               <span className="hidden sm:inline">{t.install || 'Install'}</span>
@@ -230,10 +231,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* User Account / Login Pill */}
           {user ? (
-            <div className="relative" ref={userMenuRef}>
+            <div className="relative shrink-0" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer select-none"
+                className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer select-none shrink-0"
+                title={getLocalizedUserName(user.name, lang)}
               >
                 {user.avatarUrl ? (
                   <img
@@ -254,7 +256,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     {user.isGuest ? (t.guestPass || 'Guest Pass') : user.provider === 'phone' ? (t.mobileOtp || 'Mobile OTP') : user.provider}
                   </span>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block shrink-0" />
               </button>
 
               {/* User Account Dropdown Menu */}
