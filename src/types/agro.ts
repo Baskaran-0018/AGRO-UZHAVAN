@@ -6,7 +6,14 @@ export type SoilType =
   | 'Sandy Loam'
   | 'Clayey'
   | 'Loamy'
-  | 'Saline/Alkaline';
+  | 'Saline/Alkaline'
+  | 'Clay Loam'
+  | 'Light Black'
+  | 'Forest Loam'
+  | 'Deep Well-drained'
+  | 'Light Alluvial'
+  | 'Deep Loamy'
+  | (string & {});
 
 export type CropCategory = 'Cereals' | 'Pulses' | 'Cash Crops' | 'Vegetables' | 'Fruits' | 'Spices' | 'Oilseeds' | 'Flowers' | 'Fodder';
 

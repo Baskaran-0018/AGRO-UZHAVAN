@@ -391,7 +391,7 @@ function getLangName(lang: SupportedLang): string {
     hi: 'Hindi',
     te: 'Telugu',
     kn: 'Kannada',
-    ml: 'Malayalam',
+    bn: 'Bengali',
     mr: 'Marathi',
     gu: 'Gujarati',
     pa: 'Punjabi',
