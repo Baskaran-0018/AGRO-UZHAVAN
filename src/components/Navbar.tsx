@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Close dropdown on outside click or touch
   useEffect(() => {
-    function handleClickOutside(event: Event) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       const target = event.target as Node;
       if (userMenuRef.current && !userMenuRef.current.contains(target)) {
         setIsUserMenuOpen(false);
@@ -84,15 +84,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2 sm:px-4 py-1.5 sm:py-2 shadow-xs w-full max-w-full">
-      <div className="flex items-center justify-between gap-1 sm:gap-3 max-w-7xl mx-auto w-full min-w-0">
+    <header className="sticky top-0 z-40 border-b border-emerald-100 bg-white/95 backdrop-blur-md px-2 sm:px-4 py-2 shadow-xs w-full max-w-full select-none">
+      <div className="flex items-center justify-between gap-1.5 sm:gap-3 max-w-7xl mx-auto w-full min-w-0">
         {/* Brand & Mobile Menu Toggle */}
-        <div className="flex items-center gap-1 sm:gap-2 min-w-0 shrink">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink">
           {onOpenMobileMenu && (
             <button
               type="button"
               onClick={onOpenMobileMenu}
-              className="md:hidden p-1 sm:p-1.5 rounded-lg sm:rounded-xl text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 transition-colors cursor-pointer shrink-0"
+              className="md:hidden p-1.5 rounded-xl text-slate-700 hover:bg-emerald-100 hover:text-emerald-800 transition-colors cursor-pointer shrink-0"
               title="Open Navigation Menu"
             >
               <Menu className="w-5 h-5" />
@@ -102,9 +102,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('dashboard')}
-            className="flex items-center gap-1.5 sm:gap-2.5 text-left group cursor-pointer focus:outline-none min-w-0"
+            className="flex items-center gap-2 sm:gap-2.5 text-left group cursor-pointer focus:outline-none min-w-0"
           >
-            <div className="relative flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
+            <div className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white border border-emerald-200 shadow-sm p-0.5 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
               <img
                 src="/logo.png"
                 alt="Agro Uzhavan Logo"
@@ -119,9 +119,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* Farm Switcher & Quick Indicators */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0 min-w-0">
-          {/* Active Farm Selector */}
+        {/* Top Right Tabs & Quick Controls */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
+          {/* 1. Active Farm Selector */}
           <div className="relative hidden md:flex items-center">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-400 transition-colors">
               <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -150,12 +150,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Live Weather Pill */}
+          {/* 2. Live Weather Pill */}
           {currentTemp !== undefined && (
             <button
               type="button"
               onClick={() => onNavigate('weather')}
-              className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[11px] sm:text-xs font-bold text-slate-700 hover:text-emerald-800 transition-all cursor-pointer shrink-0"
+              className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[11px] sm:text-xs font-bold text-slate-700 hover:text-emerald-800 transition-all cursor-pointer shrink-0 active:scale-95"
               title={currentWeatherDesc ? `${Math.round(currentTemp)}°C - ${translateText(currentWeatherDesc, lang)}` : `${Math.round(currentTemp)}°C`}
             >
               <CloudSun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
@@ -168,51 +168,60 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Multilingual Selector */}
+          {/* 3. Multilingual Selector Tab */}
           <div className="relative shrink-0" ref={langMenuRef}>
             <button
               type="button"
-              onClick={() => {
-                setIsLangMenuOpen(!isLangMenuOpen);
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsLangMenuOpen(prev => !prev);
                 setIsUserMenuOpen(false);
               }}
-              className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-[11px] sm:text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors cursor-pointer shrink-0 active:scale-95"
+              className={`flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl border text-[11px] sm:text-xs font-bold transition-all cursor-pointer shrink-0 active:scale-95 ${
+                isLangMenuOpen
+                  ? 'bg-emerald-100 border-emerald-400 text-emerald-900 shadow-xs'
+                  : 'bg-slate-50 hover:bg-emerald-50 border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-800'
+              }`}
               aria-label="Select Language"
               aria-expanded={isLangMenuOpen}
             >
               <Globe className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
               <span className="max-w-[48px] xs:max-w-[70px] sm:max-w-none truncate">{currentLangMeta.nativeName}</span>
-              <ChevronDown className={`w-3 h-3 text-slate-400 shrink-0 transition-transform duration-150 ${isLangMenuOpen ? 'rotate-180 text-emerald-600' : ''}`} />
+              <ChevronDown className={`w-3 h-3 text-slate-400 shrink-0 transition-transform duration-200 ${isLangMenuOpen ? 'rotate-180 text-emerald-600' : ''}`} />
             </button>
 
             {isLangMenuOpen && (
               <>
-                {/* Mobile backdrop for instant tap dismissal */}
+                {/* Global Backdrop for outside click dismissal */}
                 <div
-                  className="fixed inset-0 z-40 bg-slate-950/20 backdrop-blur-2xs sm:hidden"
+                  className="fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-2xs"
                   onClick={() => setIsLangMenuOpen(false)}
                 />
-                <div className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1rem)] rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 text-slate-900 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1 flex items-center justify-between">
+                <div className="fixed top-13 right-3 left-3 sm:left-auto sm:right-0 sm:absolute sm:top-full sm:mt-2 w-auto sm:w-60 rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 text-slate-900 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1.5 flex items-center justify-between">
                     <span>{t.chooseLanguage || 'Choose Language'}</span>
-                    <span className="text-emerald-700 font-bold text-[9px] bg-emerald-50 px-1.5 py-0.5 rounded-md">{LANGUAGES.length} {t.languages || 'Langs'}</span>
+                    <span className="text-emerald-700 font-bold text-[9px] bg-emerald-50 px-1.5 py-0.5 rounded-md">{LANGUAGES.length} {t.languages || 'Languages'}</span>
                   </div>
-                  <div className="space-y-0.5 max-h-72 overflow-y-auto overscroll-contain pr-0.5">
+                  <div className="space-y-1 max-h-72 overflow-y-auto overscroll-contain pr-0.5">
                     {LANGUAGES.map((l) => (
                       <button
                         key={l.code}
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           onChangeLang(l.code);
                           setIsLangMenuOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-left ${
                           lang === l.code
                             ? 'bg-emerald-600 text-white font-black shadow-xs ring-1 ring-emerald-500'
                             : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-950 active:bg-emerald-100'
                         }`}
                       >
-                        <span className="truncate">{l.nativeName}</span>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="truncate">{l.nativeName}</span>
+                          {lang === l.code && <span className="text-[10px] font-bold bg-white/20 px-1.5 py-0.2 rounded text-white">✓</span>}
+                        </div>
                         <span className={`text-[10px] font-normal shrink-0 ml-2 ${lang === l.code ? 'text-emerald-100' : 'text-slate-400'}`}>
                           {l.name}
                         </span>
@@ -224,22 +233,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          {/* Notifications Bell */}
+          {/* 4. Notifications Bell */}
           <button
             type="button"
             onClick={onOpenNotifications}
-            className="relative p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer shrink-0"
+            className="relative p-1.5 sm:p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer shrink-0 active:scale-95"
             title={t.alerts}
           >
             <Bell className="w-4 h-4" />
             {alertCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-amber-500 text-white text-[9px] sm:text-[10px] font-black flex items-center justify-center animate-pulse">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] font-black flex items-center justify-center animate-pulse">
                 {alertCount}
               </span>
             )}
           </button>
 
-          {/* PWA Install Button on Navbar */}
+          {/* 5. PWA Install Button */}
           {!isInstalled && (
             <button
               type="button"
@@ -252,16 +261,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* User Account / Profile Pill */}
+          {/* 6. User Account / Profile Tab */}
           {user ? (
             <div className="relative shrink-0" ref={userMenuRef}>
               <button
                 type="button"
-                onClick={() => {
-                  setIsUserMenuOpen(!isUserMenuOpen);
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsUserMenuOpen(prev => !prev);
                   setIsLangMenuOpen(false);
                 }}
-                className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer select-none shrink-0 active:scale-95"
+                className={`flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1.5 rounded-xl border transition-all cursor-pointer select-none shrink-0 active:scale-95 ${
+                  isUserMenuOpen
+                    ? 'bg-emerald-100 border-emerald-400 shadow-xs'
+                    : 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-emerald-300'
+                }`}
                 title={getLocalizedUserName(user.name, lang)}
                 aria-label="Open User Profile Menu"
                 aria-expanded={isUserMenuOpen}
@@ -285,22 +299,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                     {user.isGuest ? (t.guestPass || 'Guest Pass') : user.provider === 'phone' ? (t.mobileOtp || 'Mobile OTP') : user.provider}
                   </span>
                 </div>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 hidden sm:block shrink-0 transition-transform duration-150 ${isUserMenuOpen ? 'rotate-180 text-emerald-600' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 hidden sm:block shrink-0 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180 text-emerald-600' : ''}`} />
               </button>
 
               {/* User Account Dropdown Menu */}
               {isUserMenuOpen && (
                 <>
-                  {/* Mobile backdrop for instant tap dismissal */}
+                  {/* Global Backdrop for outside click dismissal */}
                   <div
-                    className="fixed inset-0 z-40 bg-slate-950/20 backdrop-blur-2xs sm:hidden"
+                    className="fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-2xs"
                     onClick={() => setIsUserMenuOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl bg-white border border-slate-200 shadow-2xl p-3 space-y-3 z-50 text-slate-900 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="fixed top-13 right-3 left-3 sm:left-auto sm:right-0 sm:absolute sm:top-full sm:mt-2 w-auto sm:w-76 rounded-2xl bg-white border border-slate-200 shadow-2xl p-3 space-y-3 z-50 text-slate-900 animate-in fade-in zoom-in-95 duration-150">
                     {/* Clickable user card -> opens profile */}
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setIsUserMenuOpen(false);
                         onNavigate('profile');
                       }}
@@ -328,7 +343,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     {user.isGuest && onOpenLogin && (
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setIsUserMenuOpen(false);
                           onOpenLogin();
                         }}
@@ -342,7 +358,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="space-y-1 text-xs">
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setIsUserMenuOpen(false);
                           onNavigate('profile');
                         }}
@@ -355,7 +372,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {onOpenLogin && (
                         <button
                           type="button"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setIsUserMenuOpen(false);
                             onOpenLogin();
                           }}
@@ -369,7 +387,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {onLogout && (
                         <button
                           type="button"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setIsUserMenuOpen(false);
                             onLogout();
                           }}
