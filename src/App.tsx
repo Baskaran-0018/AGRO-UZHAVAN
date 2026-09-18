@@ -41,7 +41,6 @@ import { ProfileView } from './components/views/ProfileView';
 
 import { loadWeatherData } from './lib/weatherClient';
 import { detectUserLocation } from './lib/geoService';
-import { LocationDetails } from './hooks/useUserLocation';
 
 export function App() {
   // Authentication State
@@ -129,34 +128,11 @@ export function App() {
     autoDetectStartupLocation();
   }, []);
 
-  // Location change handler from LocationSelector / useUserLocation
-  function handleLocationChange(details: LocationDetails) {
-    const updatedFarm: FarmProfile = {
-      ...activeFarm,
-      locationName: details.formattedAddress,
-      lat: details.coordinates.lat,
-      lng: details.coordinates.lon,
-      boundaryGeoJSON: [
-        [details.coordinates.lat, details.coordinates.lon],
-        [details.coordinates.lat + 0.003, details.coordinates.lon + 0.003],
-        [details.coordinates.lat + 0.001, details.coordinates.lon + 0.005],
-        [details.coordinates.lat - 0.002, details.coordinates.lon + 0.002]
-      ]
-    };
-    setActiveFarm(updatedFarm);
-    setFarms(currentFarms => {
-      const updatedFarms = currentFarms.map(f => f.id === activeFarm.id ? updatedFarm : f);
-      AgroStore.saveFarms(updatedFarms);
-      return updatedFarms;
-    });
-    confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
-  }
-
   // Manual GPS detection handler
   async function handleDetectLocation() {
     setIsDetectingLocation(true);
     try {
-      const detected = await detectUserLocation(true);
+      const detected = await detectUserLocation();
       if (detected && detected.lat && detected.lng) {
         const updatedFarm: FarmProfile = {
           ...activeFarm,
@@ -396,7 +372,6 @@ export function App() {
               onOpenAddCrop={() => setIsAddCropOpen(true)}
               onDetectLocation={handleDetectLocation}
               isDetectingLocation={isDetectingLocation}
-              onLocationChange={handleLocationChange}
             />
           )}
 

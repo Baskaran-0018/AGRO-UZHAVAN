@@ -24,8 +24,6 @@ import {
   getLocalizedCropName,
   getLocalizedGrowthStage
 } from '../../lib/universalTranslator';
-import { LocationSelector } from '../LocationSelector';
-import { LocationDetails } from '../../hooks/useUserLocation';
 
 interface DashboardViewProps {
   activeFarm: FarmProfile;
@@ -38,7 +36,6 @@ interface DashboardViewProps {
   onOpenAddCrop: () => void;
   onDetectLocation?: () => void;
   isDetectingLocation?: boolean;
-  onLocationChange?: (details: LocationDetails) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -105,9 +102,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Real-time Granular Location & Administrative Settlement Card */}
-      <LocationSelector onLocationChange={onLocationChange} />
 
       {/* Main KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
