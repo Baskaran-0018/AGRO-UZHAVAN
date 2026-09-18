@@ -3,18 +3,29 @@ export interface DetectedLocation {
   lng: number;
   locationName: string;
   city?: string;
+  district?: string;
   state?: string;
   country?: string;
-  source: 'gps' | 'ip' | 'cached';
+  source: 'gps' | 'ip' | 'search' | 'cached';
 }
 
-const LOCATION_CACHE_KEY = 'agro_user_detected_location_v1';
+export interface GeocodedPlace {
+  id: number | string;
+  name: string;
+  admin1?: string; // State
+  admin2?: string; // District
+  country?: string;
+  latitude: number;
+  longitude: number;
+}
+
+const LOCATION_CACHE_KEY = 'agro_user_detected_location_v2';
 
 /**
- * Reverse geocodes latitude and longitude into human-readable place name.
+ * High-precision reverse geocoding from coordinates into human-readable place name.
  */
 export async function reverseGeocode(lat: number, lng: number): Promise<string> {
-  // 1. Try BigDataCloud free client reverse geocoding
+  // 1. Try BigDataCloud reverse geocoding
   try {
     const res = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
@@ -22,13 +33,17 @@ export async function reverseGeocode(lat: number, lng: number): Promise<string> 
     );
     if (res.ok) {
       const data = await res.json();
-      const city = data.city || data.locality || data.localityInfo?.administrative?.[2]?.name || '';
-      const state = data.principalSubdivision || data.localityInfo?.administrative?.[1]?.name || '';
+      const city = data.city || data.locality || '';
+      const district = data.localityInfo?.administrative?.find((a: any) => a.adminLevel === 5 || a.description?.includes('district'))?.name || '';
+      const state = data.principalSubdivision || '';
       const country = data.countryName || 'India';
 
-      if (city && state) return `${city}, ${state}, ${country}`;
-      if (city) return `${city}, ${country}`;
-      if (state) return `${state}, ${country}`;
+      const parts = [city, district, state].filter(Boolean);
+      // Remove duplicate names if city and district match
+      const uniqueParts = parts.filter((item, index) => parts.indexOf(item) === index);
+      if (uniqueParts.length > 0) {
+        return `${uniqueParts.join(', ')}, ${country}`;
+      }
     }
   } catch (err) {
     console.warn('[GeoService] BigDataCloud reverse geocode error:', err);
@@ -46,13 +61,16 @@ export async function reverseGeocode(lat: number, lng: number): Promise<string> 
     if (res.ok) {
       const data = await res.json();
       const addr = data.address || {};
-      const city = addr.city || addr.town || addr.village || addr.county || addr.state_district || addr.district || '';
+      const locality = addr.suburb || addr.town || addr.village || addr.city || '';
+      const district = addr.state_district || addr.county || addr.district || '';
       const state = addr.state || '';
       const country = addr.country || 'India';
 
-      if (city && state) return `${city}, ${state}, ${country}`;
-      if (city) return `${city}, ${country}`;
-      if (state) return `${state}, ${country}`;
+      const parts = [locality, district, state].filter(Boolean);
+      const uniqueParts = parts.filter((item, index) => parts.indexOf(item) === index);
+      if (uniqueParts.length > 0) {
+        return `${uniqueParts.join(', ')}, ${country}`;
+      }
     }
   } catch (err) {
     console.warn('[GeoService] OSM Nominatim reverse geocode error:', err);
@@ -62,9 +80,39 @@ export async function reverseGeocode(lat: number, lng: number): Promise<string> 
 }
 
 /**
- * Detects location using high-accuracy GPS with automatic fast IP fallback.
+ * Searches places globally with instant auto-complete (Open-Meteo Geocoding).
  */
-export async function detectUserLocation(): Promise<DetectedLocation> {
+export async function searchPlaces(query: string): Promise<GeocodedPlace[]> {
+  if (!query || query.trim().length < 2) return [];
+  try {
+    const res = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query.trim())}&count=10&language=en&format=json`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data.results && Array.isArray(data.results)) {
+        return data.results.map((r: any) => ({
+          id: r.id,
+          name: r.name,
+          admin1: r.admin1,
+          admin2: r.admin2,
+          country: r.country,
+          latitude: r.latitude,
+          longitude: r.longitude
+        }));
+      }
+    }
+  } catch (err) {
+    console.warn('[GeoService] Place search error:', err);
+  }
+  return [];
+}
+
+/**
+ * Detects user live location using browser high-accuracy GPS with automatic IP fallback.
+ */
+export async function detectUserLocation(forceGps = false): Promise<DetectedLocation> {
   // 1. Try Browser HTML5 GPS Geolocation
   if (typeof window !== 'undefined' && 'geolocation' in navigator) {
     try {
@@ -72,7 +120,7 @@ export async function detectUserLocation(): Promise<DetectedLocation> {
         navigator.geolocation.getCurrentPosition(
           resolve,
           reject,
-          { enableHighAccuracy: true, timeout: 6000, maximumAge: 30000 }
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 10000 }
         );
       });
 
@@ -93,11 +141,12 @@ export async function detectUserLocation(): Promise<DetectedLocation> {
 
       return result;
     } catch (gpsErr) {
-      console.warn('[GeoService] HTML5 Geolocation skipped/denied, falling back to IP detection:', gpsErr);
+      console.warn('[GeoService] HTML5 Geolocation skipped/denied:', gpsErr);
     }
   }
 
-  // 2. Try IP-based Geolocation (instant, no user prompt required)
+  // If forceGps was requested and failed, try IP lookup immediately
+  // 2. Try IP-based Geolocation (instant, no permissions needed)
   try {
     const res = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
     if (res.ok) {
@@ -129,19 +178,14 @@ export async function detectUserLocation(): Promise<DetectedLocation> {
     console.warn('[GeoService] IP lookup error:', ipErr);
   }
 
-  // 3. Cached fallback
-  try {
-    const cached = localStorage.getItem(LOCATION_CACHE_KEY);
-    if (cached) {
-      return JSON.parse(cached);
-    }
-  } catch {}
-
-  // 4. Default fallback
+  // 3. Fallback
   return {
-    lat: 12.8351,
-    lng: 79.7001,
-    locationName: 'Tamil Nadu, India',
+    lat: 12.7365,
+    lng: 77.8326,
+    locationName: 'Hosur, Tamil Nadu, India',
+    city: 'Hosur',
+    state: 'Tamil Nadu',
+    country: 'India',
     source: 'cached'
   };
 }

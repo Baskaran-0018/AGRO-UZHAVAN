@@ -1183,6 +1183,9 @@ const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'పొలం మ్యాప్',
     reports: 'నివేదికలు',
     adminPanel: 'సిస్టమ్ స్థితి',
+    farmerProfile: 'రైతు ప్రొఫైల్ & కేవైసీ',
+    kyc: 'కేవైసీ',
+    profileSaved: 'రైతు ప్రొఫైల్ & వ్యవసాయ వివరాలు విజయవంతంగా భద్రపరచబడ్డాయి!',
 
     // Nav Groups
     coreIntelligence: 'ప్రధాన మేధస్సు',
@@ -1546,6 +1549,9 @@ const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'ಕೃಷಿ ನಕ್ಷೆ',
     reports: 'ರೋಗ ವರದಿಗಳು',
     adminPanel: 'ಸಿಸ್ಟಮ್ & GPU',
+    farmerProfile: 'ರೈತರ ಪ್ರೊಫೈಲ್ & ಕೆವೈಸಿ',
+    kyc: 'ಕೆವೈಸಿ',
+    profileSaved: 'ರೈತರ ಪ್ರೊಫೈಲ್ ಮತ್ತು ಕೃಷಿ ಮಾಹಿತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!',
 
     // Nav Groups
     coreIntelligence: 'ಪ್ರಮುಖ ಬುದ್ಧಿಮತ್ತೆ',
@@ -1909,6 +1915,9 @@ const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'शेताचा नकाशा',
     reports: 'रोग अहवाल',
     adminPanel: 'सिस्टम आणि GPU',
+    farmerProfile: 'शेतकरी प्रोफाइल आणि केवायसी',
+    kyc: 'केवायसी',
+    profileSaved: 'शेतकरी प्रोफाइल आणि कृषी डेटा यशस्वीरित्या जतन केला!',
 
     // Nav Groups
     coreIntelligence: 'प्रमुख बुद्धिमत्ता',
@@ -2272,6 +2281,9 @@ const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'খামারের মানচিত্র',
     reports: 'রোগের রিপোর্ট',
     adminPanel: 'সিস্টেম ও GPU',
+    farmerProfile: 'কৃষক প্রোফাইল এবং কেওয়াইসি',
+    kyc: 'কেওয়াইসি',
+    profileSaved: 'কৃষক প্রোফাইল এবং কৃষি তথ্য সফলভাবে সংরক্ষিত হয়েছে!',
 
     // Nav Groups
     coreIntelligence: 'প্রধান বুদ্ধিমত্তা',
@@ -2635,6 +2647,9 @@ const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'ખેતરનો નકશો',
     reports: 'નિદાન અહેવાલો',
     adminPanel: 'સિસ્ટમ અને GPU',
+    farmerProfile: 'ખેડૂત પ્રોફાઇલ અને કેવાયસી',
+    kyc: 'કેવાયસી',
+    profileSaved: 'ખેડૂત પ્રોફાઇલ અને કૃષિ ડેટા સફળતાપૂર્વક સાચવવામાં આવ્યો!',
 
     // Nav Groups
     coreIntelligence: 'મુખ્ય બુદ્ધિમત્તા',
@@ -2998,6 +3013,9 @@ const RAW_TRANSLATIONS: Record<SupportedLang, Record<string, string>> = {
     farmMap: 'ਖੇਤ ਦਾ ਨਕਸ਼ਾ',
     reports: 'ਨਿਦਾਨ ਰਿਪੋਰਟਾਂ',
     adminPanel: 'ਸਿਸਟਮ ਅਤੇ GPU',
+    farmerProfile: 'ਕਿਸਾਨ ਪ੍ਰੋਫਾਈਲ ਅਤੇ ਕੇਵਾਈਸੀ',
+    kyc: 'ਕੇਵਾਈਸੀ',
+    profileSaved: 'ਕਿਸਾਨ ਪ੍ਰੋਫਾਈਲ ਅਤੇ ਖੇਤੀਬਾੜੀ ਡਾਟਾ ਸਫਲਤਾਪੂਰਵਕ ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਗਿਆ!',
 
     // Nav Groups
     coreIntelligence: 'ਮੁੱਖ ਬੁੱਧੀਮਤਾ',

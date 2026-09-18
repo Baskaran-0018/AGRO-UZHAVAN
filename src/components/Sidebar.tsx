@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'yieldpredictor', label: t.yieldPrediction || 'Yield Estimator', icon: TrendingUp },
         { id: 'medicineguide', label: t.medicineGuide || 'Pesticide & Remedies', icon: Pill },
         { id: 'assistant', label: t.aiAssistant || 'Voice AI Advisor', icon: Mic, badge: translateText('Voice', lang) },
-        { id: 'profile', label: t.farmerProfile || 'Farmer Profile & KYC', icon: UserCheck, badge: translateText('KYC', lang) },
+        { id: 'profile', label: t.farmerProfile || translateText('Farmer Profile & KYC', lang), icon: UserCheck, badge: t.kyc || translateText('KYC', lang) },
       ]
     }
   ];
