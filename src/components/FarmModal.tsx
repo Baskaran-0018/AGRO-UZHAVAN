@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { X, MapPin, Search, Plus, Check } from 'lucide-react';
+import { X, MapPin, Search, Plus, Check, Navigation, Loader2 } from 'lucide-react';
 import { FarmProfile, SoilType } from '../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../lib/i18n';
 import { getLocalizedSoilType, getLocalizedLocation } from '../lib/universalTranslator';
+import { detectUserLocation } from '../lib/geoService';
 
 interface FarmModalProps {
   isOpen: boolean;
@@ -31,17 +32,38 @@ export const FarmModal: React.FC<FarmModalProps> = ({
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
   const [name, setName] = useState('');
-  const [locationName, setLocationName] = useState('Ludhiana, Punjab, India');
+  const [locationName, setLocationName] = useState('Tamil Nadu, India');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isDetectingGps, setIsDetectingGps] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [lat, setLat] = useState(30.901);
-  const [lng, setLng] = useState(75.8573);
+  const [lat, setLat] = useState(12.8351);
+  const [lng, setLng] = useState(79.7001);
   const [soilType, setSoilType] = useState<SoilType>('Alluvial');
   const [areaAcres, setAreaAcres] = useState('10');
   const [irrigationType, setIrrigationType] = useState<'Drip' | 'Sprinkler' | 'Canal/Flood' | 'Rainfed' | 'Pivot'>('Drip');
 
   if (!isOpen) return null;
+
+  async function handleDetectGps() {
+    setIsDetectingGps(true);
+    try {
+      const loc = await detectUserLocation();
+      if (loc && loc.lat && loc.lng) {
+        setLocationName(loc.locationName);
+        setLat(loc.lat);
+        setLng(loc.lng);
+        if (!name) {
+          const baseName = loc.city || loc.state || 'My Farm';
+          setName(`${baseName} Estate`);
+        }
+      }
+    } catch (err) {
+      console.warn('GPS detection error in FarmModal:', err);
+    } finally {
+      setIsDetectingGps(false);
+    }
+  }
 
   async function handleSearch() {
     if (!searchQuery.trim() || searchQuery.length < 2) return;
@@ -134,9 +156,24 @@ export const FarmModal: React.FC<FarmModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
-              {t.farmLocation} (GPS)
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-semibold text-slate-300">
+                {t.farmLocation} (GPS)
+              </label>
+              <button
+                type="button"
+                onClick={handleDetectGps}
+                disabled={isDetectingGps}
+                className="flex items-center gap-1 text-[11px] font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-700/50 px-2 py-0.5 rounded cursor-pointer transition-all active:scale-95"
+              >
+                {isDetectingGps ? (
+                  <Loader2 className="w-3 h-3 animate-spin text-emerald-400" />
+                ) : (
+                  <Navigation className="w-3 h-3 text-emerald-400" />
+                )}
+                <span>{isDetectingGps ? 'Detecting Live GPS...' : '📍 Use Current GPS'}</span>
+              </button>
+            </div>
             <div className="flex gap-2 mb-1.5">
               <input
                 type="text"

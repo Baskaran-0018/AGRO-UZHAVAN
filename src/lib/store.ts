@@ -18,18 +18,18 @@ const INITIAL_FARMS: FarmProfile[] = [
   {
     id: 'farm-main-01',
     name: 'Primary Farm Estate',
-    locationName: 'Ludhiana, Punjab, India',
-    lat: 30.901,
-    lng: 75.8573,
+    locationName: 'Tamil Nadu, India',
+    lat: 12.8351,
+    lng: 79.7001,
     soilType: 'Alluvial',
     areaAcres: 10.0,
-    altitudeMeters: 244,
+    altitudeMeters: 80,
     irrigationType: 'Drip',
     boundaryGeoJSON: [
-      [30.901, 75.8573],
-      [30.904, 75.861],
-      [30.902, 75.864],
-      [30.898, 75.860]
+      [12.8351, 79.7001],
+      [12.838, 79.703],
+      [12.836, 79.706],
+      [12.832, 79.702]
     ],
     createdAt: new Date().toISOString()
   }
@@ -48,7 +48,36 @@ export class AgroStore {
   static getFarms(): FarmProfile[] {
     try {
       const data = localStorage.getItem(this.FARMS_KEY);
-      return data ? JSON.parse(data) : INITIAL_FARMS;
+      if (data) {
+        const parsed: FarmProfile[] = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // If any farm has legacy placeholder Ludhiana, sanitize it
+          let hasMigration = false;
+          const cleaned = parsed.map(farm => {
+            if (farm.locationName?.includes('Ludhiana') || Math.abs(farm.lat - 30.901) < 0.05) {
+              hasMigration = true;
+              return {
+                ...farm,
+                locationName: 'Tamil Nadu, India',
+                lat: 12.8351,
+                lng: 79.7001,
+                boundaryGeoJSON: [
+                  [12.8351, 79.7001],
+                  [12.838, 79.703],
+                  [12.836, 79.706],
+                  [12.832, 79.702]
+                ]
+              };
+            }
+            return farm;
+          });
+          if (hasMigration) {
+            localStorage.setItem(this.FARMS_KEY, JSON.stringify(cleaned));
+          }
+          return cleaned;
+        }
+      }
+      return INITIAL_FARMS;
     } catch {
       return INITIAL_FARMS;
     }
@@ -56,6 +85,29 @@ export class AgroStore {
 
   static saveFarms(farms: FarmProfile[]) {
     localStorage.setItem(this.FARMS_KEY, JSON.stringify(farms));
+  }
+
+  static updateFarmLocation(farmId: string, locationName: string, lat: number, lng: number): FarmProfile[] {
+    const farms = this.getFarms();
+    const updated = farms.map(f => {
+      if (f.id === farmId) {
+        return {
+          ...f,
+          locationName,
+          lat,
+          lng,
+          boundaryGeoJSON: [
+            [lat, lng],
+            [lat + 0.003, lng + 0.003],
+            [lat + 0.001, lng + 0.005],
+            [lat - 0.002, lng + 0.002]
+          ]
+        };
+      }
+      return f;
+    });
+    this.saveFarms(updated);
+    return updated;
   }
 
   static getActiveFarm(): FarmProfile {

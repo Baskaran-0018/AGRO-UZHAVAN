@@ -7,7 +7,10 @@ import {
   Wind,
   ShieldCheck,
   ArrowRight,
-  Plus
+  Plus,
+  MapPin,
+  Navigation,
+  Loader2
 } from 'lucide-react';
 import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult, YieldPredictionResult } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
@@ -31,6 +34,8 @@ interface DashboardViewProps {
   lang: SupportedLang;
   onNavigate: (view: string) => void;
   onOpenAddCrop: () => void;
+  onDetectLocation?: () => void;
+  isDetectingLocation?: boolean;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -42,6 +47,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   lang,
   onNavigate,
   onOpenAddCrop,
+  onDetectLocation,
+  isDetectingLocation,
 }) => {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const cur = weather?.current;
@@ -57,11 +64,30 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
         <div className="flex flex-wrap items-start justify-between gap-4 relative z-10">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-white/20 text-white border border-white/30 backdrop-blur-xs">
                 {t.activeFarm || 'Active Farm'}
               </span>
-              <span className="text-xs text-emerald-100 font-medium">· {getLocalizedLocation(activeFarm.locationName, lang)}</span>
+              <span className="text-xs text-emerald-100 font-semibold flex items-center gap-1.5 bg-black/20 px-3 py-1 rounded-full border border-white/10 backdrop-blur-xs">
+                <MapPin className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                {getLocalizedLocation(activeFarm.locationName, lang)}
+              </span>
+              {onDetectLocation && (
+                <button
+                  type="button"
+                  onClick={onDetectLocation}
+                  disabled={isDetectingLocation}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-white/20 hover:bg-white/35 active:scale-95 transition-all text-white border border-white/30 shadow-xs cursor-pointer"
+                  title="Detect live GPS location"
+                >
+                  {isDetectingLocation ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-200" />
+                  ) : (
+                    <Navigation className="w-3.5 h-3.5 text-emerald-200" />
+                  )}
+                  <span>{isDetectingLocation ? 'Detecting Live GPS...' : '📍 Auto-Detect GPS'}</span>
+                </button>
+              )}
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
               {getLocalizedFarmName(activeFarm.name, lang)}

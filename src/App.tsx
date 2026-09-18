@@ -40,6 +40,7 @@ import { AdminPanel } from './components/views/AdminPanel';
 import { ProfileView } from './components/views/ProfileView';
 
 import { loadWeatherData } from './lib/weatherClient';
+import { detectUserLocation } from './lib/geoService';
 
 export function App() {
   // Authentication State
@@ -65,6 +66,7 @@ export function App() {
   });
   const [weather, setWeather] = useState<WeatherForecastBundle | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
 
   // Modals
   const [isAddFarmOpen, setIsAddFarmOpen] = useState(false);
@@ -82,6 +84,82 @@ export function App() {
     trainAccuracy: 0.68,
   });
   const trainingIntervalRef = useRef<any>(null);
+
+  // Auto-detect live user location on startup
+  useEffect(() => {
+    async function autoDetectStartupLocation() {
+      try {
+        const detected = await detectUserLocation();
+        if (detected && detected.lat && detected.lng) {
+          setActiveFarm(prev => {
+            // Update if location is placeholder or user wants real location
+            const isPlaceholder = !prev.locationName ||
+              prev.locationName.includes('Ludhiana') ||
+              prev.locationName === 'Custom Location' ||
+              (Math.abs(prev.lat - 30.901) < 0.05);
+
+            if (isPlaceholder || !prev.locationName) {
+              const updatedFarm: FarmProfile = {
+                ...prev,
+                locationName: detected.locationName,
+                lat: detected.lat,
+                lng: detected.lng,
+                boundaryGeoJSON: [
+                  [detected.lat, detected.lng],
+                  [detected.lat + 0.003, detected.lng + 0.003],
+                  [detected.lat + 0.001, detected.lng + 0.005],
+                  [detected.lat - 0.002, detected.lng + 0.002]
+                ]
+              };
+              setFarms(currentFarms => {
+                const updatedFarms = currentFarms.map(f => f.id === prev.id ? updatedFarm : f);
+                AgroStore.saveFarms(updatedFarms);
+                return updatedFarms;
+              });
+              return updatedFarm;
+            }
+            return prev;
+          });
+        }
+      } catch (err) {
+        console.warn('Startup location detection error:', err);
+      }
+    }
+    autoDetectStartupLocation();
+  }, []);
+
+  // Manual GPS detection handler
+  async function handleDetectLocation() {
+    setIsDetectingLocation(true);
+    try {
+      const detected = await detectUserLocation();
+      if (detected && detected.lat && detected.lng) {
+        const updatedFarm: FarmProfile = {
+          ...activeFarm,
+          locationName: detected.locationName,
+          lat: detected.lat,
+          lng: detected.lng,
+          boundaryGeoJSON: [
+            [detected.lat, detected.lng],
+            [detected.lat + 0.003, detected.lng + 0.003],
+            [detected.lat + 0.001, detected.lng + 0.005],
+            [detected.lat - 0.002, detected.lng + 0.002]
+          ]
+        };
+        setActiveFarm(updatedFarm);
+        setFarms(currentFarms => {
+          const updatedFarms = currentFarms.map(f => f.id === activeFarm.id ? updatedFarm : f);
+          AgroStore.saveFarms(updatedFarms);
+          return updatedFarms;
+        });
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+      }
+    } catch (err) {
+      console.warn('Manual location detection error:', err);
+    } finally {
+      setIsDetectingLocation(false);
+    }
+  }
 
   // Load weather when active farm changes
   useEffect(() => {
@@ -289,10 +367,11 @@ export function App() {
               weather={weather}
               scans={scans}
               yields={yields}
-              trainingState={trainingState}
               lang={lang}
               onNavigate={setCurrentView}
               onOpenAddCrop={() => setIsAddCropOpen(true)}
+              onDetectLocation={handleDetectLocation}
+              isDetectingLocation={isDetectingLocation}
             />
           )}
 
@@ -303,6 +382,8 @@ export function App() {
               isLoading={weatherLoading}
               onRefresh={fetchWeather}
               lang={lang}
+              onDetectLocation={handleDetectLocation}
+              isDetectingLocation={isDetectingLocation}
             />
           )}
 

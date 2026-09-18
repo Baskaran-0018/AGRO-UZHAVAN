@@ -10,7 +10,10 @@ import {
   Activity,
   Calendar,
   Layers,
-  Thermometer
+  Thermometer,
+  MapPin,
+  Navigation,
+  Loader2
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -39,9 +42,19 @@ interface WeatherViewProps {
   isLoading: boolean;
   onRefresh: () => void;
   lang: SupportedLang;
+  onDetectLocation?: () => void;
+  isDetectingLocation?: boolean;
 }
 
-export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, isLoading, onRefresh, lang }) => {
+export const WeatherView: React.FC<WeatherViewProps> = ({
+  activeFarm,
+  weather,
+  isLoading,
+  onRefresh,
+  lang,
+  onDetectLocation,
+  isDetectingLocation
+}) => {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const [activeTab, setActiveTab] = useState<'hourly' | 'weekly' | 'soil_humidity' | 'table'>('hourly');
   const [selectedHour, setSelectedHour] = useState(0);
@@ -85,13 +98,32 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ activeFarm, weather, i
             <span className="px-2.5 sm:px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
               {t.weatherPrediction || 'Weather Prediction & Graphs'}
             </span>
-            <span className="text-xs text-slate-500 font-medium truncate">· {getLocalizedLocation(activeFarm.locationName, lang)}</span>
+            <span className="text-xs text-slate-600 font-semibold truncate flex items-center gap-1 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+              <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              {getLocalizedLocation(activeFarm.locationName, lang)}
+            </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-1.5 break-words">
             {t.weatherPrediction} & {t.microClimate || 'Microclimate Analytics'}
           </h1>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {onDetectLocation && (
+            <button
+              type="button"
+              onClick={onDetectLocation}
+              disabled={isDetectingLocation}
+              className="px-3 py-2 sm:py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition-all active:scale-95"
+              title="Detect live GPS coordinates"
+            >
+              {isDetectingLocation ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-700" />
+              ) : (
+                <Navigation className="w-3.5 h-3.5 text-emerald-700" />
+              )}
+              <span>{isDetectingLocation ? 'Detecting...' : '📍 Auto GPS'}</span>
+            </button>
+          )}
           <button
             onClick={onRefresh}
             disabled={isLoading}
