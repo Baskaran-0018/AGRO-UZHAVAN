@@ -132,7 +132,7 @@ export function App() {
   async function handleDetectLocation() {
     setIsDetectingLocation(true);
     try {
-      const detected = await detectUserLocation();
+      const detected = await detectUserLocation(true);
       if (detected && detected.lat && detected.lng) {
         const updatedFarm: FarmProfile = {
           ...activeFarm,

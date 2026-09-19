@@ -146,7 +146,40 @@ export async function detectUserLocation(forceGps = false): Promise<DetectedLoca
   }
 
   // If forceGps was requested and failed, try IP lookup immediately
-  // 2. Try IP-based Geolocation (instant, no permissions needed)
+  // 2. Try IP-based Geolocation (instant, fallback if GPS is not granted)
+  // Provider 1: ip-api.com (fast, highly accurate regional IP geolocation)
+  try {
+    const res = await fetch('http://ip-api.com/json', { signal: AbortSignal.timeout(4000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.status === 'success' && data.lat && data.lon) {
+        const city = data.city || '';
+        const state = data.regionName || '';
+        const country = data.country || 'India';
+        const locationName = city && state ? `${city}, ${state}, ${country}` : `${state || city || 'Live Location'}, ${country}`;
+
+        const result: DetectedLocation = {
+          lat: data.lat,
+          lng: data.lon,
+          locationName,
+          city,
+          state,
+          country,
+          source: 'ip'
+        };
+
+        try {
+          localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify(result));
+        } catch {}
+
+        return result;
+      }
+    }
+  } catch (ipapiErr) {
+    console.warn('[GeoService] ip-api.com lookup error, trying provider 2:', ipapiErr);
+  }
+
+  // Provider 2: ipwho.is
   try {
     const res = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
     if (res.ok) {
@@ -175,15 +208,47 @@ export async function detectUserLocation(forceGps = false): Promise<DetectedLoca
       }
     }
   } catch (ipErr) {
-    console.warn('[GeoService] IP lookup error:', ipErr);
+    console.warn('[GeoService] ipwho.is lookup error, trying provider B:', ipErr);
   }
 
-  // 3. Fallback
+  // Provider B: ipapi.co
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.latitude && data.longitude) {
+        const city = data.city || '';
+        const state = data.region || '';
+        const country = data.country_name || 'India';
+        const locationName = city && state ? `${city}, ${state}, ${country}` : `${state || city || 'Live Location'}, ${country}`;
+
+        const result: DetectedLocation = {
+          lat: data.latitude,
+          lng: data.longitude,
+          locationName,
+          city,
+          state,
+          country,
+          source: 'ip'
+        };
+
+        try {
+          localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify(result));
+        } catch {}
+
+        return result;
+      }
+    }
+  } catch (ipapiErr) {
+    console.warn('[GeoService] ipapi.co lookup error:', ipapiErr);
+  }
+
+  // 3. Cached / Default Location
   return {
-    lat: 12.7365,
-    lng: 77.8326,
-    locationName: 'Hosur, Tamil Nadu, India',
-    city: 'Hosur',
+    lat: 11.0168,
+    lng: 76.9558,
+    locationName: 'Coimbatore, Tamil Nadu, India',
+    city: 'Coimbatore',
     state: 'Tamil Nadu',
     country: 'India',
     source: 'cached'

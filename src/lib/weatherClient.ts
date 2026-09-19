@@ -81,7 +81,7 @@ async function fetchDirectOpenMeteo(
   );
   url.searchParams.set(
     'hourly',
-    'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,surface_pressure,wind_speed_10m,uv_index,soil_temperature_0cm,soil_moisture_0_to_1cm'
+    'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index,soil_temperature_0cm,soil_moisture_0_to_1cm'
   );
   url.searchParams.set(
     'daily',
@@ -105,7 +105,7 @@ async function fetchDirectOpenMeteo(
     pressureHpa: data.current.surface_pressure ?? 1012,
     solarRadiationWm2: data.current.shortwave_radiation ?? 650,
     cloudCoverPct: data.current.cloud_cover ?? 20,
-    uvIndex: 5.5,
+    uvIndex: data.hourly?.uv_index?.[0] ?? 5.5,
     soilTemp: (data.hourly?.soil_temperature_0cm?.[0] as number) ?? (data.current.temperature_2m - 1),
     soilMoisture: (data.hourly?.soil_moisture_0_to_1cm?.[0] as number) ?? 0.28,
     weatherCode: data.current.weather_code ?? 0,
@@ -123,7 +123,7 @@ async function fetchDirectOpenMeteo(
       humidity: data.hourly.relative_humidity_2m?.[i] ?? current.humidity,
       rainfallMm: data.hourly.precipitation?.[i] ?? 0,
       windSpeedKmh: data.hourly.wind_speed_10m?.[i] ?? 8,
-      windDirectionDeg: 0,
+      windDirectionDeg: data.hourly.wind_direction_10m?.[i] || 0,
       pressureHpa: data.hourly.surface_pressure?.[i] ?? 1012,
       solarRadiationWm2: 250,
       cloudCoverPct: 30,

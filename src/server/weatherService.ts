@@ -13,8 +13,14 @@ export async function fetchLiveWeatherData(
     process.env.VITE_OPENWEATHER_API_KEY ||
     '';
 
-  // 1. If OpenWeatherMap key is available, attempt OpenWeatherMap primary fetch
-  if (openWeatherKey) {
+  const isCustomKey =
+    openWeatherKey &&
+    openWeatherKey !== 'YOUR_OPENWEATHER_API_KEY' &&
+    openWeatherKey !== 'MY_OPENWEATHER_API_KEY' &&
+    openWeatherKey.trim().length > 10;
+
+  // 1. If valid OpenWeatherMap key is available, attempt OpenWeatherMap primary fetch
+  if (isCustomKey) {
     try {
       const owResult = await fetchFromOpenWeatherMap(lat, lon, locationName, openWeatherKey, lang);
       if (owResult) return owResult;
@@ -34,7 +40,7 @@ export async function fetchLiveWeatherData(
     );
     url.searchParams.set(
       'hourly',
-      'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,surface_pressure,wind_speed_10m,uv_index,soil_temperature_0cm,soil_moisture_0_to_1cm'
+      'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index,soil_temperature_0cm,soil_moisture_0_to_1cm'
     );
     url.searchParams.set(
       'daily',
@@ -58,7 +64,7 @@ export async function fetchLiveWeatherData(
       pressureHpa: data.current.surface_pressure,
       solarRadiationWm2: data.current.shortwave_radiation || 450,
       cloudCoverPct: data.current.cloud_cover || 20,
-      uvIndex: 5.5,
+      uvIndex: data.hourly?.uv_index?.[0] ?? 5.5,
       soilTemp: (data.hourly?.soil_temperature_0cm?.[0] as number) || data.current.temperature_2m - 1,
       soilMoisture: (data.hourly?.soil_moisture_0_to_1cm?.[0] as number) || 0.28,
       weatherCode: data.current.weather_code,
@@ -76,7 +82,7 @@ export async function fetchLiveWeatherData(
         humidity: data.hourly.relative_humidity_2m[i],
         rainfallMm: data.hourly.precipitation[i],
         windSpeedKmh: data.hourly.wind_speed_10m[i],
-        windDirectionDeg: 0,
+        windDirectionDeg: data.hourly.wind_direction_10m?.[i] || 0,
         pressureHpa: data.hourly.surface_pressure[i],
         solarRadiationWm2: 250,
         cloudCoverPct: 30,

@@ -5,7 +5,11 @@ let aiInstance: GoogleGenAI | null = null;
 function getAI(): GoogleGenAI {
   if (!aiInstance) {
     aiInstance = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || '',
+      apiKey:
+        process.env.GEMINI_API_KEY ||
+        process.env.VITE_GEMINI_API_KEY ||
+        process.env.API_KEY ||
+        '',
       httpOptions: {
         headers: {
           'User-Agent': 'aistudio-build',
@@ -19,15 +23,17 @@ function getAI(): GoogleGenAI {
 const CANDIDATE_MODELS = [
   'gemini-3.6-flash',
   'gemini-3.5-flash',
-  'gemini-3.1-flash-lite',
+  'gemini-3.5-flash-lite',
   'gemini-3.7-flash',
+  'gemini-3.7-flash-lite',
 ];
 
 const VISION_CANDIDATE_MODELS = [
   'gemini-3.6-flash',
   'gemini-3.5-flash',
-  'gemini-3.1-flash-lite',
+  'gemini-3.5-flash-lite',
   'gemini-3.7-flash',
+  'gemini-3.7-flash-lite',
 ];
 
 // Simple in-memory cache to prevent duplicate quota usage on fast renders or reloads
@@ -87,8 +93,12 @@ async function generateWithRetryAndFallback(params: {
         return response.text;
       }
     } catch (err: any) {
-      console.warn(`[Gemini Service] Model ${model} generation note:`, err?.message || err);
-      // If error, continue to next candidate model
+      const errMsg = err?.message || String(err);
+      console.warn(`[Gemini Service] Model ${model} note:`, errMsg);
+      if (errMsg.includes('API_KEY_INVALID') || errMsg.includes('API key not valid') || errMsg.includes('INVALID_ARGUMENT')) {
+        // Fast-exit if API key itself is invalid/unauthorized
+        break;
+      }
       continue;
     }
   }
@@ -136,6 +146,7 @@ Include:
 
     const rawText = await generateWithRetryAndFallback({
       contents: prompt,
+      timeoutMs: 6000,
       config: {
         responseMimeType: 'application/json',
         responseSchema: {
