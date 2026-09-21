@@ -1,4 +1,5 @@
 import { SupportedLang, TRANSLATIONS } from './i18n';
+import { getLocalizedLocation as getLocLoc, LOCATION_TOKENS as LOC_TOKENS, transliterateIndian, localizeSingleLocationPart } from './locationTranslator';
 
 /**
  * Universal Dynamic Localization Helper
@@ -4238,6 +4239,182 @@ export const COMMON_STRINGS: Record<string, Record<SupportedLang, string>> = {
     gu: 'સાઇન ઇન થઈ રહ્યું છે...',
     pa: 'ਸਾਈਨ ਇਨ ਹੋ ਰਿਹਾ ਹੈ...',
   },
+  'Auto-Detect GPS': {
+    en: 'Auto-Detect GPS',
+    ta: 'தானியங்கி GPS',
+    hi: 'ऑटो-डिटेक्ट जीपीएस',
+    te: 'ఆటో-డిటెక్ట్ జీపీఎస్',
+    kn: 'ಆಟೋ-ಡಿಟೆಕ್ಟ್ ಜಿಪಿಎಸ್',
+    mr: 'ऑटो-डिटेक्ट जीपीएस',
+    bn: 'অটো-ডিটেক্ট জিপিএস',
+    gu: 'ઑટો-ડિટેક્ટ જીપીએસ',
+    pa: 'ਆਟੋ-ਡਿਟੈਕਟ ਜੀਪੀਐਸ',
+  },
+  '📍 Auto-Detect GPS': {
+    en: '📍 Auto-Detect GPS',
+    ta: '📍 தானியங்கி GPS',
+    hi: '📍 ऑटो-डिटेक्ट जीपीएस',
+    te: '📍 ఆటో-డిటెక్ట్ జీపీఎస్',
+    kn: '📍 ಆಟೋ-ಡಿಟೆಕ್ಟ್ ಜಿಪಿಎಸ್',
+    mr: '📍 ऑटो-डिटेक्ट जीपीएस',
+    bn: '📍 অটো-ডিটেক্ট জিপিএস',
+    gu: '📍 ઑટો-ડિટેક્ટ જીપીએસ',
+    pa: '📍 ਆਟੋ-ਡਿਟੈਕਟ ਜੀਪੀਐਸ',
+  },
+  'Auto GPS': {
+    en: 'Auto GPS',
+    ta: 'தானியங்கி GPS',
+    hi: 'ऑटो जीपीएस',
+    te: 'ఆటో జీపీఎస్',
+    kn: 'ಆಟೋ ಜಿಪಿಎಸ್',
+    mr: 'ऑटो जीपीएस',
+    bn: 'অটো জিপিএস',
+    gu: 'ઑટો જીપીએસ',
+    pa: 'ਆਟੋ ਜੀਪੀਐਸ',
+  },
+  '📍 Auto GPS': {
+    en: '📍 Auto GPS',
+    ta: '📍 தானியங்கி GPS',
+    hi: '📍 ऑटो जीपीएस',
+    te: '📍 ఆటో జీపీఎస్',
+    kn: '📍 ಆಟೋ ಜಿಪಿಎಸ್',
+    mr: '📍 ऑटो जीपीएस',
+    bn: '📍 অটো জিপিএস',
+    gu: '📍 ઑટો જીપીએસ',
+    pa: '📍 ਆਟੋ ਜੀਪੀਐਸ',
+  },
+  'Detecting Live GPS...': {
+    en: 'Detecting Live GPS...',
+    ta: 'நேரலை GPS கண்டறியப்படுகிறது...',
+    hi: 'लाइव जीपीएस खोजा जा रहा है...',
+    te: 'లైవ్ జీపీఎస్ గుర్తిస్తోంది...',
+    kn: 'ಲೈವ್ ಜಿಪಿಎಸ್ ಪತ್ತೆಹಚ್ಚಲಾಗುತ್ತಿದೆ...',
+    mr: 'थेट जीपीएस शोधत आहे...',
+    bn: 'লাইভ জিপিএস সনাক্ত করা হচ্ছে...',
+    gu: 'લાઇવ જીપીએસ શોધાઈ રહ્યું છે...',
+    pa: 'ਲਾਈਵ ਜੀਪੀਐਸ ਖੋਜਿਆ ਜਾ ਰਿਹਾ ਹੈ...',
+  },
+  'Detecting...': {
+    en: 'Detecting...',
+    ta: 'கண்டறியப்படுகிறது...',
+    hi: 'खोजा जा रहा है...',
+    te: 'గుర్తిస్తోంది...',
+    kn: 'ಪತ್ತೆಹಚ್ಚಲಾಗುತ್ತಿದೆ...',
+    mr: 'शोधत आहे...',
+    bn: 'সনাক্ত করা হচ্ছে...',
+    gu: 'શોધાઈ રહ્યું છે...',
+    pa: 'ਖੋਜਿਆ ਜਾ ਰਿਹਾ ਹੈ...',
+  },
+  '📍 Auto-Detect My Live GPS Location': {
+    en: '📍 Auto-Detect My Live GPS Location',
+    ta: '📍 எனது நேரலை GPS இருப்பிடத்தைக் கண்டறி',
+    hi: '📍 मेरा लाइव जीपीएस स्थान ऑटो-डिटेक्ट करें',
+    te: '📍 నా లైవ్ జీపీఎస్ స్థానాన్ని గుర్తించండి',
+    kn: '📍 ನನ್ನ ಲೈವ್ ಜಿಪಿಎಸ್ ಸ್ಥಳವನ್ನು ಪತ್ತೆಹಚ್ಚಿ',
+    mr: '📍 माझे थेट जीपीएस स्थान शोधा',
+    bn: '📍 আমার লাইভ জিপিএস অবস্থান সনাক্ত করুন',
+    gu: '📍 મારું લાઇવ જીપીએસ સ્થાન ઑટો-ડિટેક્ટ કરો',
+    pa: '📍 ਮੇਰਾ ਲਾਈਵ ਜੀਪੀਐਸ ਟਿਕਾਣਾ ਆਟੋ-ਡਿਟੈਕਟ ਕਰੋ',
+  },
+  'Detecting Live GPS Coordinates...': {
+    en: 'Detecting Live GPS Coordinates...',
+    ta: 'நேரலை GPS ஆயத்தொலைவுகள் கண்டறியப்படுகின்றன...',
+    hi: 'लाइव जीपीएस निर्देशांक खोजे जा रहे हैं...',
+    te: 'లైవ్ జీపీఎస్ కోఆర్డినేట్స్ గుర్తిస్తోంది...',
+    kn: 'ಲೈವ್ ಜಿಪಿಎಸ್ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗುತ್ತಿದೆ...',
+    mr: 'थेट जीपीएस निर्देशक शोधत आहे...',
+    bn: 'লাইভ জিপিএস স্থানাঙ্ক সনাক্ত করা হচ্ছে...',
+    gu: 'લાઇવ જીપીએસ કોઓર્ડિનેટ્સ શોધાઈ રહ્યા છે...',
+    pa: 'ਲਾਈਵ ਜੀਪੀਐਸ ਨਿਰਦੇਸ਼ਾਂਕ ਲੱਭੇ ਜਾ ਰਹੇ ਹਨ...',
+  },
+  'Set Exact Farm Location': {
+    en: 'Set Exact Farm Location',
+    ta: 'துல்லியமான பண்ணை இருப்பிடத்தை அமைக்கவும்',
+    hi: 'सटीक फार्म स्थान सेट करें',
+    te: 'ఖచ్చితమైన వ్యవసాయ స్థానాన్ని సెట్ చేయండి',
+    kn: 'ನಿಖರವಾದ ತೋಟದ ಸ್ಥಳವನ್ನು ಹೊಂದಿಸಿ',
+    mr: 'अचूक शेत स्थान सेट करा',
+    bn: 'সঠিক খামার অবস্থান সেট করুন',
+    gu: 'ચોક્કસ ખેતરનું સ્થાન સેટ કરો',
+    pa: 'ਸਹੀ ਖੇਤ ਦਾ ਟਿਕਾਣਾ ਸੈੱਟ ਕਰੋ',
+  },
+  'Auto-detect GPS coordinates or search your village/district': {
+    en: 'Auto-detect GPS coordinates or search your village/district',
+    ta: 'GPS மூலம் கண்டறியவும் அல்லது கிராமம்/மாவட்டத்தை தேடவும்',
+    hi: 'जीपीएस निर्देशांक ऑटो-डिटेक्ट करें या अपना गांव/ज़िला खोजें',
+    te: 'జీపీఎస్ కోఆర్డినేట్స్ గుర్తించండి లేదా మీ గ్రామం/జిల్లాను శోధించండి',
+    kn: 'ಜಿಪಿಎಸ್ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ ಅಥವಾ ನಿಮ್ಮ ಗ್ರಾಮ/ಜಿಲ್ಲೆಯನ್ನು ಹುಡುಕಿ',
+    mr: 'जीपीएस निर्देशक शोधा किंवा आपले गाव/जिल्हा शोधा',
+    bn: 'জিপিএস স্থানাঙ্ক সনাক্ত করুন বা আপনার গ্রাম/জেলা খুঁজুন',
+    gu: 'જીપીએસ કોઓર્ડિનેટ્સ ઑટો-ડિટેક્ટ કરો અથવા તમારું ગામ/જિલ્લો શોધો',
+    pa: 'ਜੀਪੀਐਸ ਨਿਰਦੇਸ਼ਾਂਕ ਖੋਜੋ ਜਾਂ ਆਪਣਾ ਪਿੰਡ/ਜ਼ਿਲ੍ਹਾ ਲੱਭੋ',
+  },
+  'Current Location': {
+    en: 'Current Location',
+    ta: 'தற்போதைய இருப்பிடம்',
+    hi: 'वर्तमान स्थान',
+    te: 'ప్రస్తుత స్థానం',
+    kn: 'ಪ್ರಸ್ತುತ ಸ್ಥಳ',
+    mr: 'सध्याचे स्थान',
+    bn: 'বর্তমান অবস্থান',
+    gu: 'હાલનું સ્થાન',
+    pa: 'ਮੌਜੂਦਾ ਟਿਕਾਣਾ',
+  },
+  'Quick Select Region': {
+    en: 'Quick Select Region',
+    ta: 'விரைவு மண்டலத் தேர்வு',
+    hi: 'त्वरित क्षेत्र चयन',
+    te: 'త్వరిత ప్రాంత ఎంపిక',
+    kn: 'ತ್ವರಿತ ಪ್ರದೇಶ ಆಯ್ಕೆ',
+    mr: 'त्वरित प्रदेश निवडा',
+    bn: 'দ্রুত অঞ্চল নির্বাচন',
+    gu: 'ઝડપી પ્રદેશ પસંદગી',
+    pa: 'ਤੇਜ਼ ਖੇਤਰ ਚੋਣ',
+  },
+  'Search Results': {
+    en: 'Search Results',
+    ta: 'தேடல் முடிவுகள்',
+    hi: 'खोज परिणाम',
+    te: 'శోధన ఫలితాలు',
+    kn: 'ಹುಡುಕಾಟ ಫಲಿತಾಂಶಗಳು',
+    mr: 'शोध निकाल',
+    bn: 'অনুসন্ধানের ফলাফল',
+    gu: 'શોધ પરિણામો',
+    pa: 'ਖੋਜ ਨਤੀਜੇ',
+  },
+  'or search place': {
+    en: 'or search place',
+    ta: 'அல்லது இடத்தை தேடவும்',
+    hi: 'या स्थान खोजें',
+    te: 'లేదా స్థలాన్ని శోధించండి',
+    kn: 'ಅಥವಾ ಸ್ಥಳವನ್ನು ಹುಡುಕಿ',
+    mr: 'किंवा स्थान शोधा',
+    bn: 'অথবা স্থান অনুসন্ধান করুন',
+    gu: 'અથવા સ્થળ શોધો',
+    pa: 'ਜਾਂ ਸਥਾਨ ਖੋਜੋ',
+  },
+  'Full Graph & Forecast': {
+    en: 'Full Graph & Forecast',
+    ta: 'முழு வரைபடம் & அறிக்கை',
+    hi: 'पूर्ण ग्राफ और पूर्वानुमान',
+    te: 'పూర్తి గ్రాఫ్ మరియు సూచన',
+    kn: 'ಪೂರ್ಣ ಗ್ರಾಫ್ ಮತ್ತು ಮುನ್ಸೂಚನೆ',
+    mr: 'पूर्ण आलेख आणि अंदाज',
+    bn: 'সম্পূর্ণ গ্রাফ এবং পূর্বাভাস',
+    gu: 'સંપૂર્ણ ગ્રાફ અને આગાહી',
+    pa: 'ਪੂਰਾ ਗ੍ਰਾਫ ਅਤੇ ਪੂਰਵ ਅਨੁਮਾਨ',
+  },
+  'Weather & Microclimate Advisory': {
+    en: 'Weather & Microclimate Advisory',
+    ta: 'வானிலை & நுண்ணிய சூழல் ஆலோசனை',
+    hi: 'मौसम और सूक्ष्म जलवायु सलाह',
+    te: 'వాతావరణ మరియు సూక్ష్మ వాతావరణ సలహా',
+    kn: 'ಹವಾಮಾನ ಮತ್ತು ಸೂಕ್ಷ್ಮ ಹವಾಮಾನ ಸಲಹೆ',
+    mr: 'हवामान आणि सूक्ष्म हवामान सल्ला',
+    bn: 'আবহাওয়া ও ক্ষুদ্র জলবায়ু পরামর্শ',
+    gu: 'હવામાન અને સૂક્ષ્મ આબોહવા સલાહ',
+    pa: 'ਮੌਸਮ ਅਤੇ ਸੂਖਮ ਜਲਵਾਯੂ ਸਲਾਹ',
+  },
 };
 
 export function translateText(text: string | undefined | null, lang: SupportedLang): string {
@@ -4463,41 +4640,7 @@ const LOCATION_TOKENS: Record<string, Record<SupportedLang, string>> = {
  * Translates a farm's location into the active language
  */
 export function getLocalizedLocation(loc: string | undefined, lang: SupportedLang): string {
-  if (!loc) return '';
-  if (lang === 'en') return loc;
-  const trimmed = loc.trim();
-
-  if (COMMON_STRINGS[trimmed] && COMMON_STRINGS[trimmed][lang]) {
-    return COMMON_STRINGS[trimmed][lang];
-  }
-  for (const [k, v] of Object.entries(COMMON_STRINGS)) {
-    if (k.toLowerCase() === trimmed.toLowerCase()) {
-      return v[lang] || loc;
-    }
-  }
-
-  // Tokenized comma separation translation (e.g. "Ludhiana, Punjab, India")
-  if (trimmed.includes(',')) {
-    const parts = trimmed.split(',').map((p) => p.trim());
-    const translatedParts = parts.map((part) => {
-      if (LOCATION_TOKENS[part] && LOCATION_TOKENS[part][lang]) {
-        return LOCATION_TOKENS[part][lang];
-      }
-      for (const [k, v] of Object.entries(LOCATION_TOKENS)) {
-        if (k.toLowerCase() === part.toLowerCase()) {
-          return v[lang] || part;
-        }
-      }
-      return part;
-    });
-    return translatedParts.join(', ');
-  }
-
-  if (LOCATION_TOKENS[trimmed] && LOCATION_TOKENS[trimmed][lang]) {
-    return LOCATION_TOKENS[trimmed][lang];
-  }
-
-  return loc;
+  return getLocLoc(loc, lang);
 }
 
 /**

@@ -85,7 +85,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   ) : (
                     <Navigation className="w-3.5 h-3.5 text-emerald-200" />
                   )}
-                  <span>{isDetectingLocation ? 'Detecting Live GPS...' : '📍 Auto-Detect GPS'}</span>
+                  <span>{isDetectingLocation ? translateText('Detecting Live GPS...', lang) : translateText('📍 Auto-Detect GPS', lang)}</span>
                 </button>
               )}
             </div>

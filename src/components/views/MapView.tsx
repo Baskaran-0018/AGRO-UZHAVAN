@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { Map, Layers, MapPin, Activity, Droplets, Sun, Sparkles } from 'lucide-react';
 import { FarmProfile } from '../../types/agro';
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
+import { getLocalizedFarmName, getLocalizedLocation, getLocalizedSoilType, getLocalizedIrrigation } from '../../lib/universalTranslator';
 
 interface MapViewProps {
   activeFarm: FarmProfile;
@@ -140,9 +141,9 @@ export const MapView: React.FC<MapViewProps> = ({ activeFarm, farms, onSelectFar
         <div className="absolute top-4 left-4 z-20 p-4 rounded-xl bg-white/95 backdrop-blur-md border border-emerald-100 text-xs text-slate-800 space-y-2 max-w-xs pointer-events-auto shadow-md">
           <div className="font-bold text-slate-900 flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-emerald-600" />
-            {activeFarm.name}
+            {getLocalizedFarmName(activeFarm.name, lang)}
           </div>
-          <p className="text-[11px] text-slate-500 leading-tight">{activeFarm.locationName}</p>
+          <p className="text-[11px] text-slate-500 leading-tight">{getLocalizedLocation(activeFarm.locationName, lang)}</p>
           <div className="pt-2 border-t border-slate-100 space-y-1 text-[11px]">
             <div className="flex justify-between">
               <span className="text-slate-500">{t.farmSize || 'Total Area'}:</span>
@@ -150,11 +151,11 @@ export const MapView: React.FC<MapViewProps> = ({ activeFarm, farms, onSelectFar
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">{t.soilType || 'Soil Profile'}:</span>
-              <span className="font-bold text-slate-800">{activeFarm.soilType}</span>
+              <span className="font-bold text-slate-800">{getLocalizedSoilType(activeFarm.soilType, lang)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">{t.irrigationType || 'Irrigation'}:</span>
-              <span className="font-bold text-slate-800">{activeFarm.irrigationType}</span>
+              <span className="font-bold text-slate-800">{getLocalizedIrrigation(activeFarm.irrigationType, lang)}</span>
             </div>
           </div>
         </div>

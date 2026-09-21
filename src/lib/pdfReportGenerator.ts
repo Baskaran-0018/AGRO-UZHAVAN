@@ -1,6 +1,7 @@
 import { DiseaseDetectionResult, FarmProfile } from '../types/agro';
 import { SupportedLang, TRANSLATIONS } from './i18n';
 import { getLocalizedDiseaseDiagnostic } from './diseaseDictionary';
+import { getLocalizedFarmName, getLocalizedLocation, getLocalizedSoilType } from './universalTranslator';
 
 export function generateDiagnosticReportPDF(
   rawResult: DiseaseDetectionResult,
@@ -208,9 +209,9 @@ export function generateDiagnosticReportPDF(
   <div class="card" style="margin-bottom: 16px;">
     <div class="card-title">${t.farmLocation || 'Target Farm Location & Metadata'}</div>
     <div style="display: flex; justify-content: space-between; font-size: 12px;">
-      <div><strong>${t.farm || 'Farm'}:</strong> ${farm.name}</div>
-      <div><strong>${t.location || 'Location'}:</strong> ${farm.locationName}</div>
-      <div><strong>${t.soilType || 'Soil Type'}:</strong> ${farm.soilType}</div>
+      <div><strong>${t.farm || 'Farm'}:</strong> ${getLocalizedFarmName(farm.name, lang)}</div>
+      <div><strong>${t.location || 'Location'}:</strong> ${getLocalizedLocation(farm.locationName, lang)}</div>
+      <div><strong>${t.soilType || 'Soil Type'}:</strong> ${getLocalizedSoilType(farm.soilType, lang)}</div>
       <div><strong>${t.farmSize || 'Area'}:</strong> ${farm.areaAcres} ${t.acres || 'Acres'}</div>
     </div>
   </div>

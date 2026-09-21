@@ -19,61 +19,72 @@ export interface GeocodedPlace {
   longitude: number;
 }
 
-const LOCATION_CACHE_KEY = 'agro_user_detected_location_v2';
+const LOCATION_CACHE_KEY = 'agro_user_detected_location_v3';
 
 /**
  * High-precision reverse geocoding from coordinates into human-readable place name.
  */
 export async function reverseGeocode(lat: number, lng: number): Promise<string> {
-  // 1. Try BigDataCloud reverse geocoding
-  try {
-    const res = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
-      { signal: AbortSignal.timeout(4000) }
-    );
-    if (res.ok) {
-      const data = await res.json();
-      const city = data.city || data.locality || '';
-      const district = data.localityInfo?.administrative?.find((a: any) => a.adminLevel === 5 || a.description?.includes('district'))?.name || '';
-      const state = data.principalSubdivision || '';
-      const country = data.countryName || 'India';
-
-      const parts = [city, district, state].filter(Boolean);
-      // Remove duplicate names if city and district match
-      const uniqueParts = parts.filter((item, index) => parts.indexOf(item) === index);
-      if (uniqueParts.length > 0) {
-        return `${uniqueParts.join(', ')}, ${country}`;
-      }
-    }
-  } catch (err) {
-    console.warn('[GeoService] BigDataCloud reverse geocode error:', err);
-  }
-
-  // 2. Try OpenStreetMap Nominatim
+  // 1. Try OpenStreetMap Nominatim first (detailed village, taluk, district level)
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&addressdetails=1`,
       {
         headers: { 'Accept-Language': 'en' },
-        signal: AbortSignal.timeout(4000)
+        signal: AbortSignal.timeout(4500)
       }
     );
     if (res.ok) {
       const data = await res.json();
       const addr = data.address || {};
-      const locality = addr.suburb || addr.town || addr.village || addr.city || '';
-      const district = addr.state_district || addr.county || addr.district || '';
+      const locality = addr.village || addr.suburb || addr.town || addr.city || addr.hamlet || addr.neighbourhood || '';
+      const taluk = addr.county || addr.subdistrict || '';
+      const district = addr.state_district || addr.district || '';
       const state = addr.state || '';
       const country = addr.country || 'India';
 
-      const parts = [locality, district, state].filter(Boolean);
-      const uniqueParts = parts.filter((item, index) => parts.indexOf(item) === index);
+      const parts = [locality, taluk, district, state].filter(Boolean);
+      // Deduplicate case-insensitively
+      const uniqueParts: string[] = [];
+      for (const p of parts) {
+        if (!uniqueParts.some(u => u.toLowerCase() === p.toLowerCase())) {
+          uniqueParts.push(p);
+        }
+      }
       if (uniqueParts.length > 0) {
         return `${uniqueParts.join(', ')}, ${country}`;
       }
     }
   } catch (err) {
     console.warn('[GeoService] OSM Nominatim reverse geocode error:', err);
+  }
+
+  // 2. Try BigDataCloud reverse geocoding
+  try {
+    const res = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
+      { signal: AbortSignal.timeout(4500) }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const city = data.locality || data.city || '';
+      const district = data.localityInfo?.administrative?.find((a: any) => a.adminLevel === 5 || a.description?.includes('district'))?.name || '';
+      const state = data.principalSubdivision || '';
+      const country = data.countryName || 'India';
+
+      const parts = [city, district, state].filter(Boolean);
+      const uniqueParts: string[] = [];
+      for (const p of parts) {
+        if (!uniqueParts.some(u => u.toLowerCase() === p.toLowerCase())) {
+          uniqueParts.push(p);
+        }
+      }
+      if (uniqueParts.length > 0) {
+        return `${uniqueParts.join(', ')}, ${country}`;
+      }
+    }
+  } catch (err) {
+    console.warn('[GeoService] BigDataCloud reverse geocode error:', err);
   }
 
   return `Lat ${lat.toFixed(4)}, Lng ${lng.toFixed(4)}`;
@@ -110,17 +121,17 @@ export async function searchPlaces(query: string): Promise<GeocodedPlace[]> {
 }
 
 /**
- * Detects user live location using browser high-accuracy GPS with automatic IP fallback.
+ * Detects user live location using browser high-accuracy GPS with automatic HTTPS IP fallback.
  */
 export async function detectUserLocation(forceGps = false): Promise<DetectedLocation> {
-  // 1. Try Browser HTML5 GPS Geolocation
+  // 1. Try Browser HTML5 GPS Geolocation (High accuracy hardware GPS)
   if (typeof window !== 'undefined' && 'geolocation' in navigator) {
     try {
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
           resolve,
           reject,
-          { enableHighAccuracy: true, timeout: 8000, maximumAge: 10000 }
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       });
 
@@ -145,22 +156,22 @@ export async function detectUserLocation(forceGps = false): Promise<DetectedLoca
     }
   }
 
-  // If forceGps was requested and failed, try IP lookup immediately
-  // 2. Try IP-based Geolocation (instant, fallback if GPS is not granted)
-  // Provider 1: ip-api.com (fast, highly accurate regional IP geolocation)
+  // 2. Try Secure HTTPS IP-based Geolocation Providers
+  // Provider 1: ipapi.co (HTTPS)
   try {
-    const res = await fetch('http://ip-api.com/json', { signal: AbortSignal.timeout(4000) });
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4500) });
     if (res.ok) {
       const data = await res.json();
-      if (data.status === 'success' && data.lat && data.lon) {
+      if (data.latitude && data.longitude) {
         const city = data.city || '';
-        const state = data.regionName || '';
-        const country = data.country || 'India';
-        const locationName = city && state ? `${city}, ${state}, ${country}` : `${state || city || 'Live Location'}, ${country}`;
+        const state = data.region || '';
+        const country = data.country_name || 'India';
+        const parts = [city, state].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
+        const locationName = parts.length > 0 ? `${parts.join(', ')}, ${country}` : `${country}`;
 
         const result: DetectedLocation = {
-          lat: data.lat,
-          lng: data.lon,
+          lat: data.latitude,
+          lng: data.longitude,
           locationName,
           city,
           state,
@@ -176,19 +187,20 @@ export async function detectUserLocation(forceGps = false): Promise<DetectedLoca
       }
     }
   } catch (ipapiErr) {
-    console.warn('[GeoService] ip-api.com lookup error, trying provider 2:', ipapiErr);
+    console.warn('[GeoService] ipapi.co lookup error, trying fallback:', ipapiErr);
   }
 
-  // Provider 2: ipwho.is
+  // Provider 2: ipwho.is (HTTPS)
   try {
-    const res = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
+    const res = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4500) });
     if (res.ok) {
       const data = await res.json();
       if (data.success && data.latitude && data.longitude) {
         const city = data.city || '';
         const state = data.region || '';
         const country = data.country || 'India';
-        const locationName = city && state ? `${city}, ${state}, ${country}` : `${state || city || 'Live Location'}, ${country}`;
+        const parts = [city, state].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
+        const locationName = parts.length > 0 ? `${parts.join(', ')}, ${country}` : `${country}`;
 
         const result: DetectedLocation = {
           lat: data.latitude,
@@ -208,47 +220,16 @@ export async function detectUserLocation(forceGps = false): Promise<DetectedLoca
       }
     }
   } catch (ipErr) {
-    console.warn('[GeoService] ipwho.is lookup error, trying provider B:', ipErr);
+    console.warn('[GeoService] ipwho.is lookup error:', ipErr);
   }
 
-  // Provider B: ipapi.co
-  try {
-    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.latitude && data.longitude) {
-        const city = data.city || '';
-        const state = data.region || '';
-        const country = data.country_name || 'India';
-        const locationName = city && state ? `${city}, ${state}, ${country}` : `${state || city || 'Live Location'}, ${country}`;
-
-        const result: DetectedLocation = {
-          lat: data.latitude,
-          lng: data.longitude,
-          locationName,
-          city,
-          state,
-          country,
-          source: 'ip'
-        };
-
-        try {
-          localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify(result));
-        } catch {}
-
-        return result;
-      }
-    }
-  } catch (ipapiErr) {
-    console.warn('[GeoService] ipapi.co lookup error:', ipapiErr);
-  }
-
-  // 3. Cached / Default Location
+  // 3. Cached / Default Location (Tamil Nadu Agricultural Hub)
   return {
-    lat: 11.0168,
-    lng: 76.9558,
-    locationName: 'Coimbatore, Tamil Nadu, India',
-    city: 'Coimbatore',
+    lat: 11.3833,
+    lng: 77.8967,
+    locationName: 'Tiruchengode, Namakkal district, Tamil Nadu, India',
+    city: 'Tiruchengode',
+    district: 'Namakkal',
     state: 'Tamil Nadu',
     country: 'India',
     source: 'cached'

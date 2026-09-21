@@ -4,6 +4,7 @@ import { FarmProfile, CropRecord, WeatherForecastBundle, DiseaseDetectionResult,
 import { SupportedLang, TRANSLATIONS } from '../../lib/i18n';
 import { generateDiagnosticReportPDF } from '../../lib/pdfReportGenerator';
 import { getLocalizedDiseaseDiagnostic } from '../../lib/diseaseDictionary';
+import { getLocalizedFarmName, getLocalizedLocation, getLocalizedSoilType, getLocalizedIrrigation, translateText } from '../../lib/universalTranslator';
 
 interface ReportsViewProps {
   activeFarm: FarmProfile;
@@ -123,8 +124,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                 {t.officialDossier || 'Official Farm Dossier'}
               </span>
             </div>
-            <h2 className="text-lg font-bold text-slate-900 mt-2">{activeFarm.name}</h2>
-            <p className="text-xs text-slate-500">{activeFarm.locationName} · Lat: {activeFarm.lat.toFixed(4)}, Lng: {activeFarm.lng.toFixed(4)}</p>
+            <h2 className="text-lg font-bold text-slate-900 mt-2">{getLocalizedFarmName(activeFarm.name, lang)}</h2>
+            <p className="text-xs text-slate-500">{getLocalizedLocation(activeFarm.locationName, lang)} · Lat: {activeFarm.lat.toFixed(4)}, Lng: {activeFarm.lng.toFixed(4)}</p>
           </div>
           <div className="text-right text-xs text-slate-500 space-y-0.5">
             <div><b>{t.reportDate || 'Report Date'}:</b> {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
@@ -143,11 +144,11 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             </div>
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.soilType || 'Soil Classification'}</span>
-              <span className="font-bold text-slate-900">{activeFarm.soilType}</span>
+              <span className="font-bold text-slate-900">{getLocalizedSoilType(activeFarm.soilType, lang)}</span>
             </div>
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.irrigationType || 'Irrigation Infrastructure'}</span>
-              <span className="font-bold text-slate-900">{activeFarm.irrigationType}</span>
+              <span className="font-bold text-slate-900">{getLocalizedIrrigation(activeFarm.irrigationType, lang)}</span>
             </div>
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-slate-500 block text-[10px] uppercase font-bold">{t.altitude || 'Altitude'}</span>

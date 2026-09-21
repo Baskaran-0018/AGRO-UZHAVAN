@@ -121,7 +121,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({
               ) : (
                 <Navigation className="w-3.5 h-3.5 text-emerald-700" />
               )}
-              <span>{isDetectingLocation ? 'Detecting...' : '📍 Auto GPS'}</span>
+              <span>{isDetectingLocation ? translateText('Detecting...', lang) : translateText('📍 Auto GPS', lang)}</span>
             </button>
           )}
           <button
