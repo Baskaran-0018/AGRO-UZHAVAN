@@ -103,6 +103,7 @@ export const LOCATION_TOKENS: Record<string, Record<SupportedLang, string>> = {
   Virudhunagar: { en: 'Virudhunagar', ta: 'விருதுநகர்', hi: 'विरुद्धनगर', te: 'విరుదునగర్', kn: 'ವಿರುಧುನಗರ', mr: 'विरुद्धनगर', bn: 'বিরুধুনগর', gu: 'વિરુધુનગર', pa: 'ਵਿਰੁਧੁਨਗਰ' },
 
   // --- Prominent Taluks, Agricultural Hubs & Towns in Tamil Nadu ---
+  Vallam: { en: 'Vallam', ta: 'வல்லம்', hi: 'वल्लम', te: 'వల్లం', kn: 'ವಲ್ಲಂ', mr: 'वल्लम', bn: 'ভল্লম', gu: 'વલ્લમ', pa: 'ਵੱਲਮ' },
   Tiruchengode: { en: 'Tiruchengode', ta: 'திருச்செங்கோடு', hi: 'तिरुचेंगोडे', te: 'తిరుచెంగోడ్', kn: 'ತಿರುಚೆಂಗೋಡ್', mr: 'तिरुचेंगोडे', bn: 'তিরুচেঙ্গোড', gu: 'તિરુચેંગોડ', pa: 'ਤਿਰੂਚੇਂਗੋਡ' },
   Truchengode: { en: 'Tiruchengode', ta: 'திருச்செங்கோடு', hi: 'तिरुचेंगोडे', te: 'తిరుచెంగోడ్', kn: 'ತಿರುಚೆಂಗೋಡ್', mr: 'तिरुचेंगोडे', bn: 'তিরুচেঙ্গোড', gu: 'તિરુચેંગોડ', pa: 'ਤਿਰੂਚੇਂਗੋਡ' },
   Thiruchengodu: { en: 'Tiruchengode', ta: 'திருச்செங்கோடு', hi: 'तिरुचेंगोडे', te: 'తిరుచెంగోడ్', kn: 'ತಿರುಚೆಂಗೋಡ್', mr: 'तिरुचेंगोडे', bn: 'তিরুচেঙ্গোড', gu: 'તિરુચેંગોડ', pa: 'ਤਿਰੂਚੇਂਗੋਡ' },

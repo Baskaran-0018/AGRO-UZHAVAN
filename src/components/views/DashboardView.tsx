@@ -36,6 +36,7 @@ interface DashboardViewProps {
   onOpenAddCrop: () => void;
   onDetectLocation?: () => void;
   isDetectingLocation?: boolean;
+  onOpenLocationModal?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -49,6 +50,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenAddCrop,
   onDetectLocation,
   isDetectingLocation,
+  onOpenLocationModal,
 }) => {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const cur = weather?.current;
@@ -68,10 +70,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-white/20 text-white border border-white/30 backdrop-blur-xs">
                 {t.activeFarm || 'Active Farm'}
               </span>
-              <span className="text-xs text-emerald-100 font-semibold flex items-center gap-1.5 bg-black/20 px-3 py-1 rounded-full border border-white/10 backdrop-blur-xs">
+              <button
+                type="button"
+                onClick={onOpenLocationModal}
+                className="text-xs text-emerald-100 hover:text-white font-semibold flex items-center gap-1.5 bg-black/20 hover:bg-black/35 px-3 py-1 rounded-full border border-white/10 hover:border-white/30 backdrop-blur-xs transition-all cursor-pointer"
+                title="Click to search or set exact farm location"
+              >
                 <MapPin className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-                {getLocalizedLocation(activeFarm.locationName, lang)}
-              </span>
+                <span>{getLocalizedLocation(activeFarm.locationName, lang)}</span>
+              </button>
               {onDetectLocation && (
                 <button
                   type="button"

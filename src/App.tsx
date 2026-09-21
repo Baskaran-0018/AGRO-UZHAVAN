@@ -19,6 +19,7 @@ import { Sidebar } from './components/Sidebar';
 import { FarmModal } from './components/FarmModal';
 import { CropModal } from './components/CropModal';
 import { NotificationsModal } from './components/NotificationsModal';
+import { LocationPickerModal } from './components/LocationPickerModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { LoginView } from './components/views/LoginView';
@@ -72,7 +73,30 @@ export function App() {
   const [isAddFarmOpen, setIsAddFarmOpen] = useState(false);
   const [isAddCropOpen, setIsAddCropOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  function handleSelectLocation(locationName: string, lat: number, lng: number) {
+    const updatedFarm: FarmProfile = {
+      ...activeFarm,
+      locationName,
+      lat,
+      lng,
+      boundaryGeoJSON: [
+        [lat, lng],
+        [lat + 0.003, lng + 0.003],
+        [lat + 0.001, lng + 0.005],
+        [lat - 0.002, lng + 0.002]
+      ]
+    };
+    setActiveFarm(updatedFarm);
+    setFarms(currentFarms => {
+      const updatedFarms = currentFarms.map(f => f.id === activeFarm.id ? updatedFarm : f);
+      AgroStore.saveFarms(updatedFarms);
+      return updatedFarms;
+    });
+    confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+  }
 
   // ML Training Engine State
   const [trainingState, setTrainingState] = useState<MLTrainingState>({
@@ -372,6 +396,7 @@ export function App() {
               onOpenAddCrop={() => setIsAddCropOpen(true)}
               onDetectLocation={handleDetectLocation}
               isDetectingLocation={isDetectingLocation}
+              onOpenLocationModal={() => setIsLocationModalOpen(true)}
             />
           )}
 
@@ -512,6 +537,16 @@ export function App() {
         isOpen={isNotificationsOpen}
         onClose={() => setIsNotificationsOpen(false)}
         alerts={weather?.alerts || []}
+        lang={lang}
+      />
+
+      <LocationPickerModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
+        currentLocationName={activeFarm.locationName}
+        currentLat={activeFarm.lat}
+        currentLng={activeFarm.lng}
+        onSelectLocation={handleSelectLocation}
         lang={lang}
       />
 
