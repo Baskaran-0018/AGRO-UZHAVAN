@@ -426,218 +426,304 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       </section>
 
-      {/* Detailed Section Layout (2 Columns) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      {/* Detailed Section Layout (2 Columns): Hanging Wooden Boards with Ropes */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
         
-        {/* Left Column (2 Span): Weather & Agronomic Trajectory */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-2xs">
-            {/* Card Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-2xs">
-                  <CloudSun className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-extrabold text-gray-900 text-base">{t.weatherPrediction || 'Weather Advisory'}</h3>
-                  <p className="text-xs text-gray-500 font-medium">
-                    {getLocalizedLocation(activeFarm.locationName, lang) || 'Chennai, Tamil Nadu, India'}
-                  </p>
-                </div>
+        {/* Left Column (2 Span): Weather & Agronomic Trajectory Board */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Main Weather Advisory Hanging Wooden Board */}
+          <div className="relative pt-6 sway-board-slow">
+            {/* Left Hanging Rope */}
+            <div className="absolute top-0 left-10 z-10 flex flex-col items-center pointer-events-none">
+              <div className="w-3.5 h-3.5 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+              <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+              <div className="w-4 h-4 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
               </div>
-              <button
-                onClick={() => onNavigate('weather')}
-                className="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 flex items-center space-x-1 cursor-pointer"
-              >
-                <span>{t.sevenDayForecast || '7-Day Agronomic Forecast'}</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
             </div>
-
-            {/* Microclimate Trajectory Banner */}
-            <div className="bg-emerald-50/90 border border-emerald-200 rounded-xl p-4 mb-4">
-              <div className="flex items-start space-x-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 animate-ping"></span>
-                <div>
-                  <h4 className="font-extrabold text-sm text-emerald-950 mb-1">
-                    {translateText(weather?.aiAnalysis?.headline, lang) || 'Optimal Farm Weather & Microclimate Trajectory'}
-                  </h4>
-                  <p className="text-xs text-emerald-800 leading-relaxed font-medium">
-                    {translateText(
-                      weather?.aiAnalysis?.summary ||
-                        'Atmospheric metrics at your estate are favorable for active photosynthesis and scheduled field operations.',
-                      lang
-                    )}
-                  </p>
-                </div>
+            {/* Right Hanging Rope */}
+            <div className="absolute top-0 right-10 z-10 flex flex-col items-center pointer-events-none">
+              <div className="w-3.5 h-3.5 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+              <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+              <div className="w-4 h-4 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
               </div>
             </div>
 
-            {/* 4 Weather Parameter Boxes */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-gray-50 rounded-xl p-3 border border-gray-200 text-center flex flex-col justify-between">
-                <span className="text-[9.5px] font-extrabold text-gray-400 uppercase tracking-wider block mb-1">
-                  {t.rainProb || 'RAINFALL PROBABILITY'}
-                </span>
-                <div>
-                  <p className="font-bold text-xs text-gray-800 leading-tight">
-                    {translateText(weather?.nextHour?.summary, lang) || 'Light Intermittent showers likely'}
-                  </p>
-                  <p className="text-emerald-600 font-black text-sm mt-1">
-                    {weather?.nextHour?.rainProb ?? 87}%
-                  </p>
-                </div>
-              </div>
+            <div className="hanging-wood-card p-5 sm:p-6 space-y-5 relative overflow-hidden">
+              {/* Corner Rivets */}
+              <div className="absolute top-2.5 left-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute top-2.5 right-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute bottom-2.5 left-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute bottom-2.5 right-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
 
-              <div className="bg-gray-50 rounded-xl p-3 border border-gray-200 text-center flex flex-col justify-between">
-                <span className="text-[9.5px] font-extrabold text-gray-400 uppercase tracking-wider block mb-1">
-                  {t.sprayingIndex || 'SPRAYING WINDOW'}
-                </span>
-                <div>
-                  <p className="font-extrabold text-emerald-700 text-sm my-1">
-                    {translateText(weather?.daily?.[0]?.sprayingIndex || 'Unfavorable', lang)}
-                  </p>
-                  <p className="text-[10px] text-gray-500 font-medium">&lt; 14 km/h</p>
-                </div>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-3 border border-gray-200 text-center flex flex-col justify-between">
-                <span className="text-[9.5px] font-extrabold text-gray-400 uppercase tracking-wider block mb-1">
-                  {t.solarRad || 'SOLAR IRRADIANCE'}
-                </span>
-                <div>
-                  <p className="font-black text-amber-600 text-sm my-1">
-                    {cur?.solarRadiationWm2 || 810} W/m²
-                  </p>
-                  <p className="text-[10px] text-gray-500 font-medium">{translateText('Index', lang)}</p>
-                </div>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-3 border border-gray-200 text-center flex flex-col justify-between">
-                <span className="text-[9.5px] font-extrabold text-gray-400 uppercase tracking-wider block mb-1">
-                  {t.soilMoistureLayer || 'SOIL MOISTURE MAPPING'}
-                </span>
-                <div>
-                  <p className="font-black text-emerald-700 text-sm my-1">
-                    {cur ? (cur.soilMoisture * 100).toFixed(0) : '32'}%
-                  </p>
-                  <p className="text-[10px] text-gray-500 font-medium">{t.optimal || 'Optimal'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Smart Agronomy Intelligence Card */}
-          <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-2xs">
-            <h4 className="font-bold text-sm text-gray-800 mb-1 flex items-center space-x-2">
-              <Lightbulb className="w-4 h-4 text-amber-500" />
-              <span>Smart Agronomy Intelligence</span>
-            </h4>
-            <p className="text-xs text-gray-600 leading-relaxed font-medium">
-              {translateText(
-                'With an 87% rainfall forecast and current soil moisture at 32%, automated drip irrigation is temporarily paused for 24 hours to maximize water efficiency.',
-                lang
-              )}
-            </p>
-          </div>
-        </div>
-
-        {/* Right Column: Crop Planner Side Card */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-2xs h-full flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                <div className="flex items-center space-x-2">
-                  <Sprout className="w-5 h-5 text-emerald-600" />
-                  <h3 className="font-extrabold text-gray-900 text-base">{t.cropManagement || 'Crop Planner'}</h3>
+              {/* Board Header */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-amber-800/70">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-xs">
+                    <CloudSun className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-amber-100 text-base font-serif tracking-wide">
+                      {t.weatherPrediction || 'Weather Advisory'}
+                    </h3>
+                    <p className="text-xs text-amber-200/80 font-medium">
+                      {getLocalizedLocation(activeFarm.locationName, lang) || 'Chennai, Tamil Nadu, India'}
+                    </p>
+                  </div>
                 </div>
                 <button
-                  onClick={onOpenAddCrop}
-                  className="text-xs font-bold text-emerald-800 hover:text-emerald-900 flex items-center space-x-1 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 transition shadow-2xs cursor-pointer"
+                  onClick={() => onNavigate('weather')}
+                  className="text-xs font-bold text-amber-300 hover:text-amber-200 flex items-center space-x-1.5 bg-black/25 hover:bg-black/40 px-3 py-1.5 rounded-full border border-amber-700/50 transition cursor-pointer shadow-xs"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>{t.addCrop || 'Add Crop'}</span>
+                  <span>{t.sevenDayForecast || '7-Day Agronomic Forecast'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <div className="space-y-3" id="crop-item-list">
-                {activeCrops.length > 0 ? (
-                  activeCrops.map((crop) => (
-                    <div
-                      key={crop.id}
-                      onClick={() => onNavigate('cropplanner')}
-                      className="bg-gray-50 rounded-xl p-3.5 border border-gray-200 hover:border-emerald-300 transition flex items-center justify-between cursor-pointer"
-                    >
-                      <div>
-                        <h4 className="font-bold text-sm text-gray-900">
-                          {getLocalizedCropName(crop.cropName, lang)}
-                        </h4>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {t.variety || 'Variety'}:{' '}
-                          <span className="font-semibold text-gray-700">
-                            {translateText(crop.variety, lang) || 'High-Yield Hybrid'}
-                          </span>
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1">
-                          {getLocalizedGrowthStage(crop.growthStage, lang).split(' ')[0] || 'Germination'}
-                        </span>
-                        <p className="text-xs font-extrabold text-gray-800">
-                          {crop.areaPlantedAcres || 1} {t.acres || 'Acres'}
-                        </p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <>
-                    <div
-                      onClick={() => onNavigate('cropplanner')}
-                      className="bg-gray-50 rounded-xl p-3.5 border border-gray-200 hover:border-emerald-300 transition flex items-center justify-between cursor-pointer"
-                    >
-                      <div>
-                        <h4 className="font-bold text-sm text-gray-900">Maize / Corn</h4>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {t.variety || 'Variety'}: <span className="font-semibold text-gray-700">High-Yield Hybrid</span>
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1">
-                          Germination
-                        </span>
-                        <p className="text-xs font-extrabold text-gray-800">1 Acres</p>
-                      </div>
-                    </div>
+              {/* Microclimate Trajectory Banner inside Board */}
+              <div className="bg-gradient-to-r from-emerald-950/90 via-emerald-900/80 to-emerald-950/90 border border-emerald-500/50 rounded-xl p-4 shadow-inner">
+                <div className="flex items-start space-x-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 mt-1.5 shrink-0 animate-ping"></span>
+                  <div>
+                    <h4 className="font-extrabold text-sm text-emerald-200 mb-1">
+                      {translateText(weather?.aiAnalysis?.headline, lang) || 'Optimal Farm Weather & Microclimate Trajectory'}
+                    </h4>
+                    <p className="text-xs text-emerald-100/90 leading-relaxed font-medium">
+                      {translateText(
+                        weather?.aiAnalysis?.summary ||
+                          'Atmospheric metrics at your estate are favorable for active photosynthesis and scheduled field operations.',
+                        lang
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-                    <div
-                      onClick={() => onNavigate('cropplanner')}
-                      className="bg-gray-50 rounded-xl p-3.5 border border-gray-200 hover:border-emerald-300 transition flex items-center justify-between cursor-pointer"
-                    >
-                      <div>
-                        <h4 className="font-bold text-sm text-gray-900">Paddy</h4>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {t.variety || 'Variety'}: <span className="font-semibold text-gray-700">ADT 37</span>
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1">
-                          Germination
-                        </span>
-                        <p className="text-xs font-extrabold text-gray-800">2 Acres</p>
-                      </div>
-                    </div>
-                  </>
-                )}
+              {/* 4 Weather Parameter Boxes */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
+                  <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
+                    {t.rainProb || 'RAINFALL PROBABILITY'}
+                  </span>
+                  <div>
+                    <p className="font-bold text-xs text-amber-100 leading-tight">
+                      {translateText(weather?.nextHour?.summary, lang) || 'Light Intermittent showers likely'}
+                    </p>
+                    <p className="text-emerald-400 font-black text-sm mt-1">
+                      {weather?.nextHour?.rainProb ?? 87}%
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
+                  <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
+                    {t.sprayingIndex || 'SPRAYING WINDOW'}
+                  </span>
+                  <div>
+                    <p className="font-extrabold text-emerald-300 text-sm my-1">
+                      {translateText(weather?.daily?.[0]?.sprayingIndex || 'Unfavorable', lang)}
+                    </p>
+                    <p className="text-[10px] text-amber-200/70 font-medium">&lt; 14 km/h</p>
+                  </div>
+                </div>
+
+                <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
+                  <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
+                    {t.solarRad || 'SOLAR IRRADIANCE'}
+                  </span>
+                  <div>
+                    <p className="font-black text-amber-400 text-sm my-1">
+                      {cur?.solarRadiationWm2 || 677} W/m²
+                    </p>
+                    <p className="text-[10px] text-amber-200/70 font-medium">{translateText('Index', lang)}</p>
+                  </div>
+                </div>
+
+                <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
+                  <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
+                    {t.soilMoistureLayer || 'SOIL MOISTURE MAPPING'}
+                  </span>
+                  <div>
+                    <p className="font-black text-emerald-400 text-sm my-1">
+                      {cur ? (cur.soilMoisture * 100).toFixed(0) : '27'}%
+                    </p>
+                    <p className="text-[10px] text-amber-200/70 font-medium">{t.optimal || 'Optimal'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Smart Agronomy Intelligence Hanging Wooden Plaque */}
+          <div className="relative pt-5 sway-card-3">
+            {/* Left Rope */}
+            <div className="absolute top-0 left-8 z-10 flex flex-col items-center pointer-events-none">
+              <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+              <div className="rope-strand w-1.5 h-4.5 rounded-xs -mt-0.5"></div>
+              <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+              </div>
+            </div>
+            {/* Right Rope */}
+            <div className="absolute top-0 right-8 z-10 flex flex-col items-center pointer-events-none">
+              <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+              <div className="rope-strand w-1.5 h-4.5 rounded-xs -mt-0.5"></div>
+              <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
               </div>
             </div>
 
-            <button
-              onClick={() => onNavigate('cropplanner')}
-              className="w-full mt-4 py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer"
-            >
-              <span>{t.viewAllCrops || 'Open Crop Management'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="hanging-wood-card p-4.5 relative overflow-hidden">
+              {/* Corner Rivets */}
+              <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+
+              <h4 className="font-bold text-sm text-amber-200 mb-1 flex items-center space-x-2">
+                <Lightbulb className="w-4 h-4 text-amber-400" />
+                <span>Smart Agronomy Intelligence</span>
+              </h4>
+              <p className="text-xs text-amber-100/90 leading-relaxed font-medium">
+                {translateText(
+                  'With an 87% rainfall forecast and current soil moisture at 32%, automated drip irrigation is temporarily paused for 24 hours to maximize water efficiency.',
+                  lang
+                )}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Right Column: Crop Planner Hanging Wooden Board */}
+        <div className="space-y-6">
+          <div className="relative pt-6 sway-board-right h-full">
+            {/* Left Hanging Rope */}
+            <div className="absolute top-0 left-8 z-10 flex flex-col items-center pointer-events-none">
+              <div className="w-3.5 h-3.5 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+              <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+              <div className="w-4 h-4 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+              </div>
+            </div>
+            {/* Right Hanging Rope */}
+            <div className="absolute top-0 right-8 z-10 flex flex-col items-center pointer-events-none">
+              <div className="w-3.5 h-3.5 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+              <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+              <div className="w-4 h-4 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+              </div>
+            </div>
+
+            <div className="hanging-wood-card p-5 sm:p-6 h-full flex flex-col justify-between relative overflow-hidden">
+              {/* Corner Rivets */}
+              <div className="absolute top-2.5 left-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute top-2.5 right-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute bottom-2.5 left-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+              <div className="absolute bottom-2.5 right-2.5 w-2.5 h-2.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+
+              <div>
+                {/* Board Header */}
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-amber-800/70">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
+                      <Sprout className="w-4.5 h-4.5" />
+                    </div>
+                    <h3 className="font-extrabold text-amber-100 text-base font-serif tracking-wide">
+                      {t.cropManagement || 'Crop Planner'}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={onOpenAddCrop}
+                    className="text-xs font-bold text-emerald-300 hover:text-emerald-200 flex items-center space-x-1.5 bg-emerald-950/80 hover:bg-emerald-900 px-3 py-1.5 rounded-full border border-emerald-500/60 transition shadow-xs cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>{t.addCrop || 'Add Crop'}</span>
+                  </button>
+                </div>
+
+                {/* Registered Crops List */}
+                <div className="space-y-3" id="crop-item-list">
+                  {activeCrops.length > 0 ? (
+                    activeCrops.map((crop) => (
+                      <div
+                        key={crop.id}
+                        onClick={() => onNavigate('cropplanner')}
+                        className="bg-black/35 rounded-xl p-3.5 border border-amber-800/60 hover:border-emerald-400/80 transition flex items-center justify-between cursor-pointer shadow-inner"
+                      >
+                        <div>
+                          <h4 className="font-bold text-sm text-amber-100">
+                            {getLocalizedCropName(crop.cropName, lang)}
+                          </h4>
+                          <p className="text-xs text-amber-200/70 mt-0.5">
+                            {t.variety || 'Variety'}:{' '}
+                            <span className="font-semibold text-amber-200">
+                              {translateText(crop.variety, lang) || 'High-Yield Hybrid'}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1 shadow-2xs">
+                            {getLocalizedGrowthStage(crop.growthStage, lang).split(' ')[0] || 'Germination'}
+                          </span>
+                          <p className="text-xs font-extrabold text-amber-100">
+                            {crop.areaPlantedAcres || 1} {t.acres || 'Acres'}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div
+                        onClick={() => onNavigate('cropplanner')}
+                        className="bg-black/35 rounded-xl p-3.5 border border-amber-800/60 hover:border-emerald-400/80 transition flex items-center justify-between cursor-pointer shadow-inner"
+                      >
+                        <div>
+                          <h4 className="font-bold text-sm text-amber-100">{translateText('Maize / Corn', lang)}</h4>
+                          <p className="text-xs text-amber-200/70 mt-0.5">
+                            {t.variety || 'Variety'}: <span className="font-semibold text-amber-200">{translateText('High-Yield Hybrid', lang)}</span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1 shadow-2xs">
+                            {translateText('Germination', lang)}
+                          </span>
+                          <p className="text-xs font-extrabold text-amber-100">1 {t.acres || 'Acres'}</p>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={() => onNavigate('cropplanner')}
+                        className="bg-black/35 rounded-xl p-3.5 border border-amber-800/60 hover:border-emerald-400/80 transition flex items-center justify-between cursor-pointer shadow-inner"
+                      >
+                        <div>
+                          <h4 className="font-bold text-sm text-amber-100">{translateText('Paddy', lang)}</h4>
+                          <p className="text-xs text-amber-200/70 mt-0.5">
+                            {t.variety || 'Variety'}: <span className="font-semibold text-amber-200">ADT 37</span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1 shadow-2xs">
+                            {translateText('Germination', lang)}
+                          </span>
+                          <p className="text-xs font-extrabold text-amber-100">2 {t.acres || 'Acres'}</p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={() => onNavigate('cropplanner')}
+                className="w-full mt-4 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 border border-emerald-500/60 text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer shadow-md"
+              >
+                <span>{t.viewAllCrops || 'Open Crop Management'}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -645,3 +731,4 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     </div>
   );
 };
+
