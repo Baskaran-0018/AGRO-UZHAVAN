@@ -28,6 +28,7 @@ import {
   getLocalizedCropName,
   getLocalizedGrowthStage
 } from '../../lib/universalTranslator';
+import { FarmLandscapeBackground } from '../FarmLandscapeBackground';
 
 interface DashboardViewProps {
   activeFarm: FarmProfile;
@@ -78,7 +79,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const displayYieldTotal = latestYield ? latestYield.expectedYieldTotal : 1500.5;
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="space-y-6 animate-fadeIn pb-12 relative min-h-screen">
+      {/* Scenic Animated Farm Background (Tractor Ploughing & Farmer Sowing in slight view) */}
+      <FarmLandscapeBackground />
       
       {/* HANGING WOODEN SIGN HERO SECTION */}
       <section className="relative pt-6 pb-2">
