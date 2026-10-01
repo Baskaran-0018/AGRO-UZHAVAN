@@ -3,13 +3,14 @@
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Cinzel', Georgia, serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
   html, body {
     font-family: var(--font-sans);
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: #f1f5f1;
+    color: #1a2e1d;
     max-width: 100vw;
     overflow-x: hidden;
   }
@@ -35,14 +36,198 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #e2e8f0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #94a3b8;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #10b981;
+}
+
+/* Cybernetic Natural Tree Sidebar */
+.cyber-tree-sidebar {
+  position: relative;
+  background: #f8faf8;
+  border-right: 1px solid #e2e8f0;
+  width: 310px;
+  min-width: 310px;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.04);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Glowing Circuit Pulsing Animation */
+@keyframes circuitPulse {
+  0%, 100% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 2px #00ff88);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px #00ff88) drop-shadow(0 0 12px #39ff14);
+  }
+}
+
+@keyframes nodeGlow {
+  0%, 100% {
+    transform: scale(1);
+    fill: #00ff88;
+    filter: drop-shadow(0 0 3px #00ff88);
+  }
+  50% {
+    transform: scale(1.4);
+    fill: #ffffff;
+    filter: drop-shadow(0 0 10px #39ff14);
+  }
+}
+
+/* Gentle Swaying Animation for Hanging Wooden Sign */
+@keyframes gentleSway {
+  0%, 100% {
+    transform: rotate(-0.8deg);
+  }
+  50% {
+    transform: rotate(0.8deg);
+  }
+}
+
+.hanging-wooden-board {
+  transform-origin: top center;
+  animation: gentleSway 6s ease-in-out infinite;
+  background: radial-gradient(circle at 50% 0%, #684122 0%, #4a2d16 50%, #2f1a0b 100%);
+  box-shadow: 
+    0 12px 28px rgba(0, 0, 0, 0.35),
+    inset 0 2px 4px rgba(255, 235, 200, 0.25),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+  border: 4px solid #3b220e;
+  border-radius: 18px;
+  position: relative;
+}
+
+.hanging-wooden-board::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 2px dashed rgba(220, 170, 110, 0.3);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.circuit-trace {
+  animation: circuitPulse 3s infinite ease-in-out;
+}
+
+.circuit-node {
+  animation: nodeGlow 2s infinite ease-in-out;
+  transform-origin: center;
+}
+
+/* Top Banner Dark Green Wood Badge */
+.dashboard-wood-badge {
+  background: linear-gradient(135deg, #0e4e32 0%, #063822 100%);
+  border: 2px solid #10b981;
+  border-radius: 20px 4px 20px 20px;
+  box-shadow: 0 4px 14px rgba(14, 78, 50, 0.35);
+  transition: all 0.3s ease;
+}
+.dashboard-wood-badge.active {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.4);
+  border-color: #34d399;
+}
+
+/* Organic Leaf Container Badge (100% Enclosed Text) */
+.tree-leaf-badge {
+  position: relative;
+  background: linear-gradient(135deg, #e8f5e9 0%, #d0edd5 60%, #b8e2be 100%);
+  border: 1.5px solid #81c784;
+  border-radius: 26px 4px 26px 12px;
+  box-shadow: 
+    0 3px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 4px rgba(46, 125, 50, 0.15);
+  display: flex;
+  align-items: center;
+  padding: 6px 12px 6px 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+  overflow: hidden;
+  width: 100%;
+  min-height: 48px;
+}
+
+.tree-leaf-badge::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(76, 175, 80, 0.3) 0%, transparent 80%);
+  pointer-events: none;
+}
+
+.tree-leaf-badge:hover {
+  transform: scale(1.03) translateX(-2px);
+  background: linear-gradient(135deg, #f1f8f2 0%, #dcfae1 60%, #c3f2cc 100%);
+  border-color: #4caf50;
+  box-shadow: 
+    0 6px 16px rgba(46, 125, 50, 0.2),
+    inset 0 1px 3px rgba(255, 255, 255, 0.9);
+}
+
+.tree-leaf-badge.active {
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #154d19 100%);
+  border-color: #66bb6a;
+  box-shadow: 
+    0 6px 18px rgba(27, 94, 32, 0.4),
+    inset 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.tree-leaf-badge.active .leaf-label-text {
+  color: #ffffff !important;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.tree-leaf-badge.active .leaf-sub-text {
+  color: #a5d6a7 !important;
+}
+
+.tree-leaf-badge.active .leaf-icon-box {
+  background: #0d3b11;
+  border-color: #81c784;
+  color: #81c784;
+}
+
+.leaf-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #a5d6a7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 8px;
+  color: #2e7d32;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dashboard-glass-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  transition: all 0.25s ease;
+}
+.dashboard-glass-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
 }
 
 /* Pulse radar effect */
@@ -87,3 +272,4 @@
 .leaflet-popup-tip {
   background: #ffffff !important;
 }
+
