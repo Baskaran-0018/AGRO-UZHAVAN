@@ -213,108 +213,214 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </section>
 
-      {/* Quick Stats Grid (4 Metric Cards matching UI design) */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Quick Stats Grid: 4 Hanging Wooden Board Metric Cards with Ropes */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1 pb-2">
         
-        {/* 1. Weather Advisory Card */}
-        <div
-          className="dashboard-glass-card p-4 cursor-pointer hover:border-emerald-300"
-          onClick={() => onNavigate('weather')}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
-              {t.weatherPrediction || 'WEATHER ADVISORY'}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 shadow-2xs border border-amber-200">
-              <CloudSun className="w-4 h-4" />
+        {/* 1. Weather Advisory Hanging Wooden Card */}
+        <div className="relative pt-6 sway-card-1">
+          {/* Left Rope */}
+          <div className="absolute top-0 left-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
             </div>
           </div>
-          <div className="flex items-baseline space-x-2 my-1">
-            <span className="text-2xl font-black text-gray-900">{displayTemp}°C</span>
-            <span className="text-xs font-bold text-gray-600">{displayCondition}</span>
+          {/* Right Rope */}
+          <div className="absolute top-0 right-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+            </div>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100 mt-2">
-            <span className="flex items-center space-x-1">
-              <Droplets className="w-3.5 h-3.5 text-blue-500" />
-              <span>{displayHumidity}% {t.humidity || 'Relative Humidity'}</span>
-            </span>
-            <span className="flex items-center space-x-1">
-              <Wind className="w-3.5 h-3.5 text-gray-400" />
-              <span>{displayWind} km/h</span>
-            </span>
+
+          <div
+            className="hanging-wood-card p-4 pt-5 cursor-pointer relative overflow-hidden"
+            onClick={() => onNavigate('weather')}
+          >
+            {/* Corner Rivets */}
+            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[10px] font-black text-amber-300/90 uppercase tracking-wider">
+                {t.weatherPrediction || 'WEATHER ADVISORY'}
+              </span>
+              <div className="w-7 h-7 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-300 shadow-xs border border-amber-400/40">
+                <CloudSun className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="flex items-baseline space-x-2 my-1">
+              <span className="text-2xl font-black text-amber-50 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{displayTemp}°C</span>
+              <span className="text-xs font-bold text-amber-200">{displayCondition}</span>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
+              <span className="flex items-center space-x-1">
+                <Droplets className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{displayHumidity}% {t.humidity || 'Humidity'}</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <Wind className="w-3.5 h-3.5 text-amber-300/80" />
+                <span>{displayWind} km/h</span>
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* 2. Crop Planner Card */}
-        <div
-          className="dashboard-glass-card p-4 cursor-pointer hover:border-emerald-300"
-          onClick={() => onNavigate('cropplanner')}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
-              {t.cropManagement || 'CROP PLANNER'}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-2xs border border-emerald-200">
-              <Sprout className="w-4 h-4" />
+        {/* 2. Crop Planner Hanging Wooden Card */}
+        <div className="relative pt-6 sway-card-2">
+          {/* Left Rope */}
+          <div className="absolute top-0 left-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
             </div>
           </div>
-          <div className="flex items-baseline space-x-2 my-1">
-            <span className="text-2xl font-black text-gray-900">{activeCrops.length || 2}</span>
-            <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md">
-              {totalAcres} {t.acres || 'Acres'}
-            </span>
+          {/* Right Rope */}
+          <div className="absolute top-0 right-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+            </div>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100 mt-2">
-            <span className="font-medium truncate">
-              {activeCrops[0] ? getLocalizedCropName(activeCrops[0].cropName, lang) : 'Maize / Corn'}
-            </span>
-            <ArrowRight className="w-3.5 h-3.5 text-emerald-600" />
+
+          <div
+            className="hanging-wood-card p-4 pt-5 cursor-pointer relative overflow-hidden"
+            onClick={() => onNavigate('cropplanner')}
+          >
+            {/* Corner Rivets */}
+            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[10px] font-black text-emerald-300 uppercase tracking-wider">
+                {t.cropManagement || 'CROP PLANNER'}
+              </span>
+              <div className="w-7 h-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300 shadow-xs border border-emerald-400/40">
+                <Sprout className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="flex items-baseline space-x-2 my-1">
+              <span className="text-2xl font-black text-amber-50 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                {activeCrops.length || 2}
+              </span>
+              <span className="text-xs font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-600/60 px-2 py-0.5 rounded-md">
+                {totalAcres} {t.acres || 'Acres'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
+              <span className="font-medium truncate">
+                {activeCrops[0] ? getLocalizedCropName(activeCrops[0].cropName, lang) : 'Maize / Corn'}
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
           </div>
         </div>
 
-        {/* 3. Disease Diagnostics Card */}
-        <div
-          className="dashboard-glass-card p-4 cursor-pointer hover:border-emerald-300"
-          onClick={() => onNavigate('diseasescanner')}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
-              {t.diseaseDetection || 'DISEASE DIAGNOSTICS'}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shadow-2xs border border-teal-200">
-              <ShieldCheck className="w-4 h-4" />
+        {/* 3. Disease Diagnostics Hanging Wooden Card */}
+        <div className="relative pt-6 sway-card-3">
+          {/* Left Rope */}
+          <div className="absolute top-0 left-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
             </div>
           </div>
-          <div className="flex items-baseline space-x-2 my-1">
-            <span className="text-2xl font-black text-emerald-950">{displaySeverity}%</span>
-            <span className="text-xs font-extrabold text-amber-600">{t.severity || 'Severity'}</span>
+          {/* Right Rope */}
+          <div className="absolute top-0 right-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+            </div>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100 mt-2">
-            <span className="truncate font-medium">{displayCropGuess}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
+
+          <div
+            className="hanging-wood-card p-4 pt-5 cursor-pointer relative overflow-hidden"
+            onClick={() => onNavigate('diseasescanner')}
+          >
+            {/* Corner Rivets */}
+            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[10px] font-black text-teal-300 uppercase tracking-wider">
+                {t.diseaseDetection || 'DISEASE DIAGNOSTICS'}
+              </span>
+              <div className="w-7 h-7 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-300 shadow-xs border border-teal-400/40">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="flex items-baseline space-x-2 my-1">
+              <span className="text-2xl font-black text-amber-50 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{displaySeverity}%</span>
+              <span className="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-600/60 px-2 py-0.5 rounded-md">
+                {t.severity || 'Severity'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
+              <span className="truncate font-medium">{displayCropGuess}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-teal-400 ml-1 shrink-0" />
+            </div>
           </div>
         </div>
 
-        {/* 4. Yield & Profit Card */}
-        <div
-          className="dashboard-glass-card p-4 cursor-pointer hover:border-emerald-300"
-          onClick={() => onNavigate('yieldpredictor')}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">
-              {t.yieldPrediction || 'YIELD & PROFIT'}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shadow-2xs border border-amber-200">
-              <TrendingUp className="w-4 h-4" />
+        {/* 4. Yield & Profit Hanging Wooden Card */}
+        <div className="relative pt-6 sway-card-4">
+          {/* Left Rope */}
+          <div className="absolute top-0 left-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
             </div>
           </div>
-          <div className="flex items-baseline space-x-2 my-1">
-            <span className="text-2xl font-black text-amber-700">₹{displayProfit}k</span>
-            <span className="text-xs font-bold text-gray-500">{t.netProfitMargin || 'Net Margin'}</span>
+          {/* Right Rope */}
+          <div className="absolute top-0 right-6 z-10 flex flex-col items-center pointer-events-none">
+            <div className="w-3 h-3 rounded-full border border-amber-800 bg-amber-950 shadow-inner"></div>
+            <div className="rope-strand w-1.5 h-5.5 rounded-xs -mt-0.5"></div>
+            <div className="w-3.5 h-3.5 rounded-full border border-amber-400 bg-amber-700 shadow-xs flex items-center justify-center -mt-0.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-200"></div>
+            </div>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100 mt-2">
-            <span className="font-medium">{displayYieldTotal} Q {t.expectedYield || 'Expected Yield'}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-emerald-600" />
+
+          <div
+            className="hanging-wood-card p-4 pt-5 cursor-pointer relative overflow-hidden"
+            onClick={() => onNavigate('yieldpredictor')}
+          >
+            {/* Corner Rivets */}
+            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-900 border border-amber-950 shadow-xs"></div>
+
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider">
+                {t.yieldPrediction || 'YIELD & PROFIT'}
+              </span>
+              <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 shadow-xs border border-amber-400/40">
+                <TrendingUp className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="flex items-baseline space-x-2 my-1">
+              <span className="text-2xl font-black text-amber-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                ₹{displayProfit}k
+              </span>
+              <span className="text-xs font-bold text-amber-200/90">{t.netProfitMargin || 'Net Margin'}</span>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
+              <span className="font-medium">{displayYieldTotal} Q {t.expectedYield || 'Expected Yield'}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
+            </div>
           </div>
         </div>
 
