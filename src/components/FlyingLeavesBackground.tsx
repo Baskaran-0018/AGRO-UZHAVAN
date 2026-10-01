@@ -235,7 +235,7 @@ export const FlyingLeavesBackground: React.FC = () => {
     <div
       aria-hidden="true"
       onClick={triggerBreeze}
-      className={`pointer-events-none absolute inset-0 z-0 overflow-hidden select-none transition-all duration-700 ${
+      className={`pointer-events-none fixed inset-0 z-0 overflow-hidden select-none transition-all duration-700 ${
         breezeBoost ? 'scale-[1.01]' : 'scale-100'
       }`}
     >

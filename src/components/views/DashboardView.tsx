@@ -28,7 +28,6 @@ import {
   getLocalizedCropName,
   getLocalizedGrowthStage
 } from '../../lib/universalTranslator';
-import { FlyingLeavesBackground } from '../FlyingLeavesBackground';
 
 interface DashboardViewProps {
   activeFarm: FarmProfile;
@@ -80,9 +79,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12 relative min-h-screen">
-      {/* Pale Pink Background with Leaves Flying in the Wind */}
-      <FlyingLeavesBackground />
-      
       {/* HANGING WOODEN SIGN HERO SECTION */}
       <section className="relative pt-6 pb-2">
         {/* Overarching Heavy Tree Branch extending across dashboard top */}

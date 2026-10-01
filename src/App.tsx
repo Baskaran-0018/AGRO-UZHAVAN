@@ -23,6 +23,7 @@ import { LocationPickerModal } from './components/LocationPickerModal';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { LoginView } from './components/views/LoginView';
+import { FlyingLeavesBackground } from './components/FlyingLeavesBackground';
 
 // Views
 import { DashboardView } from './components/views/DashboardView';
@@ -328,7 +329,10 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fff0f4] text-slate-900 flex flex-col font-sans antialiased selection:bg-pink-500 selection:text-white w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-[#fff0f4] text-slate-900 flex flex-col font-sans antialiased selection:bg-pink-500 selection:text-white w-full max-w-full overflow-x-hidden relative">
+      {/* 🌸 Universal Pale Pink Animated Flying Leaves in Wind (Active across ALL pages) 🌸 */}
+      <FlyingLeavesBackground />
+
       {/* Top Navbar with User Account Integration */}
       <Navbar
         farms={farms}
