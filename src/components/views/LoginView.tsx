@@ -27,6 +27,7 @@ import {
 import { UserProfile, AuthProviderType } from '../../types/agro';
 import { LANGUAGES, SupportedLang, TRANSLATIONS } from '../../lib/i18n';
 import { translateText } from '../../lib/universalTranslator';
+import DriftWall, { AGRO_DEFAULT_ITEMS } from '../DriftWall';
 
 interface LoginViewProps {
   onLoginSuccess: (user: UserProfile) => void;
@@ -86,7 +87,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
 
   // Resend Countdown Timer
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval>;
     if (resendCountdown > 0) {
       timer = setInterval(() => {
         setResendCountdown((prev) => prev - 1);
@@ -299,9 +300,64 @@ export const LoginView: React.FC<LoginViewProps> = ({
       className={`${
         isModal
           ? 'relative bg-white rounded-3xl max-w-xl w-full mx-auto overflow-hidden shadow-2xl border border-emerald-100 animate-in fade-in zoom-in-95 duration-200'
-          : 'min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 flex flex-col justify-between text-slate-100 select-none'
+          : 'min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 flex flex-col justify-between text-slate-100 select-none relative overflow-hidden'
       }`}
     >
+      {/* Background 3D DriftWall Animation */}
+      {!isModal ? (
+        <div className="absolute inset-0 pointer-events-auto overflow-hidden z-0">
+          <DriftWall
+            items={AGRO_DEFAULT_ITEMS}
+            columns={6}
+            tileWidth={220}
+            tileHeight={140}
+            gap={18}
+            tilt={16}
+            turn={-14}
+            perspective={1200}
+            depth={120}
+            speed={42}
+            direction="up"
+            variance={0.45}
+            parallax={0.6}
+            lift={64}
+            fade={0.15}
+            dim={0.88}
+            overlayColor="#021a12"
+            radius={16}
+            roll={0}
+            pauseOnHover={false}
+            grayscale={false}
+          />
+        </div>
+      ) : (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
+          <DriftWall
+            items={AGRO_DEFAULT_ITEMS}
+            columns={4}
+            tileWidth={160}
+            tileHeight={110}
+            gap={14}
+            tilt={12}
+            turn={-10}
+            perspective={1000}
+            depth={80}
+            speed={25}
+            direction="up"
+            variance={0.4}
+            parallax={0.3}
+            lift={30}
+            fade={0.3}
+            dim={0.6}
+            overlayColor="#021a12"
+            radius={12}
+            roll={0}
+            pauseOnHover={false}
+            grayscale={false}
+          />
+        </div>
+      )}
+
       {/* Top SMS Notification Banner Toast */}
       {smsNotification && smsNotification.show && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-[92%] bg-slate-900 border border-emerald-500/60 shadow-2xl rounded-2xl p-4 text-white animate-in slide-in-from-top duration-300">
@@ -342,7 +398,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
 
       {/* Top Navbar for Standalone Page */}
       {!isModal && (
-        <header className="p-4 sm:p-6 flex items-center justify-between max-w-7xl mx-auto w-full">
+        <header className="relative z-10 p-4 sm:p-6 flex items-center justify-between max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-white border border-emerald-300 shadow-md p-1 flex items-center justify-center shrink-0 overflow-hidden">
               <img src="/logo.png" alt="Agro Uzhavan Logo" className="w-full h-full object-contain" />
@@ -388,17 +444,17 @@ export const LoginView: React.FC<LoginViewProps> = ({
       {isModal && onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-10 cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-20 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
       )}
 
       {/* Main Content Area */}
-      <div className={`flex-1 flex items-center justify-center p-4 sm:p-6 ${!isModal ? 'my-auto' : ''}`}>
+      <div className={`flex-1 flex items-center justify-center p-4 sm:p-6 relative z-10 ${!isModal ? 'my-auto' : ''}`}>
         <div className={`w-full ${!isModal ? 'max-w-md' : 'p-6 sm:p-8'}`}>
           {/* Card Container */}
-          <div className={`${!isModal ? 'bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-emerald-100 text-slate-900' : 'space-y-6 text-slate-900'}`}>
+          <div className={`${!isModal ? 'bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-emerald-500/30 text-slate-900 ring-1 ring-emerald-500/20' : 'space-y-6 text-slate-900'}`}>
             {/* Header / Brand in Modal */}
             <div className="text-center space-y-2 mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-100 border border-emerald-200 shadow-sm p-1.5 flex items-center justify-center mx-auto overflow-hidden">
@@ -810,7 +866,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
 
       {/* Feature Highlights Footer for Standalone Page */}
       {!isModal && (
-        <footer className="p-6 max-w-7xl mx-auto w-full border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-slate-400">
+        <footer className="relative z-10 p-6 max-w-7xl mx-auto w-full border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-slate-400">
           <div className="flex items-center gap-2.5">
             <CloudSun className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{t.weatherForecast || t.weather || translateText('Real-Time Weather AI', lang)}</span>

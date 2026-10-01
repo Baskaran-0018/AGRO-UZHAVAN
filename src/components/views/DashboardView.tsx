@@ -65,12 +65,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const totalAcres = activeCrops.reduce((sum, c) => sum + (c.areaPlantedAcres || 0), 0) || activeFarm.areaAcres;
   const displayTemp = cur ? Math.round(cur.temp) : 33;
-  const displayCondition = cur?.weatherDescription ? translateText(cur.weatherDescription, lang) : 'Partly Cloudy';
+  const displayCondition = cur?.weatherDescription ? translateText(cur.weatherDescription, lang) : translateText('Partly Cloudy', lang);
   const displayHumidity = cur ? Math.round(cur.humidity) : 56;
   const displayWind = cur ? Math.round(cur.windSpeedKmh) : 9;
 
   const displaySeverity = recentScan ? (recentScan.isHealthy ? 0 : recentScan.severityPercentage || 36) : 36;
-  const displayCropGuess = recentScan ? `${recentScan.cropGuess || 'Tomato'} (${recentScan.diseaseName || 'Early Blight'})` : 'Tomato (Solanum lycopersicum)';
+  const displayCropGuess = recentScan
+    ? `${recentScan.cropGuess || translateText('Tomato', lang)} (${recentScan.diseaseName || translateText('Early Blight', lang)})`
+    : `${translateText('Tomato', lang)} (Solanum lycopersicum)`;
 
   const displayProfit = latestYield ? Math.round(latestYield.estimatedProfit / 1000) : 550;
   const displayYieldTotal = latestYield ? latestYield.expectedYieldTotal : 1500.5;
@@ -152,7 +154,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="bg-gradient-to-r from-emerald-800 to-emerald-950 text-emerald-300 border border-emerald-500/60 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  {t.activeFarm || 'ACTIVE FARM'}
+                  {t.activeFarm || translateText('ACTIVE FARM', lang)}
                 </span>
 
                 <button
@@ -162,7 +164,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   title="Click to search or set exact farm location"
                 >
                   <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span className="font-bold">{getLocalizedLocation(activeFarm.locationName, lang) || 'Chennai, Tamil Nadu, India'}</span>
+                  <span className="font-bold">{getLocalizedLocation(activeFarm.locationName, lang) || translateText('Chennai, Tamil Nadu, India', lang)}</span>
                 </button>
 
                 {onDetectLocation && (
@@ -188,24 +190,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {/* Carved Wooden Sign Main Title */}
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-amber-100 tracking-tight mb-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] flex items-center space-x-3 font-serif">
                 <Tent className="w-7 h-7 sm:w-8 sm:h-8 text-amber-400 shrink-0" />
-                <span>{getLocalizedFarmName(activeFarm.name, lang) || 'Primary Farm Estate'}</span>
+                <span>{getLocalizedFarmName(activeFarm.name, lang) || translateText('Primary Farm Estate', lang)}</span>
               </h1>
 
               {/* Key Agronomic Parameters */}
               <div className="pt-2 border-t border-amber-800/70 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs md:text-sm text-amber-200 font-semibold">
                 <span className="flex items-center space-x-2 bg-black/20 px-2.5 py-1 rounded-lg border border-amber-900/50">
                   <span>🌾</span>
-                  <span className="text-white font-extrabold">{activeFarm.areaAcres || 25} {t.acres || 'Acres'}</span>
+                  <span className="text-white font-extrabold">{activeFarm.areaAcres || 25} {t.acres || translateText('Acres', lang)}</span>
                 </span>
                 <span className="text-amber-700 hidden sm:inline">•</span>
                 <span className="flex items-center space-x-2 bg-black/20 px-2.5 py-1 rounded-lg border border-amber-900/50">
                   <span>⛰️</span>
-                  <span>{t.soilType || 'Soil Type'}: <strong className="text-white font-black">{getLocalizedSoilType(activeFarm.soilType, lang) || 'Alluvial'}</strong></span>
+                  <span>{t.soilType || translateText('Soil Type', lang)}: <strong className="text-white font-black">{getLocalizedSoilType(activeFarm.soilType, lang) || translateText('Alluvial', lang)}</strong></span>
                 </span>
                 <span className="text-amber-700 hidden sm:inline">•</span>
                 <span className="flex items-center space-x-2 bg-black/20 px-2.5 py-1 rounded-lg border border-amber-900/50">
                   <span>💧</span>
-                  <span>{t.irrigationType || 'Irrigation System'}: <strong className="text-white font-black">{getLocalizedIrrigation(activeFarm.irrigationType, lang) || 'Drip'}</strong></span>
+                  <span>{t.irrigationType || translateText('Irrigation System', lang)}: <strong className="text-white font-black">{getLocalizedIrrigation(activeFarm.irrigationType, lang) || translateText('Drip', lang)}</strong></span>
                 </span>
               </div>
             </div>
@@ -247,7 +249,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-black text-amber-300/90 uppercase tracking-wider">
-                {t.weatherPrediction || 'WEATHER ADVISORY'}
+                {t.weatherPrediction || translateText('WEATHER ADVISORY', lang)}
               </span>
               <div className="w-7 h-7 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-300 shadow-xs border border-amber-400/40">
                 <CloudSun className="w-4 h-4" />
@@ -260,7 +262,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
               <span className="flex items-center space-x-1">
                 <Droplets className="w-3.5 h-3.5 text-cyan-400" />
-                <span>{displayHumidity}% {t.humidity || 'Humidity'}</span>
+                <span>{displayHumidity}% {t.humidity || translateText('Humidity', lang)}</span>
               </span>
               <span className="flex items-center space-x-1">
                 <Wind className="w-3.5 h-3.5 text-amber-300/80" />
@@ -301,7 +303,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-black text-emerald-300 uppercase tracking-wider">
-                {t.cropManagement || 'CROP PLANNER'}
+                {t.cropManagement || translateText('CROP PLANNER', lang)}
               </span>
               <div className="w-7 h-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300 shadow-xs border border-emerald-400/40">
                 <Sprout className="w-4 h-4" />
@@ -312,12 +314,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {activeCrops.length || 2}
               </span>
               <span className="text-xs font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-600/60 px-2 py-0.5 rounded-md">
-                {totalAcres} {t.acres || 'Acres'}
+                {totalAcres} {t.acres || translateText('Acres', lang)}
               </span>
             </div>
             <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
               <span className="font-medium truncate">
-                {activeCrops[0] ? getLocalizedCropName(activeCrops[0].cropName, lang) : 'Maize / Corn'}
+                {activeCrops[0] ? getLocalizedCropName(activeCrops[0].cropName, lang) : translateText('Maize / Corn', lang)}
               </span>
               <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
             </div>
@@ -355,7 +357,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-black text-teal-300 uppercase tracking-wider">
-                {t.diseaseDetection || 'DISEASE DIAGNOSTICS'}
+                {t.diseaseDetection || translateText('DISEASE DIAGNOSTICS', lang)}
               </span>
               <div className="w-7 h-7 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-300 shadow-xs border border-teal-400/40">
                 <ShieldCheck className="w-4 h-4" />
@@ -364,7 +366,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="flex items-baseline space-x-2 my-1">
               <span className="text-2xl font-black text-amber-50 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{displaySeverity}%</span>
               <span className="text-xs font-bold text-amber-400 bg-amber-950/80 border border-amber-600/60 px-2 py-0.5 rounded-md">
-                {t.severity || 'Severity'}
+                {t.severity || translateText('Severity', lang)}
               </span>
             </div>
             <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
@@ -405,7 +407,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider">
-                {t.yieldPrediction || 'YIELD & PROFIT'}
+                {t.yieldPrediction || translateText('YIELD & PROFIT', lang)}
               </span>
               <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 shadow-xs border border-amber-400/40">
                 <TrendingUp className="w-4 h-4" />
@@ -415,10 +417,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="text-2xl font-black text-amber-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 ₹{displayProfit}k
               </span>
-              <span className="text-xs font-bold text-amber-200/90">{t.netProfitMargin || 'Net Margin'}</span>
+              <span className="text-xs font-bold text-amber-200/90">{t.netProfitMargin || translateText('Net Margin', lang)}</span>
             </div>
             <div className="flex items-center justify-between text-[11px] text-amber-200/80 pt-2 border-t border-amber-800/60 mt-2">
-              <span className="font-medium">{displayYieldTotal} Q {t.expectedYield || 'Expected Yield'}</span>
+              <span className="font-medium">{displayYieldTotal} Q {t.expectedYield || translateText('Expected Yield', lang)}</span>
               <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
             </div>
           </div>
@@ -466,10 +468,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                   <div>
                     <h3 className="font-extrabold text-amber-100 text-base font-serif tracking-wide">
-                      {t.weatherPrediction || 'Weather Advisory'}
+                      {t.weatherPrediction || translateText('Weather Advisory', lang)}
                     </h3>
                     <p className="text-xs text-amber-200/80 font-medium">
-                      {getLocalizedLocation(activeFarm.locationName, lang) || 'Chennai, Tamil Nadu, India'}
+                      {getLocalizedLocation(activeFarm.locationName, lang) || translateText('Chennai, Tamil Nadu, India', lang)}
                     </p>
                   </div>
                 </div>
@@ -477,7 +479,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   onClick={() => onNavigate('weather')}
                   className="text-xs font-bold text-amber-300 hover:text-amber-200 flex items-center space-x-1.5 bg-black/25 hover:bg-black/40 px-3 py-1.5 rounded-full border border-amber-700/50 transition cursor-pointer shadow-xs"
                 >
-                  <span>{t.sevenDayForecast || '7-Day Agronomic Forecast'}</span>
+                  <span>{t.sevenDayForecast || translateText('7-Day Agronomic Forecast', lang)}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -488,7 +490,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 mt-1.5 shrink-0 animate-ping"></span>
                   <div>
                     <h4 className="font-extrabold text-sm text-emerald-200 mb-1">
-                      {translateText(weather?.aiAnalysis?.headline, lang) || 'Optimal Farm Weather & Microclimate Trajectory'}
+                      {translateText(weather?.aiAnalysis?.headline || 'Optimal Farm Weather & Microclimate Trajectory', lang)}
                     </h4>
                     <p className="text-xs text-emerald-100/90 leading-relaxed font-medium">
                       {translateText(
@@ -505,11 +507,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
                   <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
-                    {t.rainProb || 'RAINFALL PROBABILITY'}
+                    {t.rainProb || translateText('RAINFALL PROBABILITY', lang)}
                   </span>
                   <div>
                     <p className="font-bold text-xs text-amber-100 leading-tight">
-                      {translateText(weather?.nextHour?.summary, lang) || 'Light Intermittent showers likely'}
+                      {translateText(weather?.nextHour?.summary || 'Light Intermittent showers likely', lang)}
                     </p>
                     <p className="text-emerald-400 font-black text-sm mt-1">
                       {weather?.nextHour?.rainProb ?? 87}%
@@ -519,7 +521,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                 <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
                   <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
-                    {t.sprayingIndex || 'SPRAYING WINDOW'}
+                    {t.sprayingIndex || translateText('SPRAYING WINDOW', lang)}
                   </span>
                   <div>
                     <p className="font-extrabold text-emerald-300 text-sm my-1">
@@ -531,7 +533,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                 <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
                   <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
-                    {t.solarRad || 'SOLAR IRRADIANCE'}
+                    {t.solarRad || translateText('SOLAR IRRADIANCE', lang)}
                   </span>
                   <div>
                     <p className="font-black text-amber-400 text-sm my-1">
@@ -543,13 +545,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                 <div className="bg-black/35 rounded-xl p-3 border border-amber-800/60 text-center flex flex-col justify-between shadow-inner">
                   <span className="text-[9.5px] font-extrabold text-amber-300/80 uppercase tracking-wider block mb-1">
-                    {t.soilMoistureLayer || 'SOIL MOISTURE MAPPING'}
+                    {t.soilMoistureLayer || translateText('SOIL MOISTURE MAPPING', lang)}
                   </span>
                   <div>
                     <p className="font-black text-emerald-400 text-sm my-1">
                       {cur ? (cur.soilMoisture * 100).toFixed(0) : '27'}%
                     </p>
-                    <p className="text-[10px] text-amber-200/70 font-medium">{t.optimal || 'Optimal'}</p>
+                    <p className="text-[10px] text-amber-200/70 font-medium">{t.optimal || translateText('Optimal', lang)}</p>
                   </div>
                 </div>
               </div>
@@ -584,7 +586,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               <h4 className="font-bold text-sm text-amber-200 mb-1 flex items-center space-x-2">
                 <Lightbulb className="w-4 h-4 text-amber-400" />
-                <span>Smart Agronomy Intelligence</span>
+                <span>{translateText('Smart Agronomy Intelligence', lang)}</span>
               </h4>
               <p className="text-xs text-amber-100/90 leading-relaxed font-medium">
                 {translateText(
@@ -632,7 +634,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       <Sprout className="w-4.5 h-4.5" />
                     </div>
                     <h3 className="font-extrabold text-amber-100 text-base font-serif tracking-wide">
-                      {t.cropManagement || 'Crop Planner'}
+                      {t.cropManagement || translateText('Crop Planner', lang)}
                     </h3>
                   </div>
                   <button
@@ -640,7 +642,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     className="text-xs font-bold text-emerald-300 hover:text-emerald-200 flex items-center space-x-1.5 bg-emerald-950/80 hover:bg-emerald-900 px-3 py-1.5 rounded-full border border-emerald-500/60 transition shadow-xs cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>{t.addCrop || 'Add Crop'}</span>
+                    <span>{t.addCrop || translateText('Add Crop', lang)}</span>
                   </button>
                 </div>
 
@@ -658,18 +660,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             {getLocalizedCropName(crop.cropName, lang)}
                           </h4>
                           <p className="text-xs text-amber-200/70 mt-0.5">
-                            {t.variety || 'Variety'}:{' '}
+                            {t.variety || translateText('Variety', lang)}:{' '}
                             <span className="font-semibold text-amber-200">
-                              {translateText(crop.variety, lang) || 'High-Yield Hybrid'}
+                              {translateText(crop.variety, lang) || translateText('High-Yield Hybrid', lang)}
                             </span>
                           </p>
                         </div>
                         <div className="text-right">
                           <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1 shadow-2xs">
-                            {getLocalizedGrowthStage(crop.growthStage, lang).split(' ')[0] || 'Germination'}
+                            {getLocalizedGrowthStage(crop.growthStage, lang).split(' ')[0] || translateText('Germination', lang)}
                           </span>
                           <p className="text-xs font-extrabold text-amber-100">
-                            {crop.areaPlantedAcres || 1} {t.acres || 'Acres'}
+                            {crop.areaPlantedAcres || 1} {t.acres || translateText('Acres', lang)}
                           </p>
                         </div>
                       </div>
@@ -683,14 +685,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <div>
                           <h4 className="font-bold text-sm text-amber-100">{translateText('Maize / Corn', lang)}</h4>
                           <p className="text-xs text-amber-200/70 mt-0.5">
-                            {t.variety || 'Variety'}: <span className="font-semibold text-amber-200">{translateText('High-Yield Hybrid', lang)}</span>
+                            {t.variety || translateText('Variety', lang)}: <span className="font-semibold text-amber-200">{translateText('High-Yield Hybrid', lang)}</span>
                           </p>
                         </div>
                         <div className="text-right">
                           <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1 shadow-2xs">
                             {translateText('Germination', lang)}
                           </span>
-                          <p className="text-xs font-extrabold text-amber-100">1 {t.acres || 'Acres'}</p>
+                          <p className="text-xs font-extrabold text-amber-100">1 {t.acres || translateText('Acres', lang)}</p>
                         </div>
                       </div>
 
@@ -701,14 +703,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <div>
                           <h4 className="font-bold text-sm text-amber-100">{translateText('Paddy', lang)}</h4>
                           <p className="text-xs text-amber-200/70 mt-0.5">
-                            {t.variety || 'Variety'}: <span className="font-semibold text-amber-200">ADT 37</span>
+                            {t.variety || translateText('Variety', lang)}: <span className="font-semibold text-amber-200">ADT 37</span>
                           </p>
                         </div>
                         <div className="text-right">
                           <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-600/60 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mb-1 shadow-2xs">
                             {translateText('Germination', lang)}
                           </span>
-                          <p className="text-xs font-extrabold text-amber-100">2 {t.acres || 'Acres'}</p>
+                          <p className="text-xs font-extrabold text-amber-100">2 {t.acres || translateText('Acres', lang)}</p>
                         </div>
                       </div>
                     </>
@@ -720,7 +722,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 onClick={() => onNavigate('cropplanner')}
                 className="w-full mt-4 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 border border-emerald-500/60 text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer shadow-md"
               >
-                <span>{t.viewAllCrops || 'Open Crop Management'}</span>
+                <span>{translateText('Open Crop Management', lang)}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>

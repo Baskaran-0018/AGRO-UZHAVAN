@@ -28,7 +28,7 @@ function agroApiPlugin(): Plugin {
           let body: any = {};
           if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
             const buffers: Buffer[] = [];
-            for await (const chunk of req) {
+            for await (const chunk of (req as any)) {
               buffers.push(chunk);
             }
             const dataStr = Buffer.concat(buffers).toString();
@@ -42,14 +42,14 @@ function agroApiPlugin(): Plugin {
           }
 
           const response = await handleApiRequest(pathname, body, queryParams);
-          res.statusCode = response.status;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(response.data));
+          (res as any).statusCode = response.status;
+          (res as any).setHeader('Content-Type', 'application/json');
+          (res as any).end(JSON.stringify(response.data));
         } catch (err: any) {
           console.error('[API Middleware Error]:', err);
-          res.statusCode = 500;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ error: err.message || 'Internal Server Error' }));
+          (res as any).statusCode = 500;
+          (res as any).setHeader('Content-Type', 'application/json');
+          (res as any).end(JSON.stringify({ error: err.message || 'Internal Server Error' }));
         }
       });
     },

@@ -66,7 +66,7 @@ export class AgroStore {
                   [12.838, 79.703],
                   [12.836, 79.706],
                   [12.832, 79.702]
-                ]
+                ] as [number, number][]
               };
             }
             return farm;
@@ -89,7 +89,7 @@ export class AgroStore {
 
   static updateFarmLocation(farmId: string, locationName: string, lat: number, lng: number): FarmProfile[] {
     const farms = this.getFarms();
-    const updated = farms.map(f => {
+    const updated: FarmProfile[] = farms.map(f => {
       if (f.id === farmId) {
         return {
           ...f,
@@ -101,7 +101,7 @@ export class AgroStore {
             [lat + 0.003, lng + 0.003],
             [lat + 0.001, lng + 0.005],
             [lat - 0.002, lng + 0.002]
-          ]
+          ] as [number, number][]
         };
       }
       return f;

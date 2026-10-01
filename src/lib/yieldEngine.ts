@@ -123,13 +123,7 @@ export function calculateYieldSimulation(input: YieldSimInput): YieldPredictionR
     estimatedProfit,
     currency: 'INR (₹)',
     accuracyScore,
-    modelUsed: modelName,
-    keyFactors: [
-      { factor: 'Soil Organic Carbon & NPK Chemistry', impactPct: 28 },
-      { factor: 'Irrigation & Root Zone Saturation', impactPct: waterImpact !== 0 ? waterImpact : 18 },
-      { factor: 'Thermal Growing Degree Days (GDD)', impactPct: 22 },
-      { factor: 'Fertilizer Nutrition Dosage', impactPct: fertImpact !== 0 ? fertImpact : 15 }
-    ],
+    modelUsed: (modelName as 'Random Forest Regressor' | 'XGBoost 2.0' | 'Deep Neural Network (DNN)' | 'CatBoost Ensemble') || 'Random Forest Regressor',
     topDrivers: [
       { feature: 'Soil Matrix Organic Carbon & NPK Level', impactPct: 34, direction: 'positive' },
       { feature: 'Growing Degree Days (GDD) Accumulation', impactPct: 28, direction: 'positive' },
