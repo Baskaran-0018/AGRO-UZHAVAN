@@ -328,7 +328,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-[#fff0f4] text-slate-900 flex flex-col font-sans antialiased selection:bg-pink-500 selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Top Navbar with User Account Integration */}
       <Navbar
         farms={farms}

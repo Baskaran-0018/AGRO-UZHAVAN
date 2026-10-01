@@ -389,164 +389,268 @@
   will-change: transform;
 }
 
-/* Rotating wheels on tractor */
-@keyframes wheelSpin {
+/* ===================================================
+   PALE PINK WIND & FLYING LEAVES ANIMATIONS
+   =================================================== */
+
+/* Continuous Wind Breeze Streaks */
+@keyframes windStreamDrift {
   0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(-360deg);
-  }
-}
-
-.animate-wheel-spin {
-  animation: wheelSpin 1.8s linear infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-/* Tractor Exhaust Smoke Puff */
-@keyframes exhaustPuff {
-  0%, 100% {
-    opacity: 0.2;
-    transform: scale(0.8) translate(0, 0);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.3) translate(4px, -6px);
-  }
-}
-
-.animate-exhaust-puff {
-  animation: exhaustPuff 0.8s ease-out infinite;
-}
-
-/* Ploughed Soil Spray Particles */
-@keyframes soilSpray {
-  0%, 100% {
-    opacity: 0.4;
-    transform: translate(0, 0) scale(0.9);
-  }
-  50% {
-    opacity: 0.9;
-    transform: translate(-5px, -3px) scale(1.2);
-  }
-}
-
-.animate-soil-spray {
-  animation: soilSpray 0.6s ease-in-out infinite;
-}
-
-/* Farmer Walking & Sowing Motion across the field */
-@keyframes farmerSowCycle {
-  0% {
-    transform: translateX(0) translateY(0);
+    transform: translateX(-120%) skewX(-20deg);
+    opacity: 0;
   }
   25% {
-    transform: translateX(-40px) translateY(-3px);
-  }
-  50% {
-    transform: translateX(-80px) translateY(0);
+    opacity: 0.6;
   }
   75% {
-    transform: translateX(-120px) translateY(-3px);
+    opacity: 0.7;
   }
   100% {
-    transform: translateX(-160px) translateY(0);
-  }
-}
-
-.animate-farmer-sow {
-  animation: farmerSowCycle 22s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-/* Farmer Arm Scattering Seeds Gesture */
-@keyframes sowArmMotion {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  30% {
-    transform: rotate(-35deg);
-  }
-  60% {
-    transform: rotate(20deg);
-  }
-}
-
-.animate-sow-arm {
-  animation: sowArmMotion 2.2s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: 64px 38px;
-}
-
-/* Seeds scattering & floating down to earth */
-@keyframes seedsFallShower {
-  0% {
+    transform: translateX(120%) skewX(-20deg);
     opacity: 0;
-    transform: translate(0, 0) scale(0.6);
+  }
+}
+
+.animate-wind-stream-1 {
+  animation: windStreamDrift 7s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+.animate-wind-stream-2 {
+  animation: windStreamDrift 10s cubic-bezier(0.25, 1, 0.5, 1) infinite 2.5s;
+}
+.animate-wind-stream-3 {
+  animation: windStreamDrift 8.5s cubic-bezier(0.25, 1, 0.5, 1) infinite 5s;
+}
+
+/* Flying Leaf: Strong Wind Gust (West to East) */
+@keyframes leafGustEast {
+  0% {
+    transform: translate3d(-10vw, -10vh, 0) rotate(0deg) rotateX(0deg) rotateY(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate3d(55vw, 30vh, 40px) rotate(220deg) rotateX(180deg) rotateY(120deg);
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(115vw, 65vh, 0) rotate(540deg) rotateX(360deg) rotateY(240deg);
+    opacity: 0;
+  }
+}
+
+.animate-leaf-gust-east {
+  animation: leafGustEast var(--leaf-duration, 11s) cubic-bezier(0.35, 0, 0.25, 1) infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* Flying Leaf: Swirling Wind Vortex (Looping Eddy) */
+@keyframes leafSwirlVortex {
+  0% {
+    transform: translate3d(-8vw, 20vh, 0) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+    transform: translate3d(20vw, 15vh, 20px) rotate(90deg) scale(1);
   }
   35% {
-    opacity: 1;
-    transform: translate(12px, 8px) scale(1.1);
+    transform: translate3d(35vw, 35vh, 50px) rotate(240deg) rotateY(180deg);
+  }
+  50% {
+    transform: translate3d(25vw, 45vh, 30px) rotate(360deg) rotateX(180deg);
   }
   70% {
-    opacity: 0.8;
-    transform: translate(25px, 24px) scale(0.9);
+    transform: translate3d(60vw, 30vh, 60px) rotate(480deg) rotateY(360deg);
+    opacity: 0.9;
+  }
+  95% {
+    opacity: 0.7;
   }
   100% {
+    transform: translate3d(110vw, 55vh, 0) rotate(720deg) scale(0.9);
     opacity: 0;
-    transform: translate(32px, 45px) scale(0.5);
   }
 }
 
-.animate-seeds-fall {
-  animation: seedsFallShower 2.2s ease-out infinite;
+.animate-leaf-swirl-vortex {
+  animation: leafSwirlVortex var(--leaf-duration, 14s) ease-in-out infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
 }
 
-/* Farmer Walking Legs */
-@keyframes legsStepCycle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
-.animate-legs-walk {
-  animation: legsStepCycle 1.1s ease-in-out infinite;
-}
-
-/* Distant Birds Soaring */
-@keyframes birdsSoar {
+/* Flying Leaf: Diagonal Wind Drift with 3D Tumbling */
+@keyframes leafDriftDiagonal {
   0% {
-    transform: translate(-100px, 0);
+    transform: translate3d(-5vw, -15vh, 0) rotate(0deg) rotateX(0deg);
+    opacity: 0;
   }
-  50% {
-    transform: translate(200px, -20px);
+  12% {
+    opacity: 0.95;
+  }
+  45% {
+    transform: translate3d(48vw, 40vh, 35px) rotate(190deg) rotateX(160deg) rotateZ(45deg);
+  }
+  85% {
+    opacity: 0.85;
   }
   100% {
-    transform: translate(calc(100vw + 100px), -10px);
+    transform: translate3d(108vw, 95vh, 0) rotate(420deg) rotateX(360deg) rotateZ(90deg);
+    opacity: 0;
   }
 }
 
-.animate-birds-fly {
-  animation: birdsSoar 45s linear infinite;
+.animate-leaf-drift-diagonal {
+  animation: leafDriftDiagonal var(--leaf-duration, 13s) linear infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
 }
 
-/* Slow Cloud Drift */
-@keyframes cloudsDriftSlow {
+/* Flying Leaf: Updraft Thermal Lift (Rising on Wind Breeze) */
+@keyframes leafUpdraft {
   0% {
-    transform: translateX(-5%);
+    transform: translate3d(-5vw, 85vh, 0) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+    transform: translate3d(15vw, 70vh, 20px) rotate(60deg) scale(1);
+  }
+  45% {
+    transform: translate3d(45vw, 35vh, 50px) rotate(180deg) rotateY(180deg);
+  }
+  75% {
+    transform: translate3d(75vw, 15vh, 30px) rotate(300deg) rotateX(140deg);
+    opacity: 0.85;
   }
   100% {
-    transform: translateX(5%);
+    transform: translate3d(110vw, -10vh, 0) rotate(450deg) scale(0.75);
+    opacity: 0;
   }
 }
 
-.animate-clouds-drift {
-  animation: cloudsDriftSlow 30s ease-in-out infinite alternate;
+.animate-leaf-updraft {
+  animation: leafUpdraft var(--leaf-duration, 16s) ease-in-out infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
 }
+
+/* Flying Leaf: Fast Tumbling & Somersault in Wind Gust */
+@keyframes leafTumbleFast {
+  0% {
+    transform: translate3d(-8vw, 10vh, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate3d(50vw, 45vh, 40px) rotateX(360deg) rotateY(180deg) rotateZ(180deg);
+  }
+  92% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(112vw, 80vh, 0) rotateX(720deg) rotateY(360deg) rotateZ(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-leaf-tumble {
+  animation: leafTumbleFast var(--leaf-duration, 9s) cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* Flying Leaf: Counter Breeze / Gentle Float (East to West) */
+@keyframes leafCounterBreeze {
+  0% {
+    transform: translate3d(108vw, -5vh, 0) rotate(0deg) rotateY(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(50vw, 45vh, 25px) rotate(-140deg) rotateY(180deg);
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(-10vw, 95vh, 0) rotate(-320deg) rotateY(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-leaf-counter-breeze {
+  animation: leafCounterBreeze var(--leaf-duration, 17s) ease-in-out infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* Flying Leaf: Harmonic Wave Flutter */
+@keyframes leafFlutterWave {
+  0% {
+    transform: translate3d(-6vw, 30vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  25% {
+    transform: translate3d(20vw, 15vh, 15px) rotate(45deg) rotateX(80deg);
+  }
+  50% {
+    transform: translate3d(50vw, 45vh, 30px) rotate(110deg) rotateY(80deg);
+  }
+  75% {
+    transform: translate3d(80vw, 20vh, 20px) rotate(200deg) rotateX(60deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(112vw, 48vh, 0) rotate(310deg);
+    opacity: 0;
+  }
+}
+
+.animate-leaf-flutter-wave {
+  animation: leafFlutterWave var(--leaf-duration, 12s) ease-in-out infinite;
+  animation-delay: var(--leaf-delay, 0s);
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* Floating Pink Petal Dust & Sparkles */
+@keyframes petalDustFloat {
+  0% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(30px, -40px) scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(60px, -80px) scale(0.6);
+    opacity: 0.1;
+  }
+}
+
+.animate-petal-dust {
+  animation: petalDustFloat 6s ease-in-out infinite alternate;
+}
+
 
 
